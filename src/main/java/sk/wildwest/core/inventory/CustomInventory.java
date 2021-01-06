@@ -1,131 +1,346 @@
 package sk.wildwest.core.inventory;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import sk.wildwest.core.WildWest;
 import sk.wildwest.core.player.WWPlayer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class CustomInventory implements InventoryHolder, Listener {
 
-    private Inventory inventory;
-    private String inventoryName;
-
-    public CustomInventory(String inventoryName, CustomInventorySize inventorySize) {
-        this.inventory = Bukkit.createInventory(this, inventorySize.getSize(), inventoryName);
-        this.inventoryName = inventoryName;
-
+    /**
+     * Crete new empty inventory.
+     */
+    public CustomInventory(@NotNull Type type, @NotNull String title)
+    {
+        this.type = type;
+        this.inv = type.createInventory(this, title);
     }
 
-    public CustomInventory(String inventoryName, CustomInventoryType inventorySize) {
-        this.inventory = Bukkit.createInventory(this, inventorySize.getInventoryType(), inventoryName);
-        this.inventoryName = inventoryName;
+    /**
+     * Create copy of existing inventory (clones items).
+     */
+    public CustomInventory(@NotNull Inventory inventory, @NotNull String title)
+    {
+        this.type = Type.fromInventory(inventory);
+
+        this.inv = type.createInventory(this, title);
+        for (int i = 0; i < inventory.getSize(); i++)
+        {
+            @Nullable
+            ItemStack is = inventory.getItem(i);
+            if (is == null)
+                inv.setItem(i, null);
+            else
+                inv.setItem(i, is.clone());
+        }
     }
 
-    @EventHandler
-    private void onInventoryClickEvent(@NotNull InventoryClickEvent event) {
-        if(event.getInventory() == null)
-            return;
+    @NotNull
+    private final Type type;
+    @NotNull
+    private Inventory inv;
 
-        if(!event.getView().getTitle().equals(inventoryName))
-            return;
-
-        if(!(event.getWhoClicked() instanceof Player))
-            return;
-
-        if(event.getCurrentItem() == null)
-            return;
-
-        onClick(null, event.getSlot(), event.getRawSlot(), event.getCurrentItem(), event);
-
+    @NotNull
+    public Type getType()
+    {
+        return this.type;
     }
 
-    @EventHandler
-    private void onInventoryOpen(@NotNull InventoryOpenEvent event) {
-        if(event.getInventory() == null)
-            return;
 
-        if(!event.getView().getTitle().equals(inventoryName))
-            return;
-
-        if(!(event.getPlayer() instanceof Player))
-            return;
-
-        onOpen(null, event);
-
-    }
-
-    @EventHandler
-    private void onInventoryClose(@NotNull InventoryCloseEvent event) {
-        if(event.getInventory() == null)
-            return;
-
-        if(!event.getView().getTitle().equals(inventoryName))
-            return;
-
-        if(!(event.getPlayer() instanceof Player))
-            return;
-
-        onClose(null, event);
-
-    }
-
-    protected abstract void onClick(WWPlayer player, int slot, int rawSlot, ItemStack clickedItem, InventoryClickEvent event);
-    protected abstract void onOpen(WWPlayer player, InventoryOpenEvent event);
-    protected abstract void onClose(WWPlayer player, InventoryCloseEvent event);
-
+    /**
+     * Do not use this method to open the inventory, use show(Player) instead.
+     */
+    @NotNull
     @Override
-    public Inventory getInventory() {
-        return inventory;
+    public Inventory getInventory()
+    {
+        return this.inv;
     }
 
-    public enum CustomInventorySize {
+    public int getSize()
+    {
+        return this.inv.getSize();
+    }
 
-        SIZE_9(9),
-        SIZE_18(18),
-        SIZE_27(27),
-        SIZE_36(36),
-        SIZE_45(45),
-        SIZE_54(54);
+    private static final int DefaultColumns = 9;
 
-        private int size;
+    public enum Type
+    {
+        Chest1(1, new InventoryCreateFunc()
+        {
+            @Override
+            Inventory createInventory(@NotNull InventoryHolder holder, @NotNull String title)
+            {
+                return Bukkit.createInventory(holder, 9 * 1, title);
+            }
+        }),
+        Chest2(2, new InventoryCreateFunc()
+        {
+            @Override
+            Inventory createInventory(@NotNull InventoryHolder holder, @NotNull String title)
+            {
+                return Bukkit.createInventory(holder, 9 * 2, title);
+            }
+        }),
+        Chest3(3, new InventoryCreateFunc()
+        {
+            @Override
+            Inventory createInventory(@NotNull InventoryHolder holder, @NotNull String title)
+            {
+                return Bukkit.createInventory(holder, 9 * 3, title);
+            }
+        }),
+        Chest4(4, new InventoryCreateFunc()
+        {
+            @Override
+            Inventory createInventory(@NotNull InventoryHolder holder, @NotNull String title)
+            {
+                return Bukkit.createInventory(holder, 9 * 4, title);
+            }
+        }),
+        Chest5(5, new InventoryCreateFunc()
+        {
+            @Override
+            Inventory createInventory(@NotNull InventoryHolder holder, @NotNull String title)
+            {
+                return Bukkit.createInventory(holder, 9 * 5, title);
+            }
+        }),
+        Chest6(6, new InventoryCreateFunc()
+        {
+            @Override
+            Inventory createInventory(@NotNull InventoryHolder holder, @NotNull String title)
+            {
+                return Bukkit.createInventory(holder, 9 * 6, title);
+            }
+        }),
+        Hopper(5, 1, new InventoryCreateFunc()
+        {
+            @Override
+            Inventory createInventory(@NotNull InventoryHolder holder, @NotNull String title)
+            {
+                return Bukkit.createInventory(holder, InventoryType.HOPPER, title);
+            }
+        }),
+        Dispenser(9, 1, new InventoryCreateFunc()
+        {
+            @Override
+            Inventory createInventory(@NotNull InventoryHolder holder, @NotNull String title)
+            {
+                return Bukkit.createInventory(holder, InventoryType.DISPENSER, title);
+            }
+        });
 
-        CustomInventorySize(int size) {
-            this.size = size;
+        public final int columns;
+        public final int rows;
+        public final int size;
+        @NotNull
+        private final InventoryCreateFunc createFunc;
+
+        Type(int columns, int rows, @NotNull InventoryCreateFunc createFunc)
+        {
+            this.columns = columns;
+            this.rows = rows;
+            this.size = columns * rows;
+            this.createFunc = createFunc;
         }
 
-        public int getSize() {
-            return size;
+        Type(int rows, @NotNull InventoryCreateFunc createFunc)
+        {
+            this(DefaultColumns, rows, createFunc);
+        }
+
+        public Inventory createInventory(@NotNull InventoryHolder holder, @NotNull String title)
+        {
+            return createFunc.createInventory(holder, title);
+        }
+
+        abstract static class InventoryCreateFunc
+        {
+            abstract Inventory createInventory(@NotNull InventoryHolder holder, @NotNull String title);
+        }
+
+        @NotNull
+        public static Type fromInventory(@NotNull Inventory inventory)
+        {
+            switch (inventory.getType())
+            {
+                case CHEST:
+                    switch (inventory.getSize())
+                    {
+                        case 9 * 1:
+                            return Type.Chest1;
+                        case 9 * 2:
+                            return Type.Chest2;
+                        case 9 * 3:
+                            return Type.Chest3;
+                        case 9 * 4:
+                            return Type.Chest4;
+                        case 9 * 5:
+                            return Type.Chest5;
+                        case 9 * 6:
+                            return Type.Chest6;
+                        default:
+                            throw new IllegalArgumentException("Chest inventory has invalid size");
+                    }
+                case DISPENSER:
+                case DROPPER:
+                    return Type.Dispenser;
+                case HOPPER:
+                    return Type.Hopper;
+                default:
+                    throw new IllegalArgumentException("Inventory is not of supported type");
+            }
         }
     }
 
-    public enum CustomInventoryType {
+    protected abstract void onOpen(@NotNull WWPlayer player);
 
-        SIZE_5_HOPPER(InventoryType.HOPPER),
-        SIZE_9_DROPPER(InventoryType.DROPPER),
-        SIZE_9(InventoryType.CHEST),
-        SIZE_18(InventoryType.CHEST),
-        SIZE_27(InventoryType.CHEST),
-        SIZE_36(InventoryType.CHEST),
-        SIZE_45(InventoryType.CHEST),
-        SIZE_54(InventoryType.CHEST);
+    protected abstract void onClose(@NotNull WWPlayer player);
 
-        private InventoryType inventoryType;
+    @NotNull
+    private final List<Player> viewingPlayers = new ArrayList<>();
 
-        CustomInventoryType(InventoryType inventoryType) {
-            this.inventoryType = inventoryType;
+    public boolean hasViewingPlayers()
+    {
+        return !viewingPlayers.isEmpty();
+    }
+
+    public int getViewingPlayerCount()
+    {
+        return viewingPlayers.size();
+    }
+
+    @NotNull
+    public List<Player> getViewingPlayers()
+    {
+        return new ArrayList<>(viewingPlayers);
+    }
+
+    public void open(@NotNull Player player)
+    {
+        if(viewingPlayers.contains(player)) {
+            return;
         }
 
-        public InventoryType getInventoryType() {
-            return inventoryType;
+        if (viewingPlayers.size() == 0)
+            Bukkit.getPluginManager().registerEvents(this, WildWest.getInstance());
+
+        player.openInventory(inv);
+
+        if (!viewingPlayers.contains(player))
+        {
+            viewingPlayers.add(player);
+            onOpen(WWPlayer.getWWPlayer(player));
         }
+    }
+
+    public void close(@NotNull Player player)
+    {
+        InventoryView pInventory = player.getOpenInventory();
+        if (this == pInventory.getTopInventory().getHolder())
+            player.closeInventory();
+    }
+
+    public void closeAll()
+    {
+        for (Player player : new ArrayList<>(viewingPlayers))
+            close(player);
+    }
+
+    protected void removePlayer(@NotNull Player player)
+    {
+        viewingPlayers.remove(player);
+
+        if (viewingPlayers.size() == 0)
+            HandlerList.unregisterAll(this);
+    }
+
+    // Must be public
+    @EventHandler
+    public void onCloseEvent(InventoryCloseEvent event)
+    {
+        if (event.getInventory().getHolder() != this)
+            return;
+        HumanEntity entity = event.getPlayer();
+        if (!(entity instanceof Player))
+            return;
+        Player player = (Player) entity;
+
+        removePlayer(player);
+        onClose(WWPlayer.getWWPlayer(player));
+    }
+
+    // Must be public
+    @EventHandler
+    public void onPlayerQuitEvent(PlayerQuitEvent event)
+    {
+        removePlayer(event.getPlayer());
+    }
+
+    protected void setItemsRange(int startIndex, int length, @NotNull Material material) {
+        Inventory inv = getInventory();
+        for (int i = startIndex; i < startIndex + length && i < getSize(); i++)
+            inv.setItem(i, new ItemStack(material, 1));
+    }
+
+    protected void setItemsRange(int startIndex, int length, ItemStack itemStack) {
+        Inventory inv = getInventory();
+        for (int i = startIndex; i < startIndex + length && i < getSize(); i++)
+            inv.setItem(i, itemStack);
+    }
+
+    protected void setItemsRangeHorizontal(int x, int startIndex, int length, @NotNull Material material) {
+        Inventory inv = getInventory();
+        for (int i = startIndex; i < startIndex + length; i++)
+            inv.setItem(x + (i * getType().columns), new ItemStack(material, 1));
+    }
+
+    protected void setItemsRangeHorizontal(int x, int startIndex, int length, ItemStack itemStack) {
+        Inventory inv = getInventory();
+        for (int i = startIndex; i < startIndex + length; i++)
+            inv.setItem(x + (i * getType().columns), itemStack);
+    }
+
+    protected void setItem(int x, int y, Material material) {
+        setItem(x, y, new ItemStack(material, 1));
+    }
+
+    protected void setItem(int x, int y, ItemStack itemStack) {
+        inv.setItem(x + (y * getType().columns), itemStack);
+    }
+
+    protected void setItemWithOffset(int xOff, int yOff, int index, ItemStack itemStack) {
+        int x = xOff + (index % (getType().columns - xOff * 2));
+        int y = yOff + (index / (getType().rows));
+        inv.setItem(x + (y * getType().columns), itemStack);
+    }
+
+    protected void setItemWithOffset(int xOff, int yOff, int x, int y, ItemStack itemStack) {
+        inv.setItem((x + xOff) + ((y + yOff) * getType().columns), itemStack);
+    }
+
+    @NotNull
+    public static ItemStack getItemOrDefault(@Nullable ItemStack is, @NotNull ItemStack defaultItem) {
+        return (is == null || is.getType() == Material.AIR) ? defaultItem : is;
     }
 }

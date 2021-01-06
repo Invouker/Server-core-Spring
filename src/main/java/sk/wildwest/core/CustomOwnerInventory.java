@@ -20,12 +20,12 @@ public class CustomOwnerInventory extends CustomInventory {
     }
 
     @Override
-    protected void onOpen(WWPlayer player, InventoryOpenEvent event) {
+    protected void onOpen(WWPlayer player) {
 
     }
 
     @Override
-    protected void onClose(WWPlayer player, InventoryCloseEvent event) {
+    protected void onClose(WWPlayer player) {
 
     }
 
