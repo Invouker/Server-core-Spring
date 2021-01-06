@@ -1,6 +1,7 @@
 package sk.wildwest.core;
 
 import org.bukkit.plugin.java.JavaPlugin;
+import sk.wildwest.core.events.AutoEventRegister;
 
 public class WildWest extends JavaPlugin {
 
@@ -12,6 +13,7 @@ public class WildWest extends JavaPlugin {
 
         wildWest = this;
 
+        new AutoEventRegister(); // Creating register for events ( should it work )
     }
 
     @Override
