@@ -1,31 +1,90 @@
 package sk.wildwest.core.inventory;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import sk.wildwest.core.player.WWPlayer;
 
-public abstract class CustomInventory implements InventoryHolder {
+public abstract class CustomInventory implements InventoryHolder, Listener {
 
     private Inventory inventory;
+    private String inventoryName;
 
     public CustomInventory(String inventoryName, CustomInventorySize inventorySize) {
         this.inventory = Bukkit.createInventory(this, inventorySize.getSize(), inventoryName);
+        this.inventoryName = inventoryName;
 
     }
 
     public CustomInventory(String inventoryName, CustomInventoryType inventorySize) {
         this.inventory = Bukkit.createInventory(this, inventorySize.getInventoryType(), inventoryName);
+        this.inventoryName = inventoryName;
     }
 
-    public abstract void onClick(WWPlayer player);
-    public abstract void onOpen();
-    public abstract void onClose();
+    @EventHandler
+    private void onInventoryClickEvent(@NotNull InventoryClickEvent event) {
+        if(event.getInventory() == null)
+            return;
+
+        if(!event.getView().getTitle().equals(inventoryName))
+            return;
+
+        if(!(event.getWhoClicked() instanceof Player))
+            return;
+
+        if(event.getCurrentItem() == null)
+            return;
+
+        onClick(null, event.getSlot(), event.getRawSlot(), event.getCurrentItem(), event);
+
+    }
+
+    @EventHandler
+    private void onInventoryOpen(@NotNull InventoryOpenEvent event) {
+        if(event.getInventory() == null)
+            return;
+
+        if(!event.getView().getTitle().equals(inventoryName))
+            return;
+
+        if(!(event.getPlayer() instanceof Player))
+            return;
+
+        onOpen(null, event);
+
+    }
+
+    @EventHandler
+    private void onInventoryClose(@NotNull InventoryCloseEvent event) {
+        if(event.getInventory() == null)
+            return;
+
+        if(!event.getView().getTitle().equals(inventoryName))
+            return;
+
+        if(!(event.getPlayer() instanceof Player))
+            return;
+
+        onClose(null, event);
+
+    }
+
+    protected abstract void onClick(WWPlayer player, int slot, int rawSlot, ItemStack clickedItem, InventoryClickEvent event);
+    protected abstract void onOpen(WWPlayer player, InventoryOpenEvent event);
+    protected abstract void onClose(WWPlayer player, InventoryCloseEvent event);
 
     @Override
     public Inventory getInventory() {
-        return null;
+        return inventory;
     }
 
     public enum CustomInventorySize {
