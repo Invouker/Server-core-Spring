@@ -6,11 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="WildWest" />
+        <module name="WildLand" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="WildWest" target="14" />
+      <module name="WildLand" target="14" />
     </bytecodeTargetLevel>
   </component>
 </project>
