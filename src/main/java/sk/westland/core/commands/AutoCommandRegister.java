@@ -1,6 +1,5 @@
-package sk.wildwest.core.commands;
+package sk.westland.core.commands;
 
-import javassist.tools.reflect.Reflection;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
@@ -23,7 +22,7 @@ public class AutoCommandRegister {
 
             commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
 
-            Reflections reflections = new Reflections("sk.wildwest.world.commands");
+            Reflections reflections = new Reflections("sk.westland.world.commands");
             Set<Method> methodSet = reflections.getMethodsAnnotatedWith(CommandHandler.class);
 
             for(Method method : methodSet) {

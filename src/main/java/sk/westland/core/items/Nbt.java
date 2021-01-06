@@ -1,4 +1,4 @@
-package sk.wildwest.core.items;
+package sk.westland.core.items;
 
 import net.minecraft.server.v1_16_R2.NBTBase;
 import net.minecraft.server.v1_16_R2.NBTTagCompound;

@@ -1,4 +1,4 @@
-package sk.wildwest.core;
+package sk.westland.core;
 
 import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.chat.ComponentSerializer;
@@ -6,7 +6,7 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.craftbukkit.v1_16_R2.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import sk.wildwest.core.items.Nbt;
+import sk.westland.core.items.Nbt;
 
 public class ComponentBuilder  {
 

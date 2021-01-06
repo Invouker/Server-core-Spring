@@ -1,11 +1,11 @@
-package sk.wildwest.world.inventories;
+package sk.westland.world.inventories;
 
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import sk.wildwest.core.inventory.ItemShopMenu;
-import sk.wildwest.core.player.WWPlayer;
+import sk.westland.core.inventory.ItemShopMenu;
+import sk.westland.core.player.WWPlayer;
 
 public class CustomOwnerInventory extends ItemShopMenu {
 

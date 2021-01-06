@@ -1,4 +1,4 @@
-package sk.wildwest.core.player;
+package sk.westland.core.player;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

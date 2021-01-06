@@ -1,4 +1,4 @@
-package sk.wildwest.core.commands;
+package sk.westland.core.commands;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,10 +1,10 @@
-package sk.wildwest.world.commands;
+package sk.westland.world.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
-import sk.wildwest.core.commands.CommandHandler;
+import sk.westland.core.commands.CommandHandler;
 
 public class HelpCommand implements CommandExecutor {
 

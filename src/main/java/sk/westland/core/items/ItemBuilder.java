@@ -1,4 +1,4 @@
-package sk.wildwest.core.items;
+package sk.westland.core.items;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;

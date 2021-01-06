@@ -1,4 +1,4 @@
-package sk.wildwest.core.inventory;
+package sk.westland.core.inventory;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -7,9 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
@@ -18,8 +16,8 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import sk.wildwest.core.WildWest;
-import sk.wildwest.core.player.WWPlayer;
+import sk.westland.core.WestLand;
+import sk.westland.core.player.WWPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -243,7 +241,7 @@ public abstract class CustomInventory implements InventoryHolder, Listener {
         }
 
         if (viewingPlayers.size() == 0)
-            Bukkit.getPluginManager().registerEvents(this, WildWest.getInstance());
+            Bukkit.getPluginManager().registerEvents(this, WestLand.getInstance());
 
         player.openInventory(inv);
 

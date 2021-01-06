@@ -1,11 +1,10 @@
-package sk.wildwest.core;
+package sk.westland.core;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import sk.wildwest.core.ComponentBuilder;
 
 public enum ChatInfo {
 

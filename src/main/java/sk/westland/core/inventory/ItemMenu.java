@@ -1,4 +1,4 @@
-package sk.wildwest.core.inventory;
+package sk.westland.core.inventory;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -10,7 +10,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import sk.wildwest.core.player.WWPlayer;
+import sk.westland.core.player.WWPlayer;
 
 import java.util.Objects;
 

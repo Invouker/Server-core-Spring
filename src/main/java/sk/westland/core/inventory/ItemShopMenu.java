@@ -1,5 +1,5 @@
 
-package sk.wildwest.core.inventory;
+package sk.westland.core.inventory;
 
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.tuple.ImmutableTriple;
@@ -11,9 +11,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import sk.wildwest.core.ChatInfo;
-import sk.wildwest.core.items.ItemBuilder;
-import sk.wildwest.core.items.Nbt;
+import sk.westland.core.ChatInfo;
+import sk.westland.core.items.ItemBuilder;
+import sk.westland.core.items.Nbt;
 
 import java.util.HashMap;
 import java.util.Map;
