@@ -1,22 +1,29 @@
 
 package sk.wildwest.core.inventory;
 
+import org.bukkit.Material;
+import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.tuple.ImmutableTriple;
+import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.tuple.Triple;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import sk.wildwest.core.ChatInfo;
+import sk.wildwest.core.items.ItemBuilder;
+import sk.wildwest.core.items.Nbt;
 
-public abstract class ItemShopMenu extends ItemMenu
-{
-    public ItemShopMenu(@NotNull Type type, @NotNull BaseComponent title)
-    {
+import java.util.HashMap;
+import java.util.Map;
+
+public abstract class ItemShopMenu extends ItemMenu {
+
+    public ItemShopMenu(Type type, String title) {
         super(type, title);
 
         items = new ItemStack[type.size];
-    }
-
-    @Deprecated
-    public ItemShopMenu(@NotNull Type type, @NotNull String title)
-    {
-        this(type, ComponentBuilder.legacy(title).build());
     }
 
     public void updateInventory() {
@@ -27,8 +34,7 @@ public abstract class ItemShopMenu extends ItemMenu
             inventory.setItem(i++, is);
     }
 
-    @Override
-    protected void onClick(@NotNull Player player, int slot, @Nullable ItemStack item, @Nullable ItemStack cursor, @NotNull InventoryClickEvent event) {
+    protected void onClick(Player player, int slot, ItemStack item, ItemStack cursor, InventoryClickEvent event) {
         if(item == null || item.getType() == Material.AIR)
             return;
 
@@ -55,22 +61,17 @@ public abstract class ItemShopMenu extends ItemMenu
             // Send info message
             ChatInfo.SUCCESS.send(
                     player,
-                    ComponentBuilder.translate(
+                    "Úspešne si kúpil " + item + ", za " + itemPrice
+                    /*ComponentBuilder.translate(
                             "shop.buy.ok",
                             ComponentBuilder.item(item).build(),
                             ComponentBuilder.text(itemPrice + "").build(),
                             PriceHelper.getMoneyComponent(moneyType)
-                    ).build()
+                    ).build()*/
             );
         }
         else
-            ChatInfo.WARNING.send(
-                    player,
-                    ComponentBuilder.translate(
-                            "shop.buy.no_money",
-                            PriceHelper.getMoneyComponent(moneyType)
-                    ).build()
-            );
+            ChatInfo.WARNING.send(player, "Nemáš dostatok penazí!");
     }
 
     public static boolean canPay(Player player, Material material, int amount)
@@ -154,27 +155,20 @@ public abstract class ItemShopMenu extends ItemMenu
 
     protected int addItem(@NotNull ItemStack is, @NotNull Material moneyType, int price) {
         ItemStack isDisplay = new ItemBuilder(is.clone())
-                .addLore(PriceHelper.getPriceComponent(moneyType, price))
+                .addLore("Cena: " + price)
                 .build();
         return addItem(isDisplay, is, moneyType, price);
     }
 
     protected void setItem(int index, @NotNull ItemStack is, @NotNull Material moneyType, int price) {
         ItemStack isDisplay = new ItemBuilder(is)
-                .addLore(PriceHelper.getPriceComponent(moneyType, price))
+                .addLore("Cena: " + price)
                 .build();
         setItem(index, isDisplay, is, moneyType, price);
     }
 
-    @Override
     protected void onOpen(@NotNull Player player)
     {
         updateInventory();
-    }
-
-    @Override
-    protected void onClose(@NotNull Player player)
-    {
-
     }
 }

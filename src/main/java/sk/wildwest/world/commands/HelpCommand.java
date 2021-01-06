@@ -9,7 +9,7 @@ import sk.wildwest.core.commands.CommandHandler;
 public class HelpCommand implements CommandExecutor {
 
     @Override
-    @CommandHandler(commandName="test")
+    @CommandHandler(commandName="test", description = "idk what", aliases =  "test")
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
 
         if(command.getName().equals("test")) {
