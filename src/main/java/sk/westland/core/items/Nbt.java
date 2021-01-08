@@ -1,10 +1,10 @@
 package sk.westland.core.items;
 
-import net.minecraft.server.v1_16_R2.NBTBase;
-import net.minecraft.server.v1_16_R2.NBTTagCompound;
-import net.minecraft.server.v1_16_R2.NBTTagList;
-import net.minecraft.server.v1_16_R2.NBTTagString;
-import org.bukkit.craftbukkit.v1_16_R2.inventory.CraftItemStack;
+import net.minecraft.server.v1_16_R3.NBTBase;
+import net.minecraft.server.v1_16_R3.NBTTagCompound;
+import net.minecraft.server.v1_16_R3.NBTTagList;
+import net.minecraft.server.v1_16_R3.NBTTagString;
+import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -139,7 +139,7 @@ public class Nbt
 
     public static ItemStack setNbt_Bool(@NotNull ItemStack is, @NotNull String key, boolean value)
     {
-        net.minecraft.server.v1_16_R2.ItemStack nms = CraftItemStack.asNMSCopy(is);
+        net.minecraft.server.v1_16_R3.ItemStack nms = CraftItemStack.asNMSCopy(is);
         {
             NBTTagCompound compound = nms.getTag();
             if (compound == null)
@@ -154,7 +154,7 @@ public class Nbt
 
     public static ItemStack setNbt_Int(@NotNull ItemStack is, @NotNull String key, int value)
     {
-        net.minecraft.server.v1_16_R2.ItemStack nms = CraftItemStack.asNMSCopy(is);
+        net.minecraft.server.v1_16_R3.ItemStack nms = CraftItemStack.asNMSCopy(is);
         {
             NBTTagCompound compound = nms.getTag();
             if (compound == null)
@@ -169,7 +169,7 @@ public class Nbt
 
     public static ItemStack setNbt_Long(@NotNull ItemStack is, @NotNull String key, long value)
     {
-        net.minecraft.server.v1_16_R2.ItemStack nms = CraftItemStack.asNMSCopy(is);
+        net.minecraft.server.v1_16_R3.ItemStack nms = CraftItemStack.asNMSCopy(is);
         {
             NBTTagCompound compound = nms.getTag();
             if (compound == null)
@@ -184,7 +184,7 @@ public class Nbt
 
     public static ItemStack setNbt_String(@NotNull ItemStack is, @NotNull String key, String value)
     {
-        net.minecraft.server.v1_16_R2.ItemStack nms = CraftItemStack.asNMSCopy(is);
+        net.minecraft.server.v1_16_R3.ItemStack nms = CraftItemStack.asNMSCopy(is);
         {
             NBTTagCompound compound = nms.getTag();
             if (compound == null)
@@ -199,7 +199,7 @@ public class Nbt
 
     public static ItemStack setNbt_IntArray(@NotNull ItemStack is, @NotNull String key, @NotNull int[] value)
     {
-        net.minecraft.server.v1_16_R2.ItemStack nms = CraftItemStack.asNMSCopy(is);
+        net.minecraft.server.v1_16_R3.ItemStack nms = CraftItemStack.asNMSCopy(is);
         {
             NBTTagCompound compound = nms.getTag();
             if (compound == null)
@@ -214,7 +214,7 @@ public class Nbt
 
     public static ItemStack setNbt_StringArray(@NotNull ItemStack is, @NotNull String key, @NotNull String[] value)
     {
-        net.minecraft.server.v1_16_R2.ItemStack nms = CraftItemStack.asNMSCopy(is);
+        net.minecraft.server.v1_16_R3.ItemStack nms = CraftItemStack.asNMSCopy(is);
         {
             NBTTagCompound compound = nms.getTag();
             if (compound == null)
@@ -343,7 +343,7 @@ public class Nbt
 
     public static boolean getNbt_Bool(@NotNull ItemStack is, @NotNull String key, boolean default_)
     {
-        net.minecraft.server.v1_16_R2.ItemStack nms = CraftItemStack.asNMSCopy(is);
+        net.minecraft.server.v1_16_R3.ItemStack nms = CraftItemStack.asNMSCopy(is);
         {
             NBTTagCompound compound = nms.getTag();
             if (compound != null)
@@ -355,7 +355,7 @@ public class Nbt
 
     public static int getNbt_Int(@NotNull ItemStack is, @NotNull String key, int default_)
     {
-        net.minecraft.server.v1_16_R2.ItemStack nms = CraftItemStack.asNMSCopy(is);
+        net.minecraft.server.v1_16_R3.ItemStack nms = CraftItemStack.asNMSCopy(is);
         {
             NBTTagCompound compound = nms.getTag();
             if (compound != null)
@@ -367,7 +367,7 @@ public class Nbt
 
     public static long getNbt_Long(@NotNull ItemStack is, @NotNull String key, long default_)
     {
-        net.minecraft.server.v1_16_R2.ItemStack nms = CraftItemStack.asNMSCopy(is);
+        net.minecraft.server.v1_16_R3.ItemStack nms = CraftItemStack.asNMSCopy(is);
         {
             NBTTagCompound compound = nms.getTag();
             if (compound != null)
@@ -384,7 +384,7 @@ public class Nbt
 
     public static String getNbt_String(@NotNull ItemStack is, @NotNull String key, String default_)
     {
-        net.minecraft.server.v1_16_R2.ItemStack nms = CraftItemStack.asNMSCopy(is);
+        net.minecraft.server.v1_16_R3.ItemStack nms = CraftItemStack.asNMSCopy(is);
         {
             NBTTagCompound compound = nms.getTag();
             if (compound != null)
@@ -401,7 +401,7 @@ public class Nbt
 
     public static int[] getNbt_IntArray(@NotNull ItemStack is, @NotNull String key, int[] default_)
     {
-        net.minecraft.server.v1_16_R2.ItemStack nms = CraftItemStack.asNMSCopy(is);
+        net.minecraft.server.v1_16_R3.ItemStack nms = CraftItemStack.asNMSCopy(is);
         {
             NBTTagCompound compound = nms.getTag();
             if (compound != null)
@@ -418,7 +418,7 @@ public class Nbt
 
     public static String[] getNbt_StringArray(@NotNull ItemStack is, @NotNull String key, String[] default_)
     {
-        net.minecraft.server.v1_16_R2.ItemStack nms = CraftItemStack.asNMSCopy(is);
+        net.minecraft.server.v1_16_R3.ItemStack nms = CraftItemStack.asNMSCopy(is);
         {
             NBTTagCompound compound = nms.getTag();
             if (compound != null)

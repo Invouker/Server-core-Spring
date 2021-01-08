@@ -3,7 +3,7 @@ package sk.westland.core;
 import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.chat.ComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.craftbukkit.v1_16_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import sk.westland.core.items.Nbt;
@@ -49,7 +49,7 @@ public class ComponentBuilder  {
 
 
     public static String convertItemStackToJson(ItemStack itemStack) {
-        net.minecraft.server.v1_16_R2.ItemStack nms = CraftItemStack.asNMSCopy(itemStack);
+        net.minecraft.server.v1_16_R3.ItemStack nms = CraftItemStack.asNMSCopy(itemStack);
         return "{ \"id\":\"" + itemStack.getType().getKey().toString() + "\" \"tag\":" + (nms.getTag() == null ? "{}" : nms.getTag().asString()) + "}";
     }
 

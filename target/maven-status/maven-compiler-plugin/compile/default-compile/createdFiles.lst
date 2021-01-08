@@ -3,15 +3,12 @@ sk\westland\core\ComponentBuilder.class
 sk\westland\core\services\ServerService.class
 sk\westland\core\inventory\CustomInventory$Type$InventoryCreateFunc.class
 sk\westland\core\inventory\CustomInventory$Type.class
-sk\westland\core\commands\AutoCommandRegister.class
 sk\westland\core\inventory\CustomInventory$Type$7.class
-sk\westland\core\events\AutoEventRegister.class
 sk\westland\core\inventory\CustomInventory$Type$2.class
 sk\westland\core\inventory\CustomInventory.class
 sk\westland\core\ChatInfo.class
 sk\westland\core\inventory\ItemMenu.class
 sk\westland\core\inventory\CustomInventory$Type$6.class
-sk\westland\core\commands\CommandHandler.class
 sk\westland\core\items\Nbt.class
 sk\westland\core\application\Application.class
 sk\westland\core\items\ItemBuilder.class
@@ -21,6 +18,7 @@ sk\westland\core\inventory\CustomInventory$Type$3.class
 sk\westland\core\inventory\CustomInventory$Type$1.class
 sk\westland\core\inventory\ItemMenu$1.class
 sk\westland\core\WestLand$1.class
+sk\westland\world\events\ServerEvent.class
 sk\westland\core\WestLand.class
 sk\westland\core\inventory\CustomInventory$Type$5.class
 sk\westland\core\player\WWPlayer.class
