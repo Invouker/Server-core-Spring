@@ -1,21 +1,26 @@
 package sk.westland.world.commands;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
-import sk.westland.core.commands.CommandHandler;
 
-public class HelpCommand implements CommandExecutor {
+import dev.alangomes.springspigot.context.Context;
+import dev.alangomes.springspigot.security.HasPermission;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import picocli.CommandLine;
+import sk.westland.core.services.ServerService;
+
+@Component
+@CommandLine.Command(name = "playerinfo")
+@HasPermission("playerinfo")
+public class HelpCommand implements Runnable {
+
+    @Autowired
+    private ServerService serverService;
+
+    @Autowired
+    private Context context;
 
     @Override
-    @CommandHandler(commandName="test", description = "idk what", aliases =  "test")
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-
-        if(command.getName().equals("test")) {
-            commandSender.sendMessage("lulw, funguje??");
-        }
-
-        return false;
+    public void run() {
+       context.getSender().sendMessage("Sending a message?" + serverService.getName());
     }
 }
