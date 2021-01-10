@@ -11,6 +11,8 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
+import sk.westland.core.event.PluginDisableEvent;
+import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.services.PlayerService;
 
 import java.io.IOException;
@@ -71,9 +73,10 @@ public class WestLand extends JavaPlugin {
 
         application.setDefaultProperties(properties);
 
+        Bukkit.getPluginManager().callEvent(new PluginEnableEvent(this));
+
         if(Bukkit.getOnlinePlayers().size() > 0)
         Bukkit.getOnlinePlayers().forEach((player ->  {
-
             playerService.loadUser(player);
         }));
     }
@@ -86,6 +89,8 @@ public class WestLand extends JavaPlugin {
         Bukkit.getOnlinePlayers().forEach((player ->  {
             playerService.saveAndUnloadUser(player);
         }));
+
+        Bukkit.getPluginManager().callEvent(new PluginDisableEvent(this));
 
         Thread.currentThread().setContextClassLoader(defaultClassLoader);
 
