@@ -1,13 +1,17 @@
 package sk.westland.core;
 
 import dev.alangomes.springspigot.SpringSpigotInitializer;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
-import sk.westland.core.application.Application;
+import org.springframework.stereotype.Component;
+import sk.westland.core.services.PlayerService;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -20,13 +24,19 @@ public class WestLand extends JavaPlugin {
     private ConfigurableApplicationContext context;
     private ClassLoader defaultClassLoader;
 
+    @Autowired
+
+    private PlayerService playerService;
+
     @Override
     public void onEnable() {
         super.onEnable();
 
         westLand = this;
 
-        System.out.println("Loading Spring framework...");
+        Bukkit.getConsoleSender().sendMessage("§a");
+        Bukkit.getConsoleSender().sendMessage("§aLoading Spring framework...");
+
         saveDefaultConfig();
 
         defaultClassLoader = Thread.currentThread().getContextClassLoader();
@@ -53,16 +63,29 @@ public class WestLand extends JavaPlugin {
 
         this.context = application.run();
 
-        System.out.println("Spring framework loaded.");
+        Bukkit.getConsoleSender().sendMessage("§a");
+        Bukkit.getConsoleSender().sendMessage("§aSpring framework successfully started!");
+        Bukkit.getConsoleSender().sendMessage("§a");
 
         setupDatabase(properties);
 
         application.setDefaultProperties(properties);
+
+        if(Bukkit.getOnlinePlayers().size() > 0)
+        Bukkit.getOnlinePlayers().forEach((player ->  {
+
+            playerService.loadUser(player);
+        }));
     }
 
     @Override
     public void onDisable() {
         super.onDisable();
+
+        if(Bukkit.getOnlinePlayers().size() > 0)
+        Bukkit.getOnlinePlayers().forEach((player ->  {
+            playerService.saveAndUnloadUser(player);
+        }));
 
         Thread.currentThread().setContextClassLoader(defaultClassLoader);
 

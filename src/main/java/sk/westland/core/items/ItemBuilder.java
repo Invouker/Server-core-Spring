@@ -332,7 +332,6 @@ public class ItemBuilder
      * @param lore The lore to set it to.
      */
     @NotNull
-    @Deprecated
     public ItemBuilder setLore(@Nullable List<String> lore)
     {
         ItemMeta im = is.getItemMeta();
@@ -350,7 +349,6 @@ public class ItemBuilder
      * @param lore The lore to set it to.
      */
     @NotNull
-    @Deprecated
     public ItemBuilder setLore(@NotNull String... lore)
     {
         return setLore(Arrays.asList(lore));
@@ -362,7 +360,6 @@ public class ItemBuilder
      * @param name The name to change it to.
      */
     @NotNull
-    @Deprecated
     public ItemBuilder setName(@Nullable String name)
     {
         ItemMeta im = is.getItemMeta();

@@ -2,9 +2,13 @@ package sk.westland.core;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import sk.westland.core.player.WLPlayer;
+
+import java.util.logging.Level;
 
 public enum ChatInfo {
 
@@ -12,7 +16,8 @@ public enum ChatInfo {
         UNAVAILABLE("§8§l> §7", ComponentBuilder.text("> ").bold(true).color(ChatColor.DARK_GRAY).build(), ChatColor.GRAY),
         SUCCESS("§2§l[#] §a", ComponentBuilder.text("[#] ").bold(true).color(ChatColor.DARK_GREEN).build(), ChatColor.GREEN),
         WARNING("§c§l[!] §e", ComponentBuilder.text("[!] ").bold(true).color(ChatColor.RED).build(), ChatColor.YELLOW),
-        ERROR("§4§l[!!] §c", ComponentBuilder.text("[!!] ").bold(true).color(ChatColor.DARK_RED).build(), ChatColor.RED);
+        ERROR("§4§l[!!] §c", ComponentBuilder.text("[!!] ").bold(true).color(ChatColor.DARK_RED).build(), ChatColor.RED),
+        COMMAND_HELPER(ChatColor.of("#FF04AA") +"§l~~ ", ComponentBuilder.text("§l ").bold(true).color(ChatColor.of("#FF04AA")).build(), ChatColor.of("#FF04AA"));
 
     private String prefix;
     private BaseComponent component;
@@ -58,6 +63,18 @@ public enum ChatInfo {
 
     public void send(Player player, String message) {
         player.sendMessage(prefix + message);
+    }
+
+    public void send(WLPlayer player, String message) {
+        player.getPlayer().sendMessage(prefix + message);
+    }
+
+    public void sendCommandHelper(WLPlayer wlPlayer, String baseCommand, String... commands) {
+        wlPlayer.sendMessage(prefix + " Command Helper " + prefix);
+        for (String command : commands) {
+            wlPlayer.sendMessage("§l/" +baseCommand + " " + command);
+        }
+        wlPlayer.sendMessage("§a");
     }
 
     public void send(CommandSender sender, String message) {

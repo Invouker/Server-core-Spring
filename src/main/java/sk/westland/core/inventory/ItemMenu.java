@@ -10,7 +10,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import sk.westland.core.player.WWPlayer;
+import sk.westland.core.player.WLPlayer;
 
 import java.util.Objects;
 
@@ -24,7 +24,7 @@ public abstract class ItemMenu extends CustomInventory {
         super(inventory, title);
     }
 
-    protected abstract void onClick(@NotNull WWPlayer player, int slot, @Nullable ItemStack item, @Nullable ItemStack cursor, @NotNull InventoryClickEvent event);
+    protected abstract void onClick(@NotNull Player player, int slot, @Nullable ItemStack item, @Nullable ItemStack cursor, @NotNull InventoryClickEvent event);
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event)
     {
@@ -55,7 +55,11 @@ public abstract class ItemMenu extends CustomInventory {
         ItemStack cursor = event.getCursor();
         if (cursor == null || cursor.getType() == Material.AIR)
             cursor = null;
-        onClick(WWPlayer.getWWPlayer(player), event.getSlot(), clickedItem, cursor, event);
+
+        if(clickedItem == null)
+            return;
+
+        onClick(player, event.getSlot(), clickedItem, cursor, event);
 
         /*
         if (cursor == null || cursor.getType() == Material.AIR)

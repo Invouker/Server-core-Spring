@@ -17,12 +17,13 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import sk.westland.core.WestLand;
-import sk.westland.core.player.WWPlayer;
+import sk.westland.core.player.WLPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class CustomInventory implements InventoryHolder, Listener {
+
 
     /**
      * Crete new empty inventory.
@@ -211,9 +212,9 @@ public abstract class CustomInventory implements InventoryHolder, Listener {
         }
     }
 
-    protected abstract void onOpen(@NotNull WWPlayer player);
+    protected abstract void onOpen(@NotNull Player player);
 
-    protected abstract void onClose(@NotNull WWPlayer player);
+    protected abstract void onClose(@NotNull Player player);
 
     @NotNull
     private final List<Player> viewingPlayers = new ArrayList<>();
@@ -248,7 +249,7 @@ public abstract class CustomInventory implements InventoryHolder, Listener {
         if (!viewingPlayers.contains(player))
         {
             viewingPlayers.add(player);
-            onOpen(WWPlayer.getWWPlayer(player));
+            onOpen(player);
         }
     }
 
@@ -285,7 +286,7 @@ public abstract class CustomInventory implements InventoryHolder, Listener {
         Player player = (Player) entity;
 
         removePlayer(player);
-        onClose(WWPlayer.getWWPlayer(player));
+        onClose(player);
     }
 
     // Must be public
