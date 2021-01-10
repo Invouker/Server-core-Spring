@@ -43,7 +43,7 @@ public class PlayerDataStorageService implements Listener {
         }
 
         if(!userRepository.findByUuid(uuid.toString()).isPresent()) {
-            UserData userData = new UserData(player.getName(), player.getUniqueId().toString(), 0);
+            UserData userData = new UserData(player.getName(), player.getUniqueId().toString(), 0, -1, -1);
             userMap.put(player, userData);
             Bukkit.getConsoleSender().sendMessage("Registring new user " + player.getName() + " to database!");
             return userData;

@@ -253,6 +253,10 @@ public abstract class CustomInventory implements InventoryHolder, Listener {
         }
     }
 
+    public void close(WLPlayer wlPlayer) {
+        this.close(wlPlayer.getPlayer());
+    }
+
     public void close(@NotNull Player player)
     {
         InventoryView pInventory = player.getOpenInventory();
@@ -294,6 +298,10 @@ public abstract class CustomInventory implements InventoryHolder, Listener {
     public void onPlayerQuitEvent(PlayerQuitEvent event)
     {
         removePlayer(event.getPlayer());
+    }
+
+    protected void addItem(ItemStack... itemStacks) {
+        this.getInventory().addItem(itemStacks);
     }
 
     protected void setItemsRange(int startIndex, int length, @NotNull Material material) {

@@ -613,6 +613,11 @@ public class ItemBuilder
         return this;
     }
 
+    public ItemBuilder setMaterial(Material material) {
+        is.setType(material);
+        return this;
+    }
+
     public static int getModelId(@NotNull ItemStack is)
     {
         return Nbt.getNbt_Int(is, "CustomModelData", 0);

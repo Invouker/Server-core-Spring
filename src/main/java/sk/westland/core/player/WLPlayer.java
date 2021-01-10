@@ -13,21 +13,19 @@ import java.util.logging.Level;
 
 public class WLPlayer  {
 
-    private WLPlayer WLPlayer;
     private Player player;
     private UserData userData;
 
     public WLPlayer(Player player, UserData userData) {
         this.player = player;
         this.userData = userData;
-
-        if(userData == null)
-            Bukkit.getLogger().log(Level.WARNING, "UserData == null");
     }
 
     public Player getPlayer() {
         return player;
     }
+
+    // METHOD OVERRIDING
 
     public void addItemToInventory(ItemStack... itemStack) {
         player.getInventory().addItem(itemStack);
@@ -45,19 +43,43 @@ public class WLPlayer  {
         this.userData = userData;
     }
 
+    public void sendMessage(String message) {
+        player.sendMessage(message);
+    }
+
+    public String getName() {
+        return player.getName();
+    }
+
+    public boolean hasPermission(String permission) { return player.hasPermission(permission); }
+
+    ///////////////
+
+    // USER DATA
+
     public double getCoin() {
-        if(userData == null)
-            throw new NullPointerException("Userdata is not loaded!");
         return userData.getCoin();
     }
 
     public void setCoin(double coins) {
-        if(userData == null)
-            throw new NullPointerException("Userdata is not loaded!");
         userData.setCoin(coins);
     }
 
-    public void sendMessage(String message) {
-        player.sendMessage(message);
+    public int getActiveJoinMessage() {
+        return userData.getActiveJoinMessage();
     }
+
+    public void setActiveJoinMessage(int activeJoinMessage) {
+        userData.setActiveJoinMessage(activeJoinMessage);
+    }
+
+    public int getActiveQuitMessage() {
+        return userData.getActiveQuitMessage();
+    }
+
+    public void setActiveQuitMessage(int activeQuitMessage) {
+        userData.setActiveQuitMessage(activeQuitMessage);
+    }
+
+    //////////////
 }
