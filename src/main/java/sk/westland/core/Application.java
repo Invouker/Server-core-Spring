@@ -3,6 +3,8 @@ package sk.westland.core;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import sk.westland.core.services.MessageService;
+import sk.westland.core.services.PermissionService;
 import sk.westland.core.services.PlayerDataStorageService;
 import sk.westland.core.services.PlayerService;
 
@@ -17,5 +19,11 @@ public class Application {
 
     @Bean
     public PlayerDataStorageService playerDataStorageService() { return new PlayerDataStorageService(); }
+
+    @Bean
+    public MessageService messageService() { return new MessageService(); }
+
+    @Bean
+    public PermissionService permissionService() { return new PermissionService(); }
 
 }

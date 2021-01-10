@@ -15,18 +15,39 @@ public class UserData {
 
     private String uuid;
 
-    private double coin;
+    private double coin = 0;
+
+    private int activeJoinMessage = -1;
+    private int activeQuitMessage = -1;
 
     public UserData() { }
 
-    public UserData(String name, String uuid, double coin) {
+    public UserData(String name, String uuid, double coin, int activeJoinMessage, int activeQuitMessage) {
         this.name = name;
         this.uuid = uuid;
         this.coin = coin;
+        this.activeJoinMessage = activeJoinMessage;
+        this.activeQuitMessage = activeQuitMessage;
     }
 
     public long getId() {
         return id;
+    }
+
+    public int getActiveJoinMessage() {
+        return activeJoinMessage;
+    }
+
+    public void setActiveJoinMessage(int activeJoinMessage) {
+        this.activeJoinMessage = activeJoinMessage;
+    }
+
+    public int getActiveQuitMessage() {
+        return activeQuitMessage;
+    }
+
+    public void setActiveQuitMessage(int activeQuitMessage) {
+        this.activeQuitMessage = activeQuitMessage;
     }
 
     public void setId(long id) {

@@ -13,21 +13,32 @@ import sk.westland.core.player.WLPlayer;
 
 public class TestInventory extends ItemMenu {
 
+    private ItemStack item = new ItemBuilder(Material.STICK).setName("§b ")
+            .setLore("Pičo", "Aj tak", " si kokot", "a nič ti nepomôže").build();
+
+    private static int ID = 0;
 
     public TestInventory() {
         super(Type.Chest4, "test");
 
-        this.getInventory().addItem(new ItemBuilder(Material.STICK).setName("§bEaglove Dildo").setLore("Pičo", "Aj tak", " si kokot", "a nič ti nepomôže").build());
+        this.getInventory().setItem(5, new ItemBuilder(item).setName("Close inventory").build());
+        this.getInventory().setItem(0, new ItemBuilder(item).setName("§bEaglove Dildo " + ID).build());
+    }
+
+    private void updateInventory() {
+
     }
 
     @Override
     protected void onClick(@NotNull Player player, int slot, @Nullable ItemStack item, @Nullable ItemStack cursor, @NotNull InventoryClickEvent event) {
-        System.out.println("Clicking on: " + item.toString() + " playerName: " + player.getName());
-
         if(slot == 0) {
             event.setCancelled(true);
 
-            System.out.println("Si len piča!!");
+            this.getInventory().setItem(0, new ItemBuilder(item).setName("§bEaglove Dildo " + ID).build());
+            ID++;
+        }
+
+        if(slot == 5) {
             close(player);
         }
     }

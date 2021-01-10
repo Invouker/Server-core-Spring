@@ -3,6 +3,7 @@ sk\westland\core\ComponentBuilder.class
 sk\westland\world\commands\CoinCommands$SetCoin.class
 sk\westland\core\inventory\CustomInventory$Type$InventoryCreateFunc.class
 sk\westland\core\inventory\CustomInventory$Type.class
+sk\westland\core\inventory\CustomOwnerInventory.class
 sk\westland\core\inventory\CustomInventory$Type$7.class
 sk\westland\core\inventory\CustomInventory$Type$2.class
 sk\westland\core\inventory\CustomInventory.class
@@ -18,6 +19,7 @@ sk\westland\core\inventory\CustomInventory$1.class
 sk\westland\core\database\player\UserData.class
 sk\westland\core\inventory\CustomInventory$Type$4.class
 sk\westland\core\Application.class
+sk\westland\world\inventories\ChangeJoinMessageInventory.class
 sk\westland\core\inventory\CustomInventory$Type$3.class
 sk\westland\core\inventory\CustomInventory$Type$1.class
 sk\westland\core\inventory\ItemMenu$1.class
@@ -28,8 +30,12 @@ sk\westland\world\events\ServerEvent.class
 sk\westland\core\WestLand.class
 sk\westland\core\inventory\CustomInventory$Type$5.class
 sk\westland\core\database\player\UserRepository.class
+sk\westland\core\services\MessageService$QuitMessage.class
 sk\westland\core\services\PlayerService.class
 sk\westland\world\commands\TestCommand.class
 sk\westland\core\inventory\CustomInventory$Type$8.class
+sk\westland\core\services\MessageService.class
 sk\westland\world\commands\CoinCommands$SetCoins.class
+sk\westland\world\inventories\ChangeQuitMessage.class
+sk\westland\core\services\MessageService$JoinMessage.class
 sk\westland\world\inventories\TestInventory.class
