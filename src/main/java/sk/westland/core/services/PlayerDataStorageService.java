@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sk.westland.core.WestLand;
 import sk.westland.core.database.player.UserData;
+import sk.westland.core.database.player.UserOption;
+import sk.westland.core.database.player.UserOptionRepository;
 import sk.westland.core.database.player.UserRepository;
 
 import java.util.HashMap;
@@ -17,7 +19,7 @@ import java.util.UUID;
 @Service
 public class PlayerDataStorageService implements Listener {
 
-    private static Map<Player, UserData> userMap = new HashMap<>();
+    private static Map<Player, Data> userMap = new HashMap<>();
 
     public PlayerDataStorageService() {
         Bukkit.getScheduler().runTaskTimerAsynchronously(WestLand.getInstance(), () -> {
@@ -28,31 +30,38 @@ public class PlayerDataStorageService implements Listener {
     @Autowired
     private UserRepository userRepository;
 
-    public UserData load(Player player) {
+    @Autowired
+    private UserOptionRepository userOptionRepository;
+
+    public Data load(Player player) {
         UUID uuid = player.getUniqueId();
         if(isUserLoaded(player))
             return userMap.get(player);
 
         if(isUserRegistered(player)) {
             Optional<UserData> userData = userRepository.findByUuid(uuid.toString());
-            if(userData.isPresent()) {
-                userMap.put(player, userData.get());
+            Optional<UserOption> userOption = userOptionRepository.findByUuid(uuid.toString());
+            if(userData.isPresent() && userOption.isPresent()) {
+                Data data = new Data(userData.get(), userOption.get());
+                userMap.put(player, data);
                 Bukkit.getConsoleSender().sendMessage("Loading player from database!");
-                return userData.get();
+                return data;
             }
         }
 
         if(!userRepository.findByUuid(uuid.toString()).isPresent()) {
-            UserData userData = new UserData(player.getName(), player.getUniqueId().toString(), 0, -1, -1);
-            userMap.put(player, userData);
+            UserData userData = new UserData(player.getName(), player.getUniqueId().toString(), 0, 1, 0, -1, -1);
+            UserOption userOption = new UserOption(player.getName(), player.getUniqueId().toString(), true, false, true);
+            Data data = new Data(userData, userOption);
+            userMap.put(player, data);
             Bukkit.getConsoleSender().sendMessage("Registring new user " + player.getName() + " to database!");
-            return userData;
+            return data;
         }
         return null;
     }
 
-    public UserData save(Player player) {
-        if(userRepository == null)
+    public void save(Player player) {
+        if(userRepository == null || userOptionRepository == null)
             throw new NullPointerException("userRepository == null");
 
         if(player == null)
@@ -61,10 +70,11 @@ public class PlayerDataStorageService implements Listener {
         if(this.getUser(player) == null)
             load(player);
 
-        return this.userRepository.save(this.getUser(player));
+        this.userRepository.save(this.getUser(player).getUserData());
+        this.userOptionRepository.save(this.getUser(player).getUserOption());
     }
 
-    public UserData getUser(Player player) {
+    public Data getUser(Player player) {
         return this.userMap.getOrDefault(player, null);
     }
 
@@ -81,7 +91,41 @@ public class PlayerDataStorageService implements Listener {
     }
 
     public void saveAllUsers() {
-        this.userRepository.saveAll(userMap.values());
+        for(PlayerDataStorageService.Data data : userMap.values()) {
+            this.userRepository.save(data.getUserData());
+        }
+
+        for(PlayerDataStorageService.Data data : userMap.values()) {
+            this.userOptionRepository.save(data.getUserOption());
+        }
     }
+
+    public class Data {
+
+        private UserData userData;
+        private UserOption userOption;
+
+        public Data(UserData userData, UserOption userOption) {
+            this.userData = userData;
+            this.userOption = userOption;
+        }
+
+        public UserData getUserData() {
+            return userData;
+        }
+
+        public void setUserData(UserData userData) {
+            this.userData = userData;
+        }
+
+        public UserOption getUserOption() {
+            return userOption;
+        }
+
+        public void setUserOption(UserOption userOption) {
+            this.userOption = userOption;
+        }
+    }
+
 
 }

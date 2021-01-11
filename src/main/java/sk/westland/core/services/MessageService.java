@@ -6,11 +6,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sk.westland.core.event.player.WLPlayerJoinEvent;
+import sk.westland.core.event.player.WLPlayerQuitEvent;
 import sk.westland.core.player.WLPlayer;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class MessageService implements Listener {
@@ -22,7 +26,7 @@ public class MessageService implements Listener {
     private PermissionService permissionService;
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    private void onPlayerQuitEvent(PlayerQuitEvent event) {
+    private void onPlayerQuitEvent(WLPlayerQuitEvent event) {
         Player player = event.getPlayer();
         WLPlayer wlPlayer = playerService.getWLPlayer(player);
 
@@ -32,18 +36,17 @@ public class MessageService implements Listener {
         if(!wlPlayer.hasPermission("westland.message.quit"))
             return;
 
-        event.setQuitMessage(null);
         String activeQuitMessage = QuitMessage.values()[wlPlayer.getActiveQuitMessage()].formattedJoinMessage();
         String quitMessage = activeQuitMessage.replace("%player%", player.getName());
-        Bukkit.broadcast(quitMessage, "westland.option.message.quit");
+
+        sendMessage(getListOfActiveMessage(true), quitMessage);
+        //Bukkit.broadcast(quitMessage, "westland.option.message.quit");
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    private void onPlayerJoin(PlayerJoinEvent event) {
+    private void onPlayerJoin(WLPlayerJoinEvent event) {
         Player player = event.getPlayer();
         WLPlayer wlPlayer = playerService.getWLPlayer(player);
-
-
 
         if(wlPlayer.getActiveJoinMessage() <= 0)
             return;
@@ -51,10 +54,28 @@ public class MessageService implements Listener {
         if(!wlPlayer.hasPermission("westland.message.quit"))
             return;
 
-        event.setJoinMessage(null);
         String activeJoinMessage = JoinMessage.values()[wlPlayer.getActiveJoinMessage()].formattedJoinMessage();
         String joinMessage = activeJoinMessage.replace("%player%", player.getName());
-        Bukkit.broadcast(joinMessage, "westland.option.message.quit");
+
+        sendMessage(getListOfActiveMessage(true), joinMessage);
+    }
+
+    public void sendMessage(List<Player> players, String message) {
+        players.forEach(player->player.sendMessage(message));
+    }
+
+    private List<Player> getListOfActiveMessage(boolean join) {
+        List<Player> players = new ArrayList<>();
+        for(Map.Entry<Player, WLPlayer> entry : playerService.getWwPlayers().entrySet()) {
+            WLPlayer wlPlayer = entry.getValue();
+            if(wlPlayer.getUserOption().isShowJoinMessage() && join)
+                players.add(wlPlayer.getPlayer());
+
+            if(wlPlayer.getUserOption().isShowQuitMessage() && !join)
+                players.add(wlPlayer.getPlayer());
+        }
+
+        return players;
     }
 
     public enum JoinMessage {

@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ChangeQuitMessage extends CustomOwnerInventory {
+public class ChangeQuitMessageInventory extends CustomOwnerInventory {
 
     List<ItemStack> items = new ArrayList<>();
     private ItemBuilder item = new ItemBuilder(Material.RED_CONCRETE_POWDER).setName("§cNONE");
@@ -28,7 +28,7 @@ public class ChangeQuitMessage extends CustomOwnerInventory {
 
     private MessageService messageService;
 
-    public ChangeQuitMessage(WLPlayer player, MessageService messageService) {
+    public ChangeQuitMessageInventory(WLPlayer player, MessageService messageService) {
         super(player, Type.Chest5, "§7Zmena odpájacích správ");
 
         this.messageService = messageService;

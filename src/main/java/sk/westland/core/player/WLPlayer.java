@@ -1,22 +1,20 @@
 package sk.westland.core.player;
 
-import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.libs.jline.internal.Log;
+
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.openjsse.sun.security.ssl.SSLLogger;
-import sk.westland.core.ChatInfo;
 import sk.westland.core.database.player.UserData;
+import sk.westland.core.database.player.UserOption;
+import sk.westland.core.services.PlayerDataStorageService;
 
 import java.util.*;
-import java.util.logging.Level;
 
 public class WLPlayer  {
 
     private Player player;
-    private UserData userData;
+    private PlayerDataStorageService.Data userData;
 
-    public WLPlayer(Player player, UserData userData) {
+    public WLPlayer(Player player, PlayerDataStorageService.Data userData) {
         this.player = player;
         this.userData = userData;
     }
@@ -36,11 +34,11 @@ public class WLPlayer  {
     }
 
     public UserData getUserData() {
-        return userData;
+        return userData.getUserData();
     }
 
     public void setUserData(UserData userData) {
-        this.userData = userData;
+        this.userData.setUserData(userData);
     }
 
     public void sendMessage(String message) {
@@ -53,32 +51,39 @@ public class WLPlayer  {
 
     public boolean hasPermission(String permission) { return player.hasPermission(permission); }
 
+
+    /////
+
+    public UserOption getUserOption() {
+        return userData.getUserOption();
+    }
+
     ///////////////
 
     // USER DATA
 
     public double getCoin() {
-        return userData.getCoin();
+        return getUserData().getCoin();
     }
 
     public void setCoin(double coins) {
-        userData.setCoin(coins);
+        getUserData().setCoin(coins);
     }
 
     public int getActiveJoinMessage() {
-        return userData.getActiveJoinMessage();
+        return getUserData().getActiveJoinMessage();
     }
 
     public void setActiveJoinMessage(int activeJoinMessage) {
-        userData.setActiveJoinMessage(activeJoinMessage);
+        getUserData().setActiveJoinMessage(activeJoinMessage);
     }
 
     public int getActiveQuitMessage() {
-        return userData.getActiveQuitMessage();
+        return getUserData().getActiveQuitMessage();
     }
 
     public void setActiveQuitMessage(int activeQuitMessage) {
-        userData.setActiveQuitMessage(activeQuitMessage);
+        getUserData().setActiveQuitMessage(activeQuitMessage);
     }
 
     //////////////

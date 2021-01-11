@@ -2,7 +2,7 @@ package sk.westland.core.database.player;
 
 import javax.persistence.*;
 
-@Table
+@Table(name = "wl_player_data")
 @Entity
 public class UserData {
 
@@ -17,15 +17,20 @@ public class UserData {
 
     private double coin = 0;
 
+    private int level = 1;
+    private int exp = 0;
+
     private int activeJoinMessage = -1;
     private int activeQuitMessage = -1;
 
     public UserData() { }
 
-    public UserData(String name, String uuid, double coin, int activeJoinMessage, int activeQuitMessage) {
+    public UserData(String name, String uuid, double coin, int level, int exp, int activeJoinMessage, int activeQuitMessage) {
         this.name = name;
         this.uuid = uuid;
         this.coin = coin;
+        this.level = level;
+        this.exp = exp;
         this.activeJoinMessage = activeJoinMessage;
         this.activeQuitMessage = activeQuitMessage;
     }
@@ -76,5 +81,21 @@ public class UserData {
 
     public void setCoin(double coin) {
         this.coin = coin;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public int getExp() {
+        return exp;
+    }
+
+    public void setExp(int exp) {
+        this.exp = exp;
     }
 }

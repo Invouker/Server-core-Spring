@@ -3,12 +3,15 @@ package sk.westland.core.services;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sk.westland.core.database.player.UserData;
+import sk.westland.core.event.player.WLPlayerJoinEvent;
+import sk.westland.core.event.player.WLPlayerQuitEvent;
 import sk.westland.core.player.WLPlayer;
 
 import java.util.HashMap;
@@ -21,17 +24,22 @@ public class PlayerService implements Listener {
     @Autowired
     private PlayerDataStorageService playerDataStorageService;
 
+
     private static HashMap<Player, WLPlayer> wlPlayers = new HashMap<>();
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     private void onPlayerConnect(PlayerJoinEvent event) {
         Player player = event.getPlayer();
+
         loadUser(player);
+        Bukkit.getPluginManager().callEvent(new WLPlayerJoinEvent(getWLPlayer(player)));
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     private void onPlayerDisconnect(PlayerQuitEvent event) {
         Player player = event.getPlayer();
+
+        Bukkit.getPluginManager().callEvent(new WLPlayerQuitEvent(getWLPlayer(player)));
         saveAndUnloadUser(player);
     }
 
@@ -56,8 +64,9 @@ public class PlayerService implements Listener {
     }
 
     public void loadUser(Player player) {
-        UserData user = playerDataStorageService.load(player);
-        wlPlayers.put(player, new WLPlayer(player, user));
+        PlayerDataStorageService.Data data = playerDataStorageService.load(player);
+        UserData user =  data.getUserData();
+        wlPlayers.put(player, new WLPlayer(player, data));
         Bukkit.getConsoleSender().sendMessage("§aLoading player with his name: " + user.getName() + ", UUID[" + user.getUuid()+"]");
     }
 

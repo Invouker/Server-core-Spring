@@ -8,6 +8,7 @@ import sk.westland.core.WestLand;
 
 public class PluginDisableEvent extends Event {
 
+    private static final HandlerList HANDLERS_LIST = new HandlerList();
     private WestLand westLand;
 
     public PluginDisableEvent(WestLand westLand) {
@@ -21,6 +22,10 @@ public class PluginDisableEvent extends Event {
     @NotNull
     @Override
     public HandlerList getHandlers() {
-        return null;
+        return HANDLERS_LIST;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLERS_LIST;
     }
 }
