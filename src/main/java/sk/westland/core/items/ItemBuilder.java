@@ -618,6 +618,37 @@ public class ItemBuilder
         return this;
     }
 
+    public ItemBuilder applyDurability(short damage) {
+        ItemMeta im = is.getItemMeta();
+
+        if(im instanceof Damageable) {
+            Damageable damageable = (Damageable) im;
+
+            if(damageable.getDamage()+damage > is.getType().getMaxDurability()) {
+                is.setType(Material.AIR);
+                playBreakSound();
+            }
+
+            damageable.setDamage(damageable.getDamage() + damage);
+
+            if(damageable.getDamage() > is.getType().getMaxDurability()) {
+                is.setType(Material.AIR);
+                playBreakSound();
+            }
+
+
+            is.setItemMeta((ItemMeta) damageable);
+        }
+        return this;
+    }
+
+    private void playBreakSound() {
+        Bukkit.getOnlinePlayers()
+                .forEach((target)-> {
+                    target.playSound(target.getLocation(), Sound.ENTITY_ITEM_BREAK, 1f, 1f);
+                });
+    }
+
     public static int getModelId(@NotNull ItemStack is)
     {
         return Nbt.getNbt_Int(is, "CustomModelData", 0);

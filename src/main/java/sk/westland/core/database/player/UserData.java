@@ -1,6 +1,9 @@
 package sk.westland.core.database.player;
 
+import sk.westland.core.utils.converter.StringConverter;
+
 import javax.persistence.*;
+import java.util.List;
 
 @Table(name = "wl_player_data")
 @Entity
@@ -19,6 +22,10 @@ public class UserData {
 
     private int level = 1;
     private int exp = 0;
+
+    @Column(columnDefinition = "text", nullable = false)
+    @Convert(converter = StringConverter.class)
+    private List<String> craftingRecipe;
 
     private int activeJoinMessage = -1;
     private int activeQuitMessage = -1;
@@ -97,5 +104,13 @@ public class UserData {
 
     public void setExp(int exp) {
         this.exp = exp;
+    }
+
+    public List<String> getCraftingRecipe() {
+        return craftingRecipe;
+    }
+
+    public void setCraftingRecipe(List<String> craftingRecipe) {
+        this.craftingRecipe = craftingRecipe;
     }
 }

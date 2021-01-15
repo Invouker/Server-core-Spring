@@ -3,10 +3,7 @@ package sk.westland.core;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import sk.westland.core.services.MessageService;
-import sk.westland.core.services.PermissionService;
-import sk.westland.core.services.PlayerDataStorageService;
-import sk.westland.core.services.PlayerService;
+import sk.westland.core.services.*;
 
 @SpringBootApplication(scanBasePackages = "sk.westland")
 @EnableJpaRepositories()
@@ -25,5 +22,14 @@ public class Application {
 
     @Bean
     public PermissionService permissionService() { return new PermissionService(); }
+
+    @Bean
+    public PlaceholderAPIService placeholderAPIService() { return new PlaceholderAPIService(); }
+
+    @Bean
+    public ItemInteractionService itemInteractionService() { return new ItemInteractionService(); }
+
+    @Bean
+    public RecipeService recipeService() { return new RecipeService(); }
 
 }
