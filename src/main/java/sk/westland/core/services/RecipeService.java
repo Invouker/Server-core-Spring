@@ -37,11 +37,9 @@ public class RecipeService implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     private void onPluginInit(PluginEnableEvent event) {
        Bukkit.getScheduler().runTaskLater(event.getWestLand(), ()->{
-           System.out.println(" nuulll check");
            if (craftingRecipes == null)
                return;
 
-           System.out.println(" != null" + craftingRecipes.toString());
            craftingRecipes.forEach((name, craftingRecipe) -> craftingRecipe.register());
        }, 40l);
     }
@@ -128,12 +126,12 @@ public class RecipeService implements Listener {
 /*
     private void onPlayerRoleLeft(PlayerLeftRoleEvent event) {
         Player player = event.getBukkitPlayer();
-        MBPlayer mbPlayer = event.getPlayer();
+        WLPlayer WLPlayer = event.getPlayer();
         clearRecipes(player);
 
-        if (!mbPlayer.isAdmin()) {
-            mbPlayer.setMetaXPLevel(player.getLevel());
-            mbPlayer.setMetaEXP(player.getExp());
+        if (!WLPlayer.isAdmin()) {
+            WLPlayer.setMetaXPLevel(player.getLevel());
+            WLPlayer.setMetaEXP(player.getExp());
         }
 
         player.setExp(0);

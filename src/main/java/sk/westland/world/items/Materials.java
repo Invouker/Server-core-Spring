@@ -12,7 +12,7 @@ public class Materials {
 
     public enum Items {
         //Craftable                                               // MODEL ID
-        CROWBAR(null, new Crowbar());
+        CROWBAR(new Crowbar(), null);
 
         private Craftable craftable;
         private CustomItem customItem;
@@ -51,6 +51,13 @@ public class Materials {
             else return ((CustomItem) craftable).getItem().getType();
         }
 
+        public static Items findItemName(String name){
+            for(Items item : Items.values()) {
+                if(item.name().toLowerCase().equals(name.toLowerCase()))
+                    return item;
+            }
+            return null;
+        }
     }
 
     public enum Resources {

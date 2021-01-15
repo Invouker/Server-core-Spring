@@ -107,11 +107,13 @@ public class CraftingRecipe {
         System.out.println("REGISTRING RECIPE: " + recipeType + ", " + namespacedKey.toString());
         switch(craftingType) {
             case ShapedRecipe: {
-                Bukkit.addRecipe(shapedRecipe);
+                if(Bukkit.getRecipe(shapedRecipe.getKey()) == null)
+                    Bukkit.addRecipe(shapedRecipe);
                 break;
             }
             case ShapelessRecipe: {
-                Bukkit.addRecipe(shapelessRecipe);
+                if(Bukkit.getRecipe(shapelessRecipe.getKey()) == null)
+                    Bukkit.addRecipe(shapelessRecipe);
                 break;
             }
         }

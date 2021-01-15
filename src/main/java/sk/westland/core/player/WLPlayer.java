@@ -3,9 +3,11 @@ package sk.westland.core.player;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import sk.westland.core.WestLand;
 import sk.westland.core.database.player.UserData;
 import sk.westland.core.database.player.UserOption;
 import sk.westland.core.services.PlayerDataStorageService;
+import sk.westland.world.items.Materials;
 
 import java.util.*;
 
@@ -87,4 +89,43 @@ public class WLPlayer  {
     }
 
     //////////////
+
+    public void uncraftingRecipe(String items) {
+        this.uncraftingRecipe(Objects.requireNonNull(Materials.Items.findItemName(items)));
+    }
+
+    public void uncraftingRecipe(Materials.Items items) {
+        this.getKnownCraftingRecipes().remove(items.getCraftable().getNamespacedKey(WestLand.getInstance()).getKey().toLowerCase());
+        this.getPlayer().undiscoverRecipe(items.getCraftable().getNamespacedKey(WestLand.getInstance()));
+    }
+
+    public void discoverRecipe(String items) {
+        this.discoverRecipe(Objects.requireNonNull(Materials.Items.findItemName(items)));
+    }
+
+    public void discoverRecipe(Materials.Items items) {
+        this.getKnownCraftingRecipes().add(items.getCraftable().getNamespacedKey(WestLand.getInstance()).getKey().toLowerCase());
+        this.getPlayer().discoverRecipe(items.getCraftable().getNamespacedKey(WestLand.getInstance()));
+    }
+
+    public boolean hasDiscovered(String items) {
+        return this.hasDiscovered(Objects.requireNonNull(Materials.Items.findItemName(items)));
+    }
+
+    public boolean hasDiscovered(Materials.Items items) {
+
+        if(!items.isCraftable())
+            throw new IllegalArgumentException("Item " + items.getItem().getItemMeta().getDisplayName() + " cannot be as a discovered recipe!");
+
+        return this.getKnownCraftingRecipes().contains(items.getCraftable().getNamespacedKey(WestLand.getInstance()).getKey());
+    }
+
+    public List<String> getKnownCraftingRecipes() {
+        if(this.getUserData().getCraftingRecipe() == null)
+            this.getUserData().setCraftingRecipe(new ArrayList<>());
+
+        return this.getUserData().getCraftingRecipe();
+    }
+
+
 }
