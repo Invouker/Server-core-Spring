@@ -1,7 +1,9 @@
 package sk.westland.core.player;
 
 
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import sk.westland.core.WestLand;
 import sk.westland.core.database.player.UserData;
@@ -53,6 +55,7 @@ public class WLPlayer  {
 
     public boolean hasPermission(String permission) { return player.hasPermission(permission); }
 
+    public Inventory getInventory() { return player.getInventory(); }
 
     /////
 
@@ -128,4 +131,11 @@ public class WLPlayer  {
     }
 
 
+    public void playXPSound() {
+        this.playSound(Sound.ENTITY_EXPERIENCE_ORB_PICKUP);
+    }
+
+    public void playSound(Sound sound) {
+        player.playSound(player.getLocation(), sound, 2f, 2f);
+    }
 }

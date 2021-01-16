@@ -32,4 +32,10 @@ public class Application {
     @Bean
     public RecipeService recipeService() { return new RecipeService(); }
 
+    @Bean
+    public QuestService questService() { return new QuestService(); }
+
+    @Bean
+    public InteractionService interactionService() { return new InteractionService(); }
+
 }

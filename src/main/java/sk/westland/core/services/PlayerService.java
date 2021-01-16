@@ -47,7 +47,7 @@ public class PlayerService implements Listener {
         return wlPlayers.get(player);
     }
 
-    public HashMap<Player, WLPlayer> getWwPlayers() {
+    public HashMap<Player, WLPlayer> getWLPlayers() {
         return wlPlayers;
     }
 

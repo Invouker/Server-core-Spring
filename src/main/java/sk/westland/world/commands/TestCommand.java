@@ -7,8 +7,10 @@ import org.springframework.stereotype.Component;
 import picocli.CommandLine;
 import sk.westland.core.database.player.UserData;
 import sk.westland.core.items.CraftingRecipe;
+import sk.westland.core.quest.QuestLogMenu;
 import sk.westland.core.services.MessageService;
 import sk.westland.core.services.PlayerService;
+import sk.westland.core.services.QuestService;
 import sk.westland.world.inventories.ChangeJoinMessageInventory;
 import sk.westland.world.inventories.ChangeQuitMessageInventory;
 import sk.westland.world.items.Materials;
@@ -66,6 +68,28 @@ public class TestCommand implements Runnable {
             UserData userData = playerService.getWLPlayer(context.getPlayer()).getUserData();
 
             List<String> recipes = userData.getCraftingRecipe();
+        }
+    }
+
+    @Component
+    @CommandLine.Command(name = "3")
+    @HasPermission("commands.test3")
+    class Test3 implements Runnable {
+
+        @Autowired
+        private Context context;
+
+        @Autowired
+        private PlayerService playerService;
+
+        @Autowired
+        private QuestService questService;
+
+
+        @Override
+        public void run() {
+            QuestLogMenu questLogMenu = new QuestLogMenu(playerService, questService);
+            questLogMenu.open(context.getPlayer());
         }
     }
 }

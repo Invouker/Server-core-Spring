@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 import sk.westland.core.event.PluginDisableEvent;
 import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.services.PlayerService;
+import sk.westland.core.services.QuestService;
+import sk.westland.world.items.Materials;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -27,8 +29,10 @@ public class WestLand extends JavaPlugin {
     private ClassLoader defaultClassLoader;
 
     @Autowired
-
     private PlayerService playerService;
+
+    @Autowired
+    private QuestService questService;
 
     @Override
     public void onEnable() {
@@ -65,20 +69,26 @@ public class WestLand extends JavaPlugin {
 
         this.context = application.run();
 
-        Bukkit.getConsoleSender().sendMessage("§a");
-        Bukkit.getConsoleSender().sendMessage("§aSpring framework successfully started!");
-        Bukkit.getConsoleSender().sendMessage("§a");
-
         setupDatabase(properties);
 
         application.setDefaultProperties(properties);
 
         Bukkit.getPluginManager().callEvent(new PluginEnableEvent(this));
 
-        if(Bukkit.getOnlinePlayers().size() > 0)
-        Bukkit.getOnlinePlayers().forEach((player ->  {
-            playerService.loadUser(player);
-        }));
+        if(Bukkit.getOnlinePlayers().size() > 0) {
+            Bukkit.getOnlinePlayers().forEach((player ->  {
+                playerService.loadUser(player);
+            }));
+        }
+
+
+        Bukkit.getConsoleSender().sendMessage("§aLoaded " + Materials.Items.values().length + " custom items!");
+        Bukkit.getConsoleSender().sendMessage("§aLoaded " + Materials.Resources.values().length + " resource items!");
+        Bukkit.getConsoleSender().sendMessage("§aLoaded " + questService.getQuestIds().size() + " quests!");
+
+        Bukkit.getConsoleSender().sendMessage("§a");
+        Bukkit.getConsoleSender().sendMessage("§aSpring framework successfully started!");
+        Bukkit.getConsoleSender().sendMessage("§a");
     }
 
     @Override

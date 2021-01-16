@@ -65,7 +65,7 @@ public class MessageService implements Listener {
 
     private List<Player> getListOfActiveMessage(boolean join) {
         List<Player> players = new ArrayList<>();
-        for(Map.Entry<Player, WLPlayer> entry : playerService.getWwPlayers().entrySet()) {
+        for(Map.Entry<Player, WLPlayer> entry : playerService.getWLPlayers().entrySet()) {
             WLPlayer wlPlayer = entry.getValue();
             if(wlPlayer.getUserOption().isShowJoinMessage() && join)
                 players.add(wlPlayer.getPlayer());
