@@ -62,6 +62,8 @@
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
 
+
+
     </repositories>
 
     <dependencies>
@@ -83,7 +85,6 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
 
         <dependency>
             <groupId>mysql</groupId>
@@ -174,7 +175,20 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.dmulloy2</groupId>
+            <artifactId>ProtocolLib</artifactId>
+            <version>4.5.1</version>
+        </dependency>
+
     </dependencies>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>maven2</id>
+            <url>https://repo.maven.apache.org/maven2/</url>
+        </pluginRepository>
+    </pluginRepositories>
 
     <build>
         <plugins>
