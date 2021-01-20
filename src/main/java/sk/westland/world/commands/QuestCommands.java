@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine;
-import sk.westland.core.ChatInfo;
+import sk.westland.core.utils.ChatInfo;
 import sk.westland.core.player.WLPlayer;
 import sk.westland.core.quest.ESetQuestStateResult;
 import sk.westland.core.quest.QuestLogMenu;

@@ -1,4 +1,4 @@
-package sk.westland.core;
+package sk.westland.core.utils;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.ChatColor;
@@ -7,8 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import sk.westland.core.player.WLPlayer;
-
-import java.util.logging.Level;
+import sk.westland.core.utils.ComponentBuilder;
 
 public enum ChatInfo {
 
@@ -79,6 +78,10 @@ public enum ChatInfo {
 
     public void send(CommandSender sender, String message) {
         sender.sendMessage(prefix + message);
+    }
+
+    public void sendAll(String message) {
+        Bukkit.getOnlinePlayers().forEach((player) -> send(player, message));
     }
 
     @Deprecated

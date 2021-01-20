@@ -1,4 +1,4 @@
-package sk.westland.core;
+package sk.westland.core.utils;
 
 import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.chat.ComponentSerializer;

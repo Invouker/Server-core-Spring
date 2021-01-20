@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import sk.westland.core.ChatInfo;
+import sk.westland.core.utils.ChatInfo;
 import sk.westland.core.items.ItemBuilder;
 import sk.westland.core.items.Nbt;
 
