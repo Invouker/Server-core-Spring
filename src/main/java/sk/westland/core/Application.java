@@ -36,6 +36,9 @@ public class Application {
     public QuestService questService() { return new QuestService(); }
 
     @Bean
+    public BlockService blockService() { return new BlockService(); }
+
+    @Bean
     public InteractionService interactionService() { return new InteractionService(); }
 
 }

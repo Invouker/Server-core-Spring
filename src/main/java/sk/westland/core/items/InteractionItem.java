@@ -1,6 +1,8 @@
 package sk.westland.core.items;
 
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -17,12 +19,17 @@ public class InteractionItem implements Listener {
     private Consumer<PlayerInteractEvent> consumerInteract;
     private Consumer<WLPlayerDamageEvent> consumerDamage;
     private Consumer<PlayerInteractAtEntityEvent> consumerInteractAtEntity;
+    private Consumer<BlockPlaceEvent> consumerBlockPlaceEvent;
+    private Consumer<BlockBreakEvent> consumerBlockBreakEvent;
 
-    public InteractionItem(ItemStack itemStack, int CustomModelID, Consumer<PlayerInteractEvent> consumerInteract, Consumer<WLPlayerDamageEvent> consumerDamage, Consumer<PlayerInteractAtEntityEvent> consumerInteractAtEntity) {
-        this.customModelID = CustomModelID;
+    public InteractionItem(int customModelID, ItemStack itemStack, Consumer<PlayerInteractEvent> consumerInteract, Consumer<WLPlayerDamageEvent> consumerDamage, Consumer<PlayerInteractAtEntityEvent> consumerInteractAtEntity, Consumer<BlockPlaceEvent> consumerBlockPlaceEvent, Consumer<BlockBreakEvent> consumerBlockBreakEvent) {
+        this.customModelID = customModelID;
+        this.itemStack = itemStack;
         this.consumerInteract = consumerInteract;
         this.consumerDamage = consumerDamage;
         this.consumerInteractAtEntity = consumerInteractAtEntity;
+        this.consumerBlockPlaceEvent = consumerBlockPlaceEvent;
+        this.consumerBlockBreakEvent = consumerBlockBreakEvent;
     }
 
     public int getCustomModelID() {
@@ -43,5 +50,13 @@ public class InteractionItem implements Listener {
 
     public Consumer<PlayerInteractAtEntityEvent> getConsumerInteractAtEntity() {
         return consumerInteractAtEntity;
+    }
+
+    public Consumer<BlockPlaceEvent> getConsumerBlockPlaceEvent () {
+        return consumerBlockPlaceEvent;
+    }
+
+    public Consumer<BlockBreakEvent> getConsumerBlockBreakEvent() {
+        return consumerBlockBreakEvent;
     }
 }

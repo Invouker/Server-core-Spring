@@ -19,8 +19,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class ItemBuilder
-{
+public class ItemBuilder {
+
+    public static ItemBuilder ItemBuilder(Material material) {
+        return new ItemBuilder(material);
+    }
+
     @NotNull
     protected ItemStack is;
 

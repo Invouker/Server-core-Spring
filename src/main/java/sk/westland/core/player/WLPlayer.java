@@ -1,6 +1,7 @@
 package sk.westland.core.player;
 
 
+import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -56,6 +57,8 @@ public class WLPlayer  {
     public boolean hasPermission(String permission) { return player.hasPermission(permission); }
 
     public Inventory getInventory() { return player.getInventory(); }
+
+    public Location getLocation() { return player.getLocation(); }
 
     /////
 

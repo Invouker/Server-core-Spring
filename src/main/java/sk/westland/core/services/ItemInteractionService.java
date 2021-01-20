@@ -11,6 +11,8 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
@@ -80,7 +82,7 @@ public class ItemInteractionService implements Listener {
         processItemInteraction(itemInteractions.get(localizedName),  event);
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.NORMAL)
     private void onPlayerDamageEntity(@NotNull EntityDamageByEntityEvent event) {
         if(!(event.getDamager() instanceof Player))
             return;
@@ -118,6 +120,52 @@ public class ItemInteractionService implements Listener {
                        event));
     }
 
+    @EventHandler(priority = EventPriority.NORMAL)
+    private void onPlayerPlaceItem(@NotNull BlockPlaceEvent event) {
+        Player player = event.getPlayer();
+
+        ItemStack itemStack = player.getEquipment() == null ? null : player.getEquipment().getItemInMainHand();
+        if(itemStack == null || itemStack.getType() == Material.AIR)
+            return;
+
+        if(!itemStack.getType().isBlock() &&
+                !itemStack.getType().isSolid())
+            return;
+
+        if(!itemStack.hasItemMeta())
+            return;
+
+        if(!itemStack.getItemMeta().hasDisplayName())
+            return;
+
+        String localizedName = ChatColor.stripColor(itemStack.getItemMeta().getDisplayName());
+        if(!itemInteractions.containsKey(localizedName))
+            return;
+
+        processItemInteraction(itemInteractions.get(localizedName), event);
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    private void onPlayerBreakBlockWithItem(@NotNull BlockBreakEvent event) {
+        Player player = event.getPlayer();
+
+        ItemStack itemStack = player.getEquipment() == null ? null : player.getEquipment().getItemInMainHand();
+        if(itemStack == null || itemStack.getType() == Material.AIR)
+            return;
+
+        if(!itemStack.hasItemMeta())
+            return;
+
+        if(!itemStack.getItemMeta().hasDisplayName())
+            return;
+
+        String localizedName = ChatColor.stripColor(itemStack.getItemMeta().getDisplayName());
+        if(!itemInteractions.containsKey(localizedName))
+            return;
+
+        processItemInteraction(itemInteractions.get(localizedName), event);
+    }
+
     private void processItemInteraction(InteractionItem item, Event event) {
         if(item == null)
             throw new NullPointerException("ItemInteraction is null");
@@ -130,6 +178,12 @@ public class ItemInteractionService implements Listener {
 
         if(event instanceof PlayerInteractAtEntityEvent)
             item.getConsumerInteractAtEntity().accept((PlayerInteractAtEntityEvent) event);
+
+        if(event instanceof BlockPlaceEvent)
+            item.getConsumerBlockPlaceEvent().accept((BlockPlaceEvent) event);
+
+        if(event instanceof BlockBreakEvent)
+            item.getConsumerBlockBreakEvent().accept((BlockBreakEvent) event);
     }
 
     public void registerItem(String localizedName, InteractionItem item) {

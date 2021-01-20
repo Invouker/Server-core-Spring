@@ -17,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import sk.westland.core.WestLand;
+import sk.westland.core.items.ItemBuilder;
 import sk.westland.core.player.WLPlayer;
 
 import java.util.ArrayList;
@@ -24,7 +25,8 @@ import java.util.List;
 
 public abstract class CustomInventory implements InventoryHolder, Listener {
 
-
+    protected static final ItemStack CLOSE_INVENTORY_ITEM = new ItemBuilder(Material.STRUCTURE_VOID).setName("§cClose Inventory").build();
+    protected static final ItemStack GRAY_GLASS = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName("§r ").build();
     /**
      * Crete new empty inventory.
      */
@@ -350,4 +352,7 @@ public abstract class CustomInventory implements InventoryHolder, Listener {
     public static ItemStack getItemOrDefault(@Nullable ItemStack is, @NotNull ItemStack defaultItem) {
         return (is == null || is.getType() == Material.AIR) ? defaultItem : is;
     }
+
+    protected void setItemCloseInventory(int x, int y) { setItem(x, y, CLOSE_INVENTORY_ITEM); }
+    protected void setItemCloseInventory(int x) { inv.setItem(x,  CLOSE_INVENTORY_ITEM); }
 }

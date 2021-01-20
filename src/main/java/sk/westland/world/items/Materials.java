@@ -5,14 +5,21 @@ import org.bukkit.inventory.ItemStack;
 import sk.westland.core.items.Craftable;
 import sk.westland.core.items.CustomItem;
 import sk.westland.core.items.CustomResourceItem;
+import sk.westland.world.items.blocks.BlockBreakerItem;
+import sk.westland.world.items.blocks.BlockPlacerItem;
 import sk.westland.world.items.resources.IronRod;
 import sk.westland.world.items.tools.Crowbar;
+import sk.westland.world.items.tools.Hammer;
 
 public class Materials {
 
     public enum Items {
         //Craftable                                               // MODEL ID
-        CROWBAR(new Crowbar(), null);
+        CROWBAR(new Crowbar(), null),
+        HAMMER(new Hammer(), null),
+
+        BLOCK_PLACER(new BlockPlacerItem(), null),
+        BLOCK_BREAKER(new BlockBreakerItem(), null);
 
         private Craftable craftable;
         private CustomItem customItem;

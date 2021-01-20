@@ -13,6 +13,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 import sk.westland.core.event.PluginDisableEvent;
 import sk.westland.core.event.PluginEnableEvent;
+import sk.westland.core.services.BlockService;
 import sk.westland.core.services.PlayerService;
 import sk.westland.core.services.QuestService;
 import sk.westland.world.items.Materials;
@@ -24,6 +25,8 @@ import java.util.stream.Collectors;
 
 public class WestLand extends JavaPlugin {
 
+    public static final String CUSTOM_BLOCK_NBT = "BLOCK_ID";
+
     public static WestLand westLand;
     private ConfigurableApplicationContext context;
     private ClassLoader defaultClassLoader;
@@ -33,6 +36,9 @@ public class WestLand extends JavaPlugin {
 
     @Autowired
     private QuestService questService;
+
+    @Autowired
+    private BlockService blockService;
 
     @Override
     public void onEnable() {
@@ -85,6 +91,7 @@ public class WestLand extends JavaPlugin {
         Bukkit.getConsoleSender().sendMessage("§aLoaded " + Materials.Items.values().length + " custom items!");
         Bukkit.getConsoleSender().sendMessage("§aLoaded " + Materials.Resources.values().length + " resource items!");
         Bukkit.getConsoleSender().sendMessage("§aLoaded " + questService.getQuestIds().size() + " quests!");
+        Bukkit.getConsoleSender().sendMessage("§aLoaded " + blockService.getLOADED_BLOCKS() + " blocks!");
 
         Bukkit.getConsoleSender().sendMessage("§a");
         Bukkit.getConsoleSender().sendMessage("§aSpring framework successfully started!");

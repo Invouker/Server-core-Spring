@@ -18,7 +18,7 @@ public class CraftingRecipe {
 
     private ShapedRecipe shapedRecipe = null;
     private ShapelessRecipe shapelessRecipe = null;
-    private CraftingType craftingType = CraftingType.ShapedRecipe;
+    private CraftingType craftingType;
 
     public CraftingRecipe(NamespacedKey key, RecipeType recipeType, ItemStack result, CraftingType craftingType) {
        this(key, recipeType, result);
@@ -31,6 +31,7 @@ public class CraftingRecipe {
         this.result = result;
         this.recipeType = recipeType;
 
+        craftingType = CraftingType.ShapedRecipe;
         switch(craftingType) {
             default:
             case ShapedRecipe: {
@@ -104,8 +105,7 @@ public class CraftingRecipe {
         if(shapedRecipe == null && shapelessRecipe == null)
             throw new NullPointerException("Shaped/Shapeless recipe is null: " + namespacedKey.getKey());
 
-        System.out.println("REGISTRING RECIPE: " + recipeType + ", " + namespacedKey.toString());
-        switch(craftingType) {
+       switch(craftingType) {
             case ShapedRecipe: {
                 if(Bukkit.getRecipe(shapedRecipe.getKey()) == null)
                     Bukkit.addRecipe(shapedRecipe);

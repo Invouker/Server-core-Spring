@@ -9,7 +9,7 @@ import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
-import sk.westland.core.ChatInfo;
+import sk.westland.core.utils.ChatInfo;
 import sk.westland.core.player.WLPlayer;
 import sk.westland.core.quest.*;
 import sk.westland.core.quest.action.event.TaskEnabledEvent;
@@ -272,7 +272,6 @@ public class QuestService implements Listener {
             boolean isCompleted = questTask.getTaskAction().evaluate(questStorage.getQuest(), questTask, player, questStorage.getTaskStorage(questTask), bukkitEvent);
             if(isCompleted) {
                 questStorage.setTaskCompleted(questTask);
-                System.out.println("AD");
                 if(questTask.getTitle() != null)
                     player.sendMessage(ChatColor.GREEN + "Dokončil jsi část úkolu: " + ChatColor.YELLOW + questTask.getTitle());
 
