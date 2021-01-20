@@ -16,8 +16,6 @@ public class TaskFactory {
     private List<QuestTask> questTaskList = new ArrayList<>();
 
     public TaskFactory addTask(String title, String description, ITaskAction action, List<IReward> taskRewards) {
-        System.out.println("ADDING TASK: " + title + ", " + description + ", ACTION:" + action);
-
         TaskRequireEvent taskRequireEvent = getTaskRequireEvent(action.getClass());
 
         assert taskRequireEvent != null;

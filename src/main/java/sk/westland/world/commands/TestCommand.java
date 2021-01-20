@@ -62,7 +62,7 @@ public class TestCommand implements Runnable {
 
         @Override
         public void run() {
-            context.getPlayer().getInventory().addItem(Materials.Items.CROWBAR.getItem());
+            context.getPlayer().getInventory().addItem(Materials.Items.BLOCK_PLACER.getItem());
             context.getSender().sendMessage("Pridal sa ti item do inventára!");
 
             UserData userData = playerService.getWLPlayer(context.getPlayer()).getUserData();

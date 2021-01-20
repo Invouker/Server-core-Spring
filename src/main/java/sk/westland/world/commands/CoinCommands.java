@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine;
-import sk.westland.core.ChatInfo;
+import sk.westland.core.utils.ChatInfo;
 import sk.westland.core.player.WLPlayer;
 import sk.westland.core.services.PlayerService;
 import sk.westland.world.commands.Converter.PlayerArgConverter;
@@ -26,7 +26,7 @@ public class CoinCommands implements Runnable {
     public void run() {
         Player player = context.getPlayer();
         WLPlayer wlPlayer = playerService.getWLPlayer(player);
-        ChatInfo.COMMAND_HELPER.sendCommandHelper(wlPlayer, "coin","get", "set", "give");
+        ChatInfo.COMMAND_HELPER.sendCommandHelper(wlPlayer, "coin","get <player>", "set <>", "give");
     }
 
     @Component
@@ -80,7 +80,7 @@ public class CoinCommands implements Runnable {
         @Autowired
         private Context context;
 
-        @CommandLine.Parameters(index = "0", defaultValue = "@s", converter = PlayerArgConverter.class)
+        @CommandLine.Parameters(index = "1", defaultValue = "@s", converter = PlayerArgConverter.class)
         private Player targetPlayerArg;
 
         @Autowired
@@ -118,10 +118,10 @@ public class CoinCommands implements Runnable {
     @HasPermission("commands.coin.give")
     public static class SetCoins implements Runnable {
 
-        @CommandLine.Parameters(index = "1")
+        @CommandLine.Parameters(index = "0")
         private double coins;
 
-        @CommandLine.Parameters(index = "0", defaultValue = "@s", converter = PlayerArgConverter.class)
+        @CommandLine.Parameters(index = "1", defaultValue = "@s", converter = PlayerArgConverter.class)
         private Player targetPlayerArg;
 
         @Autowired

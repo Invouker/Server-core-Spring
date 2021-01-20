@@ -21,12 +21,13 @@ public class TestInventory extends ItemMenu {
     public TestInventory() {
         super(Type.Chest4, "test");
 
-        this.getInventory().setItem(5, new ItemBuilder(item).setName("Close inventory").build());
-        this.getInventory().setItem(0, new ItemBuilder(item).setName("§bEaglove Dildo " + ID).build());
+
     }
 
-    private void updateInventory() {
-
+    @Override
+    protected void itemInit() {
+        this.getInventory().setItem(5, new ItemBuilder(item).setName("Close inventory").build());
+        this.getInventory().setItem(0, new ItemBuilder(item).setName("§bEaglove Dildo " + ID).build());
     }
 
     @Override

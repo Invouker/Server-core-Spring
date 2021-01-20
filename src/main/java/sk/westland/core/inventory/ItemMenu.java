@@ -18,12 +18,15 @@ public abstract class ItemMenu extends CustomInventory {
 
     public ItemMenu(@NotNull Type type, @NotNull String title) {
         super(type, title);
+        itemInit();
     }
 
     public ItemMenu(@NotNull Inventory inventory, @NotNull String title) {
         super(inventory, title);
+        itemInit();
     }
 
+    protected abstract void itemInit();
     protected abstract void onClick(@NotNull Player player, int slot, @Nullable ItemStack item, @Nullable ItemStack cursor, @NotNull InventoryClickEvent event);
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event)
@@ -59,6 +62,11 @@ public abstract class ItemMenu extends CustomInventory {
         if(clickedItem == null)
             return;
 
+        if(clickedItem.isSimilar(CLOSE_INVENTORY_ITEM)) {
+            close(player);
+            return;
+        }
+
         onClick(player, event.getSlot(), clickedItem, cursor, event);
 
         /*
@@ -75,11 +83,15 @@ public abstract class ItemMenu extends CustomInventory {
     {
         if (event.getInventory().getHolder() != this)
             return;
-        if (!Objects.equals(event.getInventory(), getInventory()))
+        if (!Objects.equals(event.getInventory(), getInventory())) {
             return;
+        }
+
 
         event.setCancelled(true);
         event.setResult(Event.Result.DENY);
+
+
     }
 
 }

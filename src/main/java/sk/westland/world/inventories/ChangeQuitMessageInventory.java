@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import sk.westland.core.ChatInfo;
+import sk.westland.core.utils.ChatInfo;
 import sk.westland.core.inventory.CustomOwnerInventory;
 import sk.westland.core.items.ItemBuilder;
 import sk.westland.core.player.WLPlayer;
@@ -24,8 +24,6 @@ public class ChangeQuitMessageInventory extends CustomOwnerInventory {
     private ItemBuilder item = new ItemBuilder(Material.RED_CONCRETE_POWDER).setName("§cNONE");
     private ItemStack glassItem = new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setName("§a").build();
 
-    private ItemStack structure = new ItemBuilder(Material.STRUCTURE_VOID).setName("§cClose Inventory").build();
-
     private MessageService messageService;
 
     public ChangeQuitMessageInventory(WLPlayer player, MessageService messageService) {
@@ -33,7 +31,6 @@ public class ChangeQuitMessageInventory extends CustomOwnerInventory {
 
         this.messageService = messageService;
 
-        prepareItems();
         updateInventory();
     }
 
@@ -53,20 +50,20 @@ public class ChangeQuitMessageInventory extends CustomOwnerInventory {
                 addItem(items.get(i));
             }
         setItemsRange(36, 9, glassItem);
-        setItem(4, 4, structure);
+        setItem(4, 4, CLOSE_INVENTORY_ITEM);
     }
 
-    private List<String> getItemLore(String joinMessage) {
-        return Arrays.asList("§a", "§c" + joinMessage, "§a");
-    }
-
-    private void prepareItems() {
+    @Override
+    protected void itemInit() {
         getInventory().clear();
         for(MessageService.QuitMessage quitMessage : MessageService.QuitMessage.values()) {
             String lore = quitMessage.formattedJoinMessageWithoutPrefix().replaceAll("%player%",  wlPlayer.getName());
             items.add(item.setName(quitMessage.getName()).setLore(getItemLore(lore)).build().clone());
         }
+    }
 
+    private List<String> getItemLore(String joinMessage) {
+        return Arrays.asList("§a", "§c" + joinMessage, "§a");
     }
 
     @Override

@@ -23,7 +23,6 @@ public class InteractWithNPCAction extends ITaskAction {
 
     @Override
     public boolean evaluate(@NotNull Quest quest, @NotNull QuestTask task, @NotNull WLPlayer Player, @NotNull ActionDataStorage dataStorage, @Nullable Event bukkitEvent) {
-        System.out.println("TEST Interacti With NPC ACTION");
 
         if(bukkitEvent == null) {
             return false;
