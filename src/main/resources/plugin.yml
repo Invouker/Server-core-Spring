@@ -1,6 +1,6 @@
 name: WestLand
 main: sk.westland.core.WestLand
-depend: [Vault, RankSync, AuthMe, Citizens, PlaceholderAPI]
+depend: [Vault, RankSync, AuthMe, Citizens, PlaceholderAPI, CMI]
 load: STARTUP
 
 author: XpresS
