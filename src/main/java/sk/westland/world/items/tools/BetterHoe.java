@@ -88,7 +88,7 @@ public class BetterHoe extends CustomItem implements Listener, Craftable {
             }
         }
 
-        if (event.getItem().hasItemMeta() && !event.getItem().getItemMeta().isUnbreakable()) {
+        if (event.getItem().hasItemMeta() && !event.getItem().getItemMeta().isUnbreakable() && count > 0) {
             ItemStack damagedItem = new ItemBuilder(event.getItem()).applyDurability((short) 1).build();
             player.getInventory().setItemInMainHand(damagedItem);
         }
