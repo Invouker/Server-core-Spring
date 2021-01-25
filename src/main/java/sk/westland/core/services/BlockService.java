@@ -122,6 +122,14 @@ public class BlockService implements Listener {
         return true;
     }
 
+    public boolean isCustomBlock(String world, int x, int y, int z) {
+        return isCustomBlock(new Location(Bukkit.getWorld(world), x, y, z));
+    }
+
+    public boolean isCustomBlock(Location location) {
+       return blockHashMap.containsKey(location);
+    }
+
     public int getLOADED_BLOCKS() {
         return LOADED_BLOCKS;
     }

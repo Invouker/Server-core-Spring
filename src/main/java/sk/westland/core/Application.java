@@ -41,4 +41,7 @@ public class Application {
     @Bean
     public InteractionService interactionService() { return new InteractionService(); }
 
+    @Bean
+    public MoneyService moneyService() { return new MoneyService(); }
+
 }

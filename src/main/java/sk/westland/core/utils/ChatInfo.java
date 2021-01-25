@@ -16,7 +16,7 @@ public enum ChatInfo {
         SUCCESS("§2§l[#] §a", ComponentBuilder.text("[#] ").bold(true).color(ChatColor.DARK_GREEN).build(), ChatColor.GREEN),
         WARNING("§c§l[!] §e", ComponentBuilder.text("[!] ").bold(true).color(ChatColor.RED).build(), ChatColor.YELLOW),
         ERROR("§4§l[!!] §c", ComponentBuilder.text("[!!] ").bold(true).color(ChatColor.DARK_RED).build(), ChatColor.RED),
-        COMMAND_HELPER(ChatColor.of("#FF04AA") +"§l~~ ", ComponentBuilder.text("§l ").bold(true).color(ChatColor.of("#FF04AA")).build(), ChatColor.of("#FF04AA"));
+        COMMAND_HELPER(ChatColor.of("#005ce6") +"§l~~ ", ComponentBuilder.text("§l ").bold(true).color(ChatColor.of("#FF04AA")).build(), ChatColor.of("#FF04AA"));
 
     private String prefix;
     private BaseComponent component;
@@ -68,12 +68,20 @@ public enum ChatInfo {
         player.getPlayer().sendMessage(prefix + message);
     }
 
-    public void sendCommandHelper(WLPlayer wlPlayer, String baseCommand, String... commands) {
-        wlPlayer.sendMessage(prefix + " Command Helper " + prefix);
+    public void sendCommandHelperS(CommandSender commandSender, String baseCommand, String... commands) {
+        commandSender.sendMessage(prefix + " Command Helper " + prefix);
         for (String command : commands) {
-            wlPlayer.sendMessage("§l/" +baseCommand + " " + command);
+            commandSender.sendMessage("§l/" +baseCommand + " " + command);
         }
-        wlPlayer.sendMessage("§a");
+        commandSender.sendMessage("§a");
+    }
+
+    public void sendCommandHelperW(WLPlayer wlPlayer, String baseCommand, String... commands) {
+        sendCommandHelperS(wlPlayer.getPlayer(), baseCommand, commands);
+    }
+
+    public void sendCommandHelperP(Player player, String baseCommand, String... commands) {
+        sendCommandHelperS(player, baseCommand, commands);
     }
 
     public void send(CommandSender sender, String message) {
@@ -82,6 +90,10 @@ public enum ChatInfo {
 
     public void sendAll(String message) {
         Bukkit.getOnlinePlayers().forEach((player) -> send(player, message));
+    }
+
+    public void sendAdmin(String message) {
+        Bukkit.getOnlinePlayers().stream().filter((player -> player.hasPermission("chatinfo.admin"))).forEach((player) -> send(player, message));
     }
 
     @Deprecated
