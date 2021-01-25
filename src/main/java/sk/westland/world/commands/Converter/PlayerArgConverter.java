@@ -19,6 +19,6 @@ public class PlayerArgConverter implements CommandLine.ITypeConverter<Player> {
         if("@s".equals(s) || "@p".equals(s))
             return context.getPlayer();
 
-        return Bukkit.getServer().getPlayer(s);
+        return Bukkit.getPlayer(s);
     }
 }

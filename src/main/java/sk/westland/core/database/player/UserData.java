@@ -18,7 +18,8 @@ public class UserData {
 
     private String uuid;
 
-    private double coin = 0;
+    private double gems = 0;
+    private double shards = 0;
 
     private int level = 1;
     private int exp = 0;
@@ -32,10 +33,10 @@ public class UserData {
 
     public UserData() { }
 
-    public UserData(String name, String uuid, double coin, int level, int exp, int activeJoinMessage, int activeQuitMessage) {
+    public UserData(String name, String uuid, double gems, int level, int exp, int activeJoinMessage, int activeQuitMessage) {
         this.name = name;
         this.uuid = uuid;
-        this.coin = coin;
+        this.gems = gems;
         this.level = level;
         this.exp = exp;
         this.activeJoinMessage = activeJoinMessage;
@@ -82,12 +83,20 @@ public class UserData {
         this.uuid = uuid;
     }
 
-    public double getCoin() {
-        return coin;
+    public double getGems() {
+        return gems;
     }
 
-    public void setCoin(double coin) {
-        this.coin = coin;
+    public void setGems(double gems) {
+        this.gems = gems;
+    }
+
+    public double getShards() {
+        return shards;
+    }
+
+    public void setShards(double shards) {
+        this.shards = shards;
     }
 
     public int getLevel() {

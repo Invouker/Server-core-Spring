@@ -38,14 +38,6 @@ public class WLPlayer  {
         return player.getUniqueId();
     }
 
-    public UserData getUserData() {
-        return userData.getUserData();
-    }
-
-    public void setUserData(UserData userData) {
-        this.userData.setUserData(userData);
-    }
-
     public void sendMessage(String message) {
         player.sendMessage(message);
     }
@@ -62,6 +54,10 @@ public class WLPlayer  {
 
     /////
 
+    public UserData getUserData() {
+        return userData.getUserData();
+    }
+
     public UserOption getUserOption() {
         return userData.getUserOption();
     }
@@ -70,13 +66,25 @@ public class WLPlayer  {
 
     // USER DATA
 
-    public double getCoin() {
-        return getUserData().getCoin();
+    public double getShards() {
+        return getUserData().getShards();
     }
 
-    public void setCoin(double coins) {
-        getUserData().setCoin(coins);
+    public void setShards(double shards) {
+        getUserData().setShards(shards);
     }
+
+    public double getGems() {
+        return getUserData().getGems();
+    }
+
+    public void setGems(double gems) {
+        getUserData().setGems(gems);
+    }
+
+    public void giveShards(double shards) { setShards(getShards() + shards); }
+
+    public void giveGems(double gems) { setGems(getGems() + gems); }
 
     public int getActiveJoinMessage() {
         return getUserData().getActiveJoinMessage();
@@ -119,7 +127,6 @@ public class WLPlayer  {
     }
 
     public boolean hasDiscovered(Materials.Items items) {
-
         if(!items.isCraftable())
             throw new IllegalArgumentException("Item " + items.getItem().getItemMeta().getDisplayName() + " cannot be as a discovered recipe!");
 
