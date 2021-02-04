@@ -37,10 +37,10 @@ public class BlockBreakerItem extends CustomItem implements Craftable, Listener 
 
     @Override
     public ItemStack getItem() {
-        return new ItemBuilder(Material.DISPENSER)
+        return new ItemBuilder(BlockType.BLOCK_BREAKER.getMaterial())
                 .setName("§fBlock breaker")
                 .setModelId(getModelID())
-                .setNbt_Int(WestLand.CUSTOM_BLOCK_NBT, BlockType.BLOCK_PLACER.getId())
+                .setNbt_Int(WestLand.CUSTOM_BLOCK_NBT, BlockType.BLOCK_BREAKER.getId())
                 .setLore("", "§7Automatický ničí bloky", "").build();
     }
 
@@ -55,32 +55,24 @@ public class BlockBreakerItem extends CustomItem implements Craftable, Listener 
     }
 
     @Override
-    protected void onPlayerInteractWithItem(PlayerInteractEvent event) {
-
-    }
-
-    @Override
-    protected void onPlayerDamageWithItem(WLPlayerDamageEvent event) {
-
-    }
-
-    @Override
-    protected void onPlayerInteractAtEntityWithItem(PlayerInteractAtEntityEvent event) {
-
-    }
-
-    @Override
     protected void onPlayerBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
         Block block = event.getBlock();
 
-        boolean place = blockService.registerNewBlock(new BlockBreaker(player.getName(), player.getUniqueId(), block.getLocation(), BlockLevel.UNCOMMON));
+        boolean place = blockService.registerNewBlock(new BlockBreaker(player.getName(), player.getUniqueId(), block.getLocation(), BlockLevel.UNCOMMON, blockService));
         event.setBuild(place);
         event.setCancelled(!place);
     }
 
     @Override
-    protected void onPlayerBlockBreak(BlockBreakEvent event) {
+    protected void onPlayerInteractWithItem(PlayerInteractEvent event) { }
 
-    }
+    @Override
+    protected void onPlayerDamageWithItem(WLPlayerDamageEvent event) { }
+
+    @Override
+    protected void onPlayerInteractAtEntityWithItem(PlayerInteractAtEntityEvent event) { }
+
+    @Override
+    protected void onPlayerBlockBreak(BlockBreakEvent event) { }
 }

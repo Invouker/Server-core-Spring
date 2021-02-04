@@ -603,6 +603,13 @@ public class ItemBuilder {
     }
 
     @NotNull
+    public ItemBuilder setNbt_Bool(String key, boolean value)
+    {
+        is = Nbt.setNbt_Bool(is, key, value);
+        return this;
+    }
+
+    @NotNull
     public ItemBuilder setNbt_Long(String key, long value)
     {
         is = Nbt.setNbt_Long(is, key, value);

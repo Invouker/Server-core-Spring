@@ -12,6 +12,8 @@ import sk.westland.core.blocks.BlockLevel;
 import sk.westland.core.blocks.BlockType;
 import sk.westland.core.blocks.CustomBlock;
 import sk.westland.core.database.data.BlockData;
+import sk.westland.core.database.data.BlockDataRepository;
+import sk.westland.core.items.ItemBuilder;
 import sk.westland.core.services.BlockService;
 import sk.westland.world.inventories.blocks.BlockBreakerInventory;
 import sk.westland.world.items.Materials;
@@ -22,24 +24,35 @@ public class BlockBreaker extends CustomBlock {
 
     private static final BlockType BLOCK_TYPE = BlockType.BLOCK_BREAKER;
 
-    public BlockBreaker(String owner, UUID ownerUUID, Location location, BlockLevel blockLevel, BlockData blockData) {
-        super(owner, ownerUUID, location, blockLevel, Materials.Items.BLOCK_BREAKER.getCustomItem(), blockData);
+    public BlockBreaker(String owner, UUID ownerUUID, Location location, BlockLevel blockLevel, BlockData blockData, BlockService blockService) {
+        super(owner, ownerUUID, location, blockLevel, Materials.Items.BLOCK_BREAKER.getCustomItem(), blockData, blockService);
         this.blockType = BLOCK_TYPE;
     }
 
-    public BlockBreaker(String owner, UUID ownerUUID, Location location, BlockLevel blockLevel) {
-        super(owner, ownerUUID, location, blockLevel, Materials.Items.BLOCK_BREAKER.getCustomItem(), new BlockData(owner, ownerUUID, location, blockLevel, BLOCK_TYPE));
+    public BlockBreaker(String owner, UUID ownerUUID, Location location, BlockLevel blockLevel, BlockService blockService) {
+        super(owner, ownerUUID, location, blockLevel, Materials.Items.BLOCK_BREAKER.getCustomItem(), new BlockData(owner, ownerUUID, location, blockLevel, BLOCK_TYPE), blockService);
     }
 
     @Override
     public void onBlockLoad() {
-
+        System.out.println("Loaded block");
     }
 
     @Override
     public void onBlockUpdate() {
+        ItemStack itemStack = getItems().get(13);
+        if(itemStack == null)
+            return;
+
+        if(!itemStack.getType().toString().toLowerCase().contains("pickaxe"))
+            return;
+
         Directional facingDirection = (Directional) block.getBlockData();
         Block relativeBlock = block.getRelative(facingDirection.getFacing());
+
+        ItemBuilder itemBuilder = new ItemBuilder(itemStack);
+        itemBuilder.applyDurability((short) 3);
+        getItems().put(13, itemBuilder.build());
 
         if (!blockedMaterial(relativeBlock.getType(),
                 Material.AIR, Material.BEDROCK, Material.BEACON,
@@ -50,8 +63,6 @@ public class BlockBreaker extends CustomBlock {
                 Material.END_PORTAL, Material.END_PORTAL_FRAME, Material.ENDER_CHEST,
                 Material.NETHER_PORTAL)) {
 
-            if(getItems().get(13) == null)
-                return;
 
             relativeBlock.breakNaturally(getItems().get(13)); // BLOCK_POSITION IN BlockBreakInventory
         }
@@ -72,7 +83,7 @@ public class BlockBreaker extends CustomBlock {
 
     @Override
     public void onBlockUnload() {
-        armorStand.remove();
+
     }
 
     @Override

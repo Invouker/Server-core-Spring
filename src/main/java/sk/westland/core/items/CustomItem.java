@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.springframework.beans.factory.annotation.Autowired;
+import sk.westland.core.database.data.BlockDataRepository;
 import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.event.player.WLPlayerDamageEvent;
 import sk.westland.core.services.BlockService;
@@ -21,7 +22,7 @@ import java.util.Random;
 public abstract class CustomItem {
 
     public static final java.util.Random Random = new Random();
-
+    private String localizedName;
     @Autowired
     protected PlayerService playerService;
 
@@ -33,6 +34,9 @@ public abstract class CustomItem {
 
     @Autowired
     protected BlockService blockService;
+
+    @Autowired
+    protected BlockDataRepository blockDataRepository;
 
     public abstract ItemStack getItem();
     public abstract int getModelID();
@@ -48,7 +52,7 @@ public abstract class CustomItem {
     private void onPluginInit(PluginEnableEvent event) {
         this.onPluginEnable(event);
 
-        String localizedName = ChatColor.stripColor(getItem().getItemMeta().getDisplayName());
+        localizedName = ChatColor.stripColor(getItem().getItemMeta().getDisplayName());
         itemInteractionService.registerItem(localizedName,
                 new InteractionItem(getModelID(), getItem(),
                         this::onPlayerInteractWithItem,
@@ -57,5 +61,14 @@ public abstract class CustomItem {
                         this::onPlayerBlockPlace,
                         this::onPlayerBlockBreak
                 ));
+    }
+
+    @Override
+    public String toString() {
+        return "CustomItem{" +
+                "localizedName='" + localizedName + '\'' +
+                "itemStack='" + getItem().toString() + '\'' +
+                "modelID='" + getModelID() + '\'' +
+                '}';
     }
 }

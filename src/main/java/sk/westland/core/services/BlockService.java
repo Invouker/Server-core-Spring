@@ -1,6 +1,7 @@
 package sk.westland.core.services;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -17,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sk.westland.core.blocks.BlockLevel;
+import sk.westland.core.blocks.BlockType;
 import sk.westland.core.blocks.CustomBlock;
 import sk.westland.world.blocks.type.BlockBreaker;
 import sk.westland.world.blocks.type.BlockPlacer;
@@ -51,12 +53,12 @@ public class BlockService implements Listener {
             LOADED_BLOCKS++;
             switch(blockData.getBlockType()) {
                 case BLOCK_PLACER: {
-                    CustomBlock block = new BlockPlacer(blockData.getOwnerName(), blockData.getOwnerUUID(), blockData.getBlockLocation(), blockData.getBlockLevel(), blockData);
+                    CustomBlock block = new BlockPlacer(blockData.getOwnerName(), blockData.getOwnerUUID(), blockData.getBlockLocation(), blockData.getBlockLevel(), blockData, this);
                     blockHashMap.put(blockData.getBlockLocation(), block);
                     break;
                 }
                 case BLOCK_BREAKER: {
-                    CustomBlock block = new BlockBreaker(blockData.getOwnerName(), blockData.getOwnerUUID(), blockData.getBlockLocation(), blockData.getBlockLevel(), blockData);
+                    CustomBlock block = new BlockBreaker(blockData.getOwnerName(), blockData.getOwnerUUID(), blockData.getBlockLocation(), blockData.getBlockLevel(), blockData, this);
                     blockHashMap.put(blockData.getBlockLocation(), block);
                     break;
                 }
@@ -69,9 +71,11 @@ public class BlockService implements Listener {
         saveBlocksData();
         blockHashMap.forEach((loc, block) -> block.onBlockUnload());
     }
-
+    private List<Location> unregisterBlocks = new ArrayList<>();
     private void blockUpdate() {
-        blockHashMap.forEach((loc, block) -> block.blockUpdate());
+        for(Map.Entry<Location, CustomBlock> entry : blockHashMap.entrySet()) {
+            entry.getValue().blockUpdate();
+        }
     }
 
     public BlockData saveBlockData(BlockData blockData) {
@@ -88,7 +92,7 @@ public class BlockService implements Listener {
     }
 
     public boolean registerNewBlockPlacer(String name, UUID uuid, Location location, BlockLevel blockLevel) {
-        return this.registerNewBlock(new BlockPlacer(name, uuid, location, blockLevel));
+        return this.registerNewBlock(new BlockPlacer(name, uuid, location, blockLevel, this));
     }
 
     public boolean registerNewBlock(CustomBlock block) {
@@ -99,27 +103,22 @@ public class BlockService implements Listener {
         return true;
     }
 
-    public boolean blockUnregister(Location location) {
+    public CustomBlock blockUnregister(Location location) {
         if(!blockHashMap.containsKey(location))
-            return false;
-
+            return null;
 
         CustomBlock customBlock = blockHashMap.get(location);
         for(Map.Entry<Integer, ItemStack> entry : customBlock.getItems().entrySet()) {
-            if(entry.getValue() != null)
+            if(entry.getValue() != null && entry.getValue().getType() != Material.AIR)
                 location.getWorld().dropItem(location, entry.getValue());
         }
-
-        location.getWorld().dropItem(location, customBlock.getCustomItem().getItem());
 
         customBlock.onBlockUnload();
 
         blockDataRepository.delete(customBlock.getBlockData());
+        blockHashMap.remove(location);
 
-        if(blockHashMap.containsKey(location))
-            blockHashMap.remove(location);
-
-        return true;
+        return customBlock;
     }
 
     public boolean isCustomBlock(String world, int x, int y, int z) {
@@ -145,11 +144,20 @@ public class BlockService implements Listener {
 
         Location location = block.getLocation();
 
-        if(block.getType() != Material.DISPENSER)
+        if(!validBlockType(block.getType()))
             return;
 
         if(blockHashMap.containsKey(location))
             blockHashMap.get(location).onBlockInteract(event, this);
+    }
+
+    public boolean validBlockType(Material material) {
+        for(BlockType blockType : BlockType.values()) {
+            if(blockType.getMaterial() == material)
+                return true;
+        }
+
+        return false;
     }
 
 
@@ -194,15 +202,23 @@ public class BlockService implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     private void onInit(BlockBreakEvent event) {
-        if(event.getBlock().getType() != Material.DISPENSER)
+        if(event.getBlock().getType() != Material.DISPENSER || event.getBlock().getType() != Material.DROPPER)
             return;
 
         Block block = event.getBlock();
-        boolean success = this.blockUnregister(block.getLocation());
-        if(success)
+        CustomBlock customBlock = this.blockUnregister(block.getLocation());
+        if(customBlock != null)
             block.setType(Material.AIR);
 
-        event.setCancelled(success);
+        Location location = customBlock.getLocation();
+        if(location.getChunk().isLoaded() && event.getPlayer().getGameMode() == GameMode.SURVIVAL)
+            location.getWorld().dropItem(location, customBlock.getCustomItem().getItem());
+
+        event.setCancelled(true);
+    }
+
+    public BlockDataRepository getBlockDataRepository() {
+        return blockDataRepository;
     }
 }
 

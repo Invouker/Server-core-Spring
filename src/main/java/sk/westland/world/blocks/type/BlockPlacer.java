@@ -25,13 +25,13 @@ public class BlockPlacer extends CustomBlock {
 
     private static final BlockType BLOCK_TYPE = BlockType.BLOCK_PLACER;
 
-    public BlockPlacer(String owner, UUID ownerUUID, Location location, BlockLevel blockLevel, BlockData blockData) {
-        super(owner, ownerUUID, location, blockLevel, Materials.Items.BLOCK_PLACER.getCustomItem(), blockData);
+    public BlockPlacer(String owner, UUID ownerUUID, Location location, BlockLevel blockLevel, BlockData blockData, BlockService blockService) {
+        super(owner, ownerUUID, location, blockLevel, Materials.Items.BLOCK_PLACER.getCustomItem(), blockData, blockService);
         this.blockType = BLOCK_TYPE;
     }
 
-    public BlockPlacer(String owner, UUID ownerUUID, Location location, BlockLevel blockLevel) {
-        super(owner, ownerUUID, location, blockLevel, Materials.Items.BLOCK_PLACER.getCustomItem(),  new BlockData(owner, ownerUUID, location, blockLevel, BLOCK_TYPE));
+    public BlockPlacer(String owner, UUID ownerUUID, Location location, BlockLevel blockLevel, BlockService blockService) {
+        super(owner, ownerUUID, location, blockLevel, Materials.Items.BLOCK_PLACER.getCustomItem(),  new BlockData(owner, ownerUUID, location, blockLevel, BLOCK_TYPE), blockService);
     }
 
     @Override
@@ -104,7 +104,6 @@ public class BlockPlacer extends CustomBlock {
     @Override
     public void onBlockUnload() {
         System.out.println("Unloaded block");
-        armorStand.remove();
     }
 
 
