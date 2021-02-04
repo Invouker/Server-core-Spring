@@ -11,6 +11,7 @@ import sk.westland.world.items.resources.IronRod;
 import sk.westland.world.items.tools.BetterHoe;
 import sk.westland.world.items.tools.Crowbar;
 import sk.westland.world.items.tools.Hammer;
+import sk.westland.world.items.tools.SaddleItem;
 
 public class Materials {
 
@@ -19,6 +20,7 @@ public class Materials {
         CROWBAR(new Crowbar(), null),
         HAMMER(new Hammer(), null),
         BETTER_HOE(new BetterHoe(), null),
+        SADDLE_ITEM(new SaddleItem(), null),
 
         BLOCK_PLACER(new BlockPlacerItem(), null),
         BLOCK_BREAKER(new BlockBreakerItem(), null);

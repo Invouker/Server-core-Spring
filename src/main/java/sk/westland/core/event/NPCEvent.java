@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityEvent;
 import org.jetbrains.annotations.NotNull;
-import sk.westland.core.player.WLPlayer;
+import sk.westland.core.entity.player.WLPlayer;
 
 public class NPCEvent extends EntityEvent {
 

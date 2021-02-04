@@ -58,4 +58,11 @@ public class Shards {
 
         // cena * 100 + ( 16 * poradie - 16)
     }
+
+
+
+
+
+
+
 }
