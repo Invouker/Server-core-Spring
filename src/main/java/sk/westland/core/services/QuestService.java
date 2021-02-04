@@ -1,5 +1,6 @@
 package sk.westland.core.services;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.craftbukkit.libs.jline.internal.Log;
@@ -9,8 +10,11 @@ import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
+import sk.westland.core.database.player.UserQuestData;
+import sk.westland.core.database.player.UserQuestRepository;
+import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.utils.ChatInfo;
-import sk.westland.core.player.WLPlayer;
+import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.quest.*;
 import sk.westland.core.quest.action.event.TaskEnabledEvent;
 import sk.westland.core.quest.storage.QuestProgressStorage;
@@ -30,9 +34,34 @@ public class QuestService implements Listener {
     @Autowired
     private InteractionService interactionService;
 
+    @Autowired
+    private UserQuestRepository userQuestRepository;
+
     private Map<String, Quest> questMap = new HashMap<>();
-    private Map<Player, Map<String, QuestProgressStorage>> progressStorageMap = new HashMap<>();
-    private Map<Player, List<QuestProgressStorage>> activeQuestProgressMap = new HashMap<>();
+    private final Map<Player, Map<String, QuestProgressStorage>> progressStorageMap = new HashMap<>(); // Player <Quest_ID, QuestStorage>
+    private final Map<Player, List<QuestProgressStorage>> activeQuestProgressMap = new HashMap<>();
+
+     // SAVE
+    ////
+
+    private void onQuestPluginEnable(PluginEnableEvent event) {
+        Bukkit.getOnlinePlayers().forEach(this::savePlayer);
+    }
+
+    private void savePlayer(Player player) {
+        Map<String, QuestProgressStorage> progressStorage = progressStorageMap.get(player);
+        List<QuestProgressStorage> activeQuestProgress = activeQuestProgressMap.get(player);
+
+
+        List<UserQuestData> userQuestData = userQuestRepository.findByUuid(player.getUniqueId().toString());
+        userQuestRepository.deleteAll(userQuestData);
+
+        for(QuestProgressStorage questProgressStorage : activeQuestProgress) {
+            //List<QuestTask> tasks = questProgressStorage.getActiveTasks().get(questProgressStorage.getActiveTasks().size()-1);
+        }
+    }
+
+    ////
 
     public Set<String> getQuestIds() {
         return questMap.keySet();
@@ -125,8 +154,6 @@ public class QuestService implements Listener {
         );
 
         bookFactory.open(player);
-
-
     }
 
     public boolean acceptQuest(String quest_id, @NotNull WLPlayer player) {
@@ -166,7 +193,6 @@ public class QuestService implements Listener {
         questPlayerProgressStorageMap.put(quest.getId(), questProgressStorage);
 
         setQuestProgressActive(questProgressStorage);
-        System.out.println("4");
         questProgressStorage.getActiveTasks().forEach((task -> task.getTaskAction().whenSwitched(quest, task, player, questProgressStorage.getTaskStorage(task))));
 
         ChatInfo.SUCCESS.send(player, ChatColor.GREEN + "Přijal jsi quest: " + ChatColor.YELLOW + quest.getTitle());

@@ -92,4 +92,25 @@ public class TestCommand implements Runnable {
             questLogMenu.open(context.getPlayer());
         }
     }
+
+    @Component
+    @CommandLine.Command(name = "4")
+    @HasPermission("commands.test4")
+    class Test4 implements Runnable {
+
+        @Autowired
+        private Context context;
+
+        @Autowired
+        private PlayerService playerService;
+
+        @Autowired
+        private QuestService questService;
+
+
+        @Override
+        public void run() {
+            context.getPlayer().getInventory().addItem(Materials.Items.SADDLE_ITEM.getItem());
+        }
+    }
 }

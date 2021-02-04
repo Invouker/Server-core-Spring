@@ -1,7 +1,7 @@
 package sk.westland.core.event.player;
 
 import org.bukkit.Location;
-import sk.westland.core.player.WLPlayer;
+import sk.westland.core.entity.player.WLPlayer;
 
 public class WLPlayerMoveEvent extends WLPlayerEvent {
 

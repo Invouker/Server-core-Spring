@@ -1,7 +1,7 @@
 package sk.westland.core.quest.reward;
 
 import sk.westland.core.quest.IReward;
-import sk.westland.core.player.WLPlayer;
+import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.services.QuestService;
 import org.jetbrains.annotations.NotNull;
 

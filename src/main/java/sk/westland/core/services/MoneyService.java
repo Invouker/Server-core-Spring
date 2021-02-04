@@ -1,8 +1,8 @@
 package sk.westland.core.services;
 
 import org.springframework.stereotype.Service;
-import sk.westland.core.MoneyType;
-import sk.westland.core.player.WLPlayer;
+import sk.westland.core.enums.MoneyType;
+import sk.westland.core.entity.player.WLPlayer;
 
 @Service
 public class MoneyService {

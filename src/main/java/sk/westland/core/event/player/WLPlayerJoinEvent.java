@@ -1,6 +1,6 @@
 package sk.westland.core.event.player;
 
-import sk.westland.core.player.WLPlayer;
+import sk.westland.core.entity.player.WLPlayer;
 
 public class WLPlayerJoinEvent extends WLPlayerEvent {
 

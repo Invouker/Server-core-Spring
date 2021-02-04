@@ -4,7 +4,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import sk.westland.core.player.WLPlayer;
+import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.quest.Quest;
 import sk.westland.core.quest.QuestTask;
 

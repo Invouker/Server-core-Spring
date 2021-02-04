@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import sk.westland.core.utils.ChatInfo;
 import sk.westland.core.inventory.CustomOwnerInventory;
 import sk.westland.core.items.ItemBuilder;
-import sk.westland.core.player.WLPlayer;
+import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.services.MessageService;
 
 import java.util.ArrayList;

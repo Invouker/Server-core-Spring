@@ -1,4 +1,4 @@
-package sk.westland.core.player;
+package sk.westland.core.entity.player;
 
 
 import org.bukkit.Location;

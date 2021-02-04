@@ -3,7 +3,7 @@ package sk.westland.core.utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import sk.westland.core.player.WLPlayer;
+import sk.westland.core.entity.player.WLPlayer;
 
 public class LocationHelper {
 

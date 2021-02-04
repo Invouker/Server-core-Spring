@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import sk.westland.core.database.player.UserData;
 import sk.westland.core.event.player.WLPlayerJoinEvent;
 import sk.westland.core.event.player.WLPlayerQuitEvent;
-import sk.westland.core.player.WLPlayer;
+import sk.westland.core.entity.player.WLPlayer;
 
 import java.util.HashMap;
 import java.util.Map;

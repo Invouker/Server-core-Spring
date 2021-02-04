@@ -2,7 +2,7 @@ package sk.westland.world.commands.suggestion;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
-import sk.westland.core.MoneyType;
+import sk.westland.core.enums.MoneyType;
 
 import java.util.Arrays;
 import java.util.Collection;

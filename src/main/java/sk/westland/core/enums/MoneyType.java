@@ -1,4 +1,4 @@
-package sk.westland.core;
+package sk.westland.core.enums;
 
 public enum MoneyType {
 

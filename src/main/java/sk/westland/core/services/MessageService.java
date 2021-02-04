@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sk.westland.core.event.player.WLPlayerJoinEvent;
 import sk.westland.core.event.player.WLPlayerQuitEvent;
-import sk.westland.core.player.WLPlayer;
+import sk.westland.core.entity.player.WLPlayer;
 
 import java.util.ArrayList;
 import java.util.List;

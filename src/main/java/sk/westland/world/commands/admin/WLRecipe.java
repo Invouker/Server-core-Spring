@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine;
 import sk.westland.core.utils.ChatInfo;
-import sk.westland.core.player.WLPlayer;
+import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.services.PlayerService;
 import sk.westland.world.commands.Converter.PlayerArgConverter;
 import sk.westland.world.commands.suggestion.CraftingSuggestion;

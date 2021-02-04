@@ -16,7 +16,7 @@ import sk.westland.core.event.player.WLPlayerInteractWithNPCEvent;
 import sk.westland.core.event.player.WLPlayerJoinEvent;
 import sk.westland.core.event.player.WLPlayerMoveEvent;
 import sk.westland.core.event.player.WLPlayerQuitEvent;
-import sk.westland.core.player.WLPlayer;
+import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.quest.QuestLogMenu;
 import sk.westland.core.quest.action.event.TaskCommandExecutedEvent;
 import sk.westland.core.quest.storage.QuestProgressStorage;

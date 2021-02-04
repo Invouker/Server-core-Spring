@@ -17,7 +17,7 @@ import sk.westland.core.utils.ComponentBuilder;
 import sk.westland.core.event.player.WLPlayerInteractWithNPCEvent;
 import sk.westland.core.interaction.buffer.InteractionBuffer;
 import sk.westland.core.interaction.buffer.InteractionBufferElement;
-import sk.westland.core.player.WLPlayer;
+import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.utils.BookPageFactory;
 
 import java.util.HashMap;

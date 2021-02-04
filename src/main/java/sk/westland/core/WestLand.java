@@ -7,15 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.stereotype.Component;
 import sk.westland.core.event.PluginDisableEvent;
 import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.services.BlockService;
 import sk.westland.core.services.PlayerService;
 import sk.westland.core.services.QuestService;
+import sk.westland.core.utils.PlaceHolder;
 import sk.westland.world.items.Materials;
 
 import java.io.IOException;
@@ -81,6 +80,12 @@ public class WestLand extends JavaPlugin {
 
         Bukkit.getPluginManager().callEvent(new PluginEnableEvent(this));
 
+        try {
+            // Disable for NOW
+            //new PlaceHolder(this, playerService).register();
+        }  catch (Exception ex) {
+            System.out.println("While hooling into PlaceholderAPI: " + ex.getLocalizedMessage());
+        }
         if(Bukkit.getOnlinePlayers().size() > 0) {
             Bukkit.getOnlinePlayers().forEach((player ->  {
                 playerService.loadUser(player);

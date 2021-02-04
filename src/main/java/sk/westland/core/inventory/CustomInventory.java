@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import sk.westland.core.WestLand;
 import sk.westland.core.items.ItemBuilder;
-import sk.westland.core.player.WLPlayer;
+import sk.westland.core.entity.player.WLPlayer;
 
 import java.util.ArrayList;
 import java.util.List;

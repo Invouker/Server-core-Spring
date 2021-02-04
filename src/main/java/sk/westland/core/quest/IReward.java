@@ -1,11 +1,10 @@
 package sk.westland.core.quest;
 
 import org.jetbrains.annotations.NotNull;
-import sk.westland.core.player.WLPlayer;
+import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.services.QuestService;
-import java.util.ArrayList;
+
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public interface IReward {

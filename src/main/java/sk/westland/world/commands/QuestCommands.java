@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine;
 import sk.westland.core.utils.ChatInfo;
-import sk.westland.core.player.WLPlayer;
+import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.quest.ESetQuestStateResult;
 import sk.westland.core.quest.QuestLogMenu;
 import sk.westland.core.quest.QuestState;
@@ -17,7 +17,7 @@ import sk.westland.world.commands.Converter.PlayerArgConverter;
 import sk.westland.world.commands.suggestion.QuestIdSuggestion;
 
 @Component
-@CommandLine.Command(name = "quest", aliases = {"q", "ulohy", "questy", "ukoly"})
+@CommandLine.Command(name = "qqqqqq")
 @HasPermission("quest")
 public class QuestCommands implements Runnable {
 

@@ -3,7 +3,7 @@ package sk.westland.core.quest.reward;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import sk.westland.core.player.WLPlayer;
+import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.quest.IReward;
 import sk.westland.core.services.QuestService;
 

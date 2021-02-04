@@ -6,8 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import sk.westland.core.player.WLPlayer;
-import sk.westland.core.utils.ComponentBuilder;
+import sk.westland.core.entity.player.WLPlayer;
 
 public enum ChatInfo {
 

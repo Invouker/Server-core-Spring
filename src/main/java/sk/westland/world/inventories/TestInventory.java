@@ -7,9 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import sk.westland.core.inventory.ItemMenu;
-import sk.westland.core.inventory.ItemShopMenu;
 import sk.westland.core.items.ItemBuilder;
-import sk.westland.core.player.WLPlayer;
 
 public class TestInventory extends ItemMenu {
 

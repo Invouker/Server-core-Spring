@@ -24,9 +24,6 @@ public class Application {
     public PermissionService permissionService() { return new PermissionService(); }
 
     @Bean
-    public PlaceholderAPIService placeholderAPIService() { return new PlaceholderAPIService(); }
-
-    @Bean
     public ItemInteractionService itemInteractionService() { return new ItemInteractionService(); }
 
     @Bean
@@ -43,5 +40,8 @@ public class Application {
 
     @Bean
     public MoneyService moneyService() { return new MoneyService(); }
+
+    @Bean
+    public HorseService horseService() { return new HorseService(); }
 
 }

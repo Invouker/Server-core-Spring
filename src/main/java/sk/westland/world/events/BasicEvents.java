@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.event.player.WLPlayerInteractWithNPCEvent;
 import sk.westland.core.event.player.WLPlayerMoveEvent;
-import sk.westland.core.player.WLPlayer;
+import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.services.PlayerService;
 
 @Component

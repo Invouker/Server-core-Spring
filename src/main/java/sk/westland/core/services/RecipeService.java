@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.event.player.WLPlayerJoinEvent;
 import sk.westland.core.items.CraftingRecipe;
-import sk.westland.core.player.WLPlayer;
+import sk.westland.core.entity.player.WLPlayer;
 
 import java.util.HashMap;
 import java.util.List;

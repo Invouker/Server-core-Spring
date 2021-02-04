@@ -12,14 +12,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import sk.westland.core.inventory.ItemMenu;
 import sk.westland.core.items.ItemBuilder;
-import sk.westland.core.player.WLPlayer;
+import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.quest.storage.QuestProgressStorage;
 import sk.westland.core.quest.storage.QuestProgressStorageOrderDependent;
 import sk.westland.core.services.PlayerService;
 import sk.westland.core.services.QuestService;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class QuestLogMenu extends ItemMenu {

@@ -3,7 +3,7 @@ package sk.westland.core.event.player;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import sk.westland.core.player.WLPlayer;
+import sk.westland.core.entity.player.WLPlayer;
 
 public class WLPlayerDamageEvent extends WLPlayerEvent {
 
