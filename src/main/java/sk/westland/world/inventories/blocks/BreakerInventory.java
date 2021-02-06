@@ -8,39 +8,30 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import sk.westland.core.blocks.CustomBlock;
-import sk.westland.core.inventory.CustomBlockInventory;
+import sk.westland.core.inventory.NCCustomInventory;
 import sk.westland.core.services.BlockService;
 
 import java.util.Map;
 
-public class BlockPlacerInventory extends CustomBlockInventory {
+public class BreakerInventory extends NCCustomInventory {
 
     private BlockService blockService;
     private CustomBlock customBlock;
 
-    private static final int[] BLOCK_POSITION = new int[] { 10,11,12, 19,20,21,  28,29,30 };
+    private static final int[] BLOCK_POSITION = new int[] { 13 }; // BlockBreak.java breakNaturally
 
-    public BlockPlacerInventory(BlockService blockService, CustomBlock customBlock) {
-        super(Type.Chest5, "Block placer");
+    public BreakerInventory(BlockService blockService, CustomBlock customBlock) {
+        super(Type.Chest3, "Block breaker");
         this.blockService = blockService;
         this.customBlock = customBlock;
     }
 
     @Override
     protected void itemInit() {
-        for (int i = 0; i < getInventory().getSize(); i++) {
-            if(isBlockPosition(i)) continue;
+        for (int i = 0; i < getInventory().getSize(); i++)
             getInventory().setItem(i, GRAY_GLASS);
-        }
 
-        setItemCloseInventory(4, 4);
-    }
-
-    private boolean isBlockPosition(int i) {
-        for (int x = 0; x < BLOCK_POSITION.length; x++)
-            if(i == BLOCK_POSITION[x])
-                return true;
-        return false;
+        setItemCloseInventory(4, 2);
     }
 
     @Override
@@ -73,9 +64,16 @@ public class BlockPlacerInventory extends CustomBlockInventory {
                 items.remove(i);
                 continue;
             }
-                items.put(i, getInventory().getItem(i));
+            items.put(i, getInventory().getItem(i));
         }
         customBlock.setItems(items);
         blockService.saveBlockData(customBlock.getBlockData());
+    }
+
+    private boolean isBlockPosition(int i) {
+        for (int x = 0; x < BLOCK_POSITION.length; x++)
+            if(i == BLOCK_POSITION[x])
+                return true;
+        return false;
     }
 }

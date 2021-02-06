@@ -185,8 +185,8 @@ public class Nbt {
         return CraftItemStack.asBukkitCopy(nms);
     }
 
-    public static ItemStack setNbt_Int(@NotNull ItemStack is, @NotNull String key, int value)
-    {
+    public static ItemStack setNbt_Int(@NotNull ItemStack is, @NotNull String key, int value) {
+
         net.minecraft.server.v1_16_R3.ItemStack nms = CraftItemStack.asNMSCopy(is);
         {
             NBTTagCompound compound = nms.getTag();

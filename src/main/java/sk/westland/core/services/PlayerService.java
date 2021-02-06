@@ -24,15 +24,14 @@ public class PlayerService implements Listener {
     @Autowired
     private PlayerDataStorageService playerDataStorageService;
 
-
     private static HashMap<Player, WLPlayer> wlPlayers = new HashMap<>();
 
     @EventHandler(priority = EventPriority.LOWEST)
     private void onPlayerConnect(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        loadUser(player);
-        Bukkit.getPluginManager().callEvent(new WLPlayerJoinEvent(getWLPlayer(player)));
+        WLPlayer wlPlayer = loadUser(player);
+        Bukkit.getPluginManager().callEvent(new WLPlayerJoinEvent(wlPlayer));
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -63,11 +62,13 @@ public class PlayerService implements Listener {
         return wlPlayers.keySet();
     }
 
-    public void loadUser(Player player) {
+    public WLPlayer loadUser(Player player) {
         PlayerDataStorageService.Data data = playerDataStorageService.load(player);
         UserData user =  data.getUserData();
-        wlPlayers.put(player, new WLPlayer(player, data));
+        WLPlayer wlPlayer = new WLPlayer(player, data);
+        wlPlayers.put(player, wlPlayer);
         Bukkit.getConsoleSender().sendMessage("§aLoading player with his name: " + user.getName() + ", UUID[" + user.getUuid()+"]");
+        return wlPlayer;
     }
 
     public void saveAndUnloadUser(Player player) {

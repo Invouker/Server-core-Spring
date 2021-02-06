@@ -71,7 +71,6 @@ public class ItemBuilder {
         }
     }
 
-    @Deprecated
     public ItemBuilder(@NotNull Material m, @Nullable String name)
     {
         is = new ItemStack(m);
@@ -609,6 +608,11 @@ public class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder setNbt_Double(String key, double value) {
+        is = Nbt.setNbt_Double(is, key, value);
+        return this;
+    }
+
     @NotNull
     public ItemBuilder setNbt_Long(String key, long value)
     {
@@ -675,4 +679,6 @@ public class ItemBuilder {
     {
         return is;
     }
+
+
 }

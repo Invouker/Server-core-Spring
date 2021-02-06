@@ -13,14 +13,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public abstract class CustomBlockInventory extends CustomInventory {
+public abstract class NCCustomInventory extends CustomInventory {
 
-    public CustomBlockInventory(@NotNull CustomInventory.Type type, @NotNull String title) {
+    public NCCustomInventory(@NotNull CustomInventory.Type type, @NotNull String title) {
         super(type, title);
         itemInit();
     }
 
-    public CustomBlockInventory(@NotNull Inventory inventory, @NotNull String title) {
+    public NCCustomInventory(@NotNull Inventory inventory, @NotNull String title) {
         super(inventory, title);
         itemInit();
     }
@@ -61,6 +61,7 @@ public abstract class CustomBlockInventory extends CustomInventory {
             return;
 
         if(clickedItem.isSimilar(CLOSE_INVENTORY_ITEM)) {
+            event.setCancelled(true);
             close(player);
             return;
         }

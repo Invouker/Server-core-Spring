@@ -12,10 +12,9 @@ import sk.westland.core.blocks.BlockLevel;
 import sk.westland.core.blocks.BlockType;
 import sk.westland.core.blocks.CustomBlock;
 import sk.westland.core.database.data.BlockData;
-import sk.westland.core.database.data.BlockDataRepository;
 import sk.westland.core.items.ItemBuilder;
 import sk.westland.core.services.BlockService;
-import sk.westland.world.inventories.blocks.BlockBreakerInventory;
+import sk.westland.world.inventories.blocks.BreakerInventory;
 import sk.westland.world.items.Materials;
 
 import java.util.UUID;
@@ -91,7 +90,7 @@ public class BlockBreaker extends CustomBlock {
         event.setCancelled(true);
         event.setUseInteractedBlock(Event.Result.DENY);
 
-        BlockBreakerInventory blockBreakerInventory = new BlockBreakerInventory(blockService, this);
+        BreakerInventory blockBreakerInventory = new BreakerInventory(blockService, this);
         blockBreakerInventory.open(event.getPlayer());
     }
 

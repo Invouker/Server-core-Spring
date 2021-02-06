@@ -15,7 +15,7 @@ import sk.westland.core.blocks.BlockType;
 import sk.westland.core.blocks.CustomBlock;
 import sk.westland.core.database.data.BlockData;
 import sk.westland.core.services.BlockService;
-import sk.westland.world.inventories.blocks.BlockPlacerInventory;
+import sk.westland.world.inventories.blocks.PlacerInventory;
 import sk.westland.world.items.Materials;
 
 import java.util.Map;
@@ -80,7 +80,7 @@ public class BlockPlacer extends CustomBlock {
         event.setCancelled(true);
         event.setUseInteractedBlock(Event.Result.DENY);
 
-        BlockPlacerInventory blockPlacerInventory = new BlockPlacerInventory(blockService, this);
+        PlacerInventory blockPlacerInventory = new PlacerInventory(blockService, this);
         blockPlacerInventory.open(event.getPlayer());
     }
 

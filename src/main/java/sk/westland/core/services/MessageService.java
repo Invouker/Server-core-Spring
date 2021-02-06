@@ -1,28 +1,80 @@
 package sk.westland.core.services;
 
+import dev.alangomes.springspigot.context.Context;
+import dev.alangomes.springspigot.security.HasPermission;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import picocli.CommandLine;
 import sk.westland.core.event.player.WLPlayerJoinEvent;
 import sk.westland.core.event.player.WLPlayerQuitEvent;
 import sk.westland.core.entity.player.WLPlayer;
+import sk.westland.core.utils.ChatInfo;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Service
-public class MessageService implements Listener {
+public class MessageService implements Listener{
 
     @Autowired
     private PlayerService playerService;
 
     @Autowired
     private PermissionService permissionService;
+
+    private List<Player> activeAdminChat = new ArrayList<>();
+
+
+    public boolean isPlayerInAdminChat(Player player) {
+        return activeAdminChat.contains(player);
+    }
+
+    public void addPlayerToAdminChat(Player player) {
+        if(isPlayerInAdminChat(player))
+            return;
+
+        activeAdminChat.add(player);
+    }
+
+    public void removePlayerFromAdminChat(Player player) {
+        if(!isPlayerInAdminChat(player))
+            return;
+
+        activeAdminChat.remove(player);
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
+        Player player = event.getPlayer();
+
+        if(!player.isOp())
+            return;
+
+        if(!player.hasPermission("adminchat"))
+            return;
+
+        String message = event.getMessage();
+        if(message.startsWith("!") || message.startsWith("?") || isPlayerInAdminChat(player)) {
+            String adminChat = message.substring(1);
+            event.setCancelled(true);
+
+            Bukkit.getOnlinePlayers()
+                    .stream()
+                    .filter((target) -> target.hasPermission("adminchat"))
+                    .forEach((target) -> {
+                target.sendMessage("§c[§lADMINCHAT§c] §f" + event.getPlayer().getName() + ": §7" + adminChat.replace('&', '§'));
+            });
+        }
+    }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     private void onPlayerQuitEvent(WLPlayerQuitEvent event) {
@@ -39,13 +91,18 @@ public class MessageService implements Listener {
         String quitMessage = activeQuitMessage.replace("%player%", player.getName());
 
         sendMessage(getListOfActiveMessage(true), quitMessage);
+
+        removePlayerFromAdminChat(player);
+
         //Bukkit.broadcast(quitMessage, "westland.option.message.quit");
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler
     private void onPlayerJoin(WLPlayerJoinEvent event) {
         Player player = event.getPlayer();
         WLPlayer wlPlayer = playerService.getWLPlayer(player);
+        if(wlPlayer == null)
+            return;
 
         if(wlPlayer.getActiveJoinMessage() <= 0)
             return;
