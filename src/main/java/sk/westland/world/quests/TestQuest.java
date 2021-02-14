@@ -38,8 +38,8 @@ public class TestQuest implements Listener {
                                 "Sám neviem čo sem napísať, ale píšem :D 1. strana",
                                 "Je to nuda, čo ti poviem, eagle je piča! 2. strana"
                         }))
-                        .addTask("Najdi potulnika", "Najdi potulnika smerom neviem kam, kokot", Actions.interactWithNPC("§6Potulnik"), new ArrayList<IReward>(Arrays.asList(new ItemReward(Material.BAMBOO, 2), new ItemReward(Material.BAMBOO, 2))))
-                        .addTask("Najdi prístav", "Choď najsť prístav, pičus",Actions.goToLocation(new Location(Bukkit.getWorld("worldspawn"), 0, 61, -173), 5))
+                        .addTask("Najdi potulnika", "Najdi potulnika smerom neviem kam, kokot", Actions.interactWithNPC("§6Potulnik"), Arrays.asList(new ItemReward(Material.BAMBOO, 2), new ItemReward(Material.BAMBOO, 2)))
+                        .addTask("Najdi Boba, pičo", "Najdi potulnfawfaika smerom neviem kam, kokot", Actions.interactWithNPC("§6Bob"), Arrays.asList(new ItemReward(Material.ACACIA_BOAT, 1), new ItemReward(Material.CACTUS, 2)))
                         .build(),
                 EnumSet.of(QuestFlag.Repeatable, QuestFlag.RemoveOnDeath),
                 new ItemReward(Material.BAMBOO, 3));

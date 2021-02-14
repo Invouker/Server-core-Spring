@@ -6,13 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine;
 import sk.westland.core.database.player.UserData;
-import sk.westland.core.items.CraftingRecipe;
 import sk.westland.core.quest.QuestLogMenu;
+import sk.westland.core.services.HorseService;
 import sk.westland.core.services.MessageService;
 import sk.westland.core.services.PlayerService;
 import sk.westland.core.services.QuestService;
 import sk.westland.world.inventories.ChangeJoinMessageInventory;
 import sk.westland.world.inventories.ChangeQuitMessageInventory;
+import sk.westland.world.inventories.entities.HorseUpgradeInventory;
 import sk.westland.world.items.Materials;
 
 import java.util.List;
@@ -111,6 +112,30 @@ public class TestCommand implements Runnable {
         @Override
         public void run() {
             context.getPlayer().getInventory().addItem(Materials.Items.SADDLE_ITEM.getItem());
+        }
+    }
+
+    @Component
+    @CommandLine.Command(name = "5")
+    @HasPermission("commands.test5")
+    class Test5 implements Runnable {
+
+        @Autowired
+        private Context context;
+
+        @Autowired
+        private PlayerService playerService;
+
+        @Autowired
+        private QuestService questService;
+
+        @Autowired
+        private HorseService horseService;
+
+        @Override
+        public void run() {
+            HorseUpgradeInventory horseUpgradeInventory = new HorseUpgradeInventory(horseService);
+            horseUpgradeInventory.open(context.getPlayer());
         }
     }
 }

@@ -44,4 +44,7 @@ public class Application {
     @Bean
     public HorseService horseService() { return new HorseService(); }
 
+    @Bean
+    public DiscordService discordService() { return new DiscordService(); }
+
 }

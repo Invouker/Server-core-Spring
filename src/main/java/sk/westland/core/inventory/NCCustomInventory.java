@@ -25,6 +25,10 @@ public abstract class NCCustomInventory extends CustomInventory {
         itemInit();
     }
 
+    public NCCustomInventory(@NotNull CustomInventory.Type type, @NotNull String title, String withoutInit) {
+        super(type, title);
+    }
+
     protected abstract void itemInit();
     protected abstract void onClick(@NotNull Player player, int slot, @Nullable ItemStack item, @Nullable ItemStack cursor, @NotNull InventoryClickEvent event);
     @EventHandler

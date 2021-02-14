@@ -50,7 +50,8 @@ public class PlayerDataStorageService implements Listener {
         }
 
         if(!userRepository.findByUuid(uuid.toString()).isPresent()) {
-            UserData userData = new UserData(player.getName(), player.getUniqueId().toString(), 0, 1, 0, -1, -1);
+
+            UserData userData = new UserData(player.getName(), player.getUniqueId().toString(), 0, 0, 1, 0, -1, -1);
             UserOption userOption = new UserOption(player.getName(), player.getUniqueId().toString(), true, false, true);
             Data data = new Data(userData, userOption);
             userMap.put(player, data);

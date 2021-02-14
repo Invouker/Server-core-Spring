@@ -17,7 +17,7 @@ import sk.westland.world.commands.Converter.PlayerArgConverter;
 import sk.westland.world.commands.suggestion.QuestIdSuggestion;
 
 @Component
-@CommandLine.Command(name = "qqqqqq")
+@CommandLine.Command(name = "qquest")
 @HasPermission("quest")
 public class QuestCommands implements Runnable {
 

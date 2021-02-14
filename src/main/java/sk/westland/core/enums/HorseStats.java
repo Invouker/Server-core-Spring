@@ -11,11 +11,11 @@ public enum HorseStats {
     JUMP("jump"), // 0 - 2
     SPEED("speed"),
     HEALTH("health"),
-    COLOUR("color"),
+    COLOR("color"),
     STYLE("style"),
 
-    ARMOUR("armour"),
-    ARMOUR_COLOR("leather_armour_col")
+    ARMOR("armour"),
+    ARMOR_COLOR("leather_armour_col")
     ;
 
     private String stats;

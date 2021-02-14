@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
@@ -353,6 +354,12 @@ public abstract class CustomInventory implements InventoryHolder, Listener {
         return (is == null || is.getType() == Material.AIR) ? defaultItem : is;
     }
 
+    @EventHandler
+    private void onPluginDisable(PluginDisableEvent event) {
+        closeAll();
+    }
+
+    protected void setItemCloseInventory() { setItemCloseInventory(4, type.rows - 1); }
+    protected void setItemCloseInventory(int y) { setItemCloseInventory(4, y); }
     protected void setItemCloseInventory(int x, int y) { setItem(x, y, CLOSE_INVENTORY_ITEM); }
-    protected void setItemCloseInventory(int x) { inv.setItem(x,  CLOSE_INVENTORY_ITEM); }
 }

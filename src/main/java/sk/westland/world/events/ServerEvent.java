@@ -21,7 +21,7 @@ public class ServerEvent implements Listener {
     @EventHandler
     private void onServerPingEvent(ServerListPingEvent event) {
         event.setMotd(
-                ChatColor.of("#3498DB") + "                    §lWestLand §7[1.16]\n" +
+                ChatColor.of("#39c7f1") + "                    §lWestLand §7[1.16]\n" +
                 ChatColor.of("#EBF5FB") + "           §lPRÍPRAVA SURVIVAL SERVERU"
         );
     }

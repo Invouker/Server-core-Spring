@@ -1,0 +1,175 @@
+package sk.westland.world.inventories.entities;
+
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+import org.codehaus.plexus.util.StringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import sk.westland.core.enums.HorseStats;
+import sk.westland.core.enums.HorseTier;
+import sk.westland.core.inventory.NCCustomInventory;
+import sk.westland.core.items.ItemBuilder;
+import sk.westland.core.items.Nbt;
+import sk.westland.core.services.HorseService;
+import sk.westland.core.utils.ChatInfo;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+public class HorseUpgradeInventory extends NCCustomInventory {
+
+    private static final int[] UPGRADE_POSITION = new int[] { 12,13,14,15,16,    22,24 };
+    private static final int SADDLE_ITEM = 19;
+    private HorseService horseService;
+    private ItemStack saddle = null;
+
+    public HorseUpgradeInventory(HorseService horseService) {
+        super(Type.Chest5, "Horse Inventory Upgrade");
+        this.horseService = horseService;
+    }
+
+    public HorseUpgradeInventory(HorseService horseService, ItemStack saddle) {
+        super(Type.Chest5, "Horse Inventory Upgrade");
+        this.horseService = horseService;
+        this.saddle = saddle;
+        getInventory().setItem(SADDLE_ITEM, saddle);
+    }
+
+    @Override
+    protected void itemInit() {
+        for (int i = 0; i < getInventory().getSize(); i++) {
+            if(i == SADDLE_ITEM) continue;
+            getInventory().setItem(i, GRAY_GLASS);
+        }
+
+        for (int i = 0; i < UPGRADE_POSITION.length; i++) {
+            int pos = UPGRADE_POSITION[i];
+            getInventory().setItem(pos, HorseUpgradeItem.values()[i].getItem());
+        }
+
+
+        setItemCloseInventory(4, 4);
+    }
+
+    private boolean isUpgradePosition(int i) {
+        for (int x = 0; x < UPGRADE_POSITION.length; x++)
+            if(i == UPGRADE_POSITION[x])
+                return true;
+        return false;
+    }
+
+    @Override
+    protected void onClick(@NotNull Player player, int slot, @Nullable ItemStack item, @Nullable ItemStack cursor, @NotNull InventoryClickEvent event) {
+        if(slot != SADDLE_ITEM) {
+            event.setCancelled(true);
+            event.setResult(Event.Result.DENY);
+        }
+
+        switch (slot) {
+            case 12: {
+                update(player, HorseStats.HEALTH);
+                break;
+            }
+            case 13: {
+                update(player, HorseStats.ARMOR);
+                break;
+            }
+            case 14: {
+                update(player, HorseStats.JUMP);
+                break;
+            }
+
+            case 15: {
+                if(getInventory().getItem(SADDLE_ITEM) == null) {
+                    return;
+                }
+                saddle = getInventory().getItem(SADDLE_ITEM);
+                HorseColorInventory horseColorInventory = new HorseColorInventory(horseService, saddle);
+                horseColorInventory.open(player);
+                break;
+            }
+            case 16: {
+                update(player, HorseStats.SPEED);
+                break;
+            }
+            case 22: {
+                if(getInventory().getItem(SADDLE_ITEM) == null) {
+                    return;
+                }
+                saddle = getInventory().getItem(SADDLE_ITEM);
+                HorseStyleInventory horseStyleInventory = new HorseStyleInventory(horseService, saddle);
+                horseStyleInventory.open(player);
+                break;
+            }
+        }
+    }
+
+    private void update(Player player, HorseStats horseStats){
+        saddle = getInventory().getItem(SADDLE_ITEM);
+        int tier = Nbt.getNbt_Int(saddle, horseStats.getStatName(), -1);
+        if(tier >= HorseTier.getMaxTier())
+            return;
+
+        ChatInfo.SUCCESS.send(player, "Úspešne si si kúpil " + StringUtils.capitalise(horseStats.name().toLowerCase()) + " upgrade (§oTier: " + tier + ") §ana koňa.");
+        saddle = horseService.applyStats(saddle, horseStats, tier+1);
+        getInventory().setItem(SADDLE_ITEM, saddle);
+
+    }
+
+    @Override
+    protected void onOpen(@NotNull Player player) {
+    }
+
+    @Override
+    protected void onClose(@NotNull Player player) {
+        if(saddle == null)
+            return;
+
+        player.getInventory().addItem(saddle);
+    }
+
+    private enum HorseUpgradeItem {
+        HEALTH("Health Upgrade", Material.REDSTONE, new String[]{"", "Možno navýšiť", "zdravie koňa", "", "§eCena upgradu §f20$"}),
+        ARMOR("Armor Upgrade", Material.IRON_HORSE_ARMOR, new String[]{"", "Možno navýšiť", "brnenie koňa", "", "§eCena upgradu §f25$"}),
+        JUMP("Jump Upgrade", Material.IRON_BOOTS, new String[]{"", "Možno navýšiť", "dosah výskoku koňa", "", "§eCena upgradu §f60$"}),
+        COLOUR("Color Select", Material.BLACK_DYE, new String[]{"", "Možno si vybrať", "farbu koňa", "", "§eCena upgradu §f23$"}),
+        SPEED("Speed Upgrade", Material.SUGAR, new String[]{"", "Možno navýšiť", "rýchlosť koňa", "", "§eCena upgradu §f50$"}),
+        STYLE("Style Select", Material.BLAZE_POWDER, new String[]{"", "Možno si vybrať", "štýL koňa", "", "§eCena upgradu §f20$"}),
+        ARMOR_COLOUR("Armor Colour Select", Material.LEATHER_HORSE_ARMOR, new String[]{"", "Možno vybrať", "farbu armoru", "", "§eCena upgradu §f30$"})
+        ;
+
+        private String name;
+        private Material material;
+        private List<String> lore;
+
+        HorseUpgradeItem(String name, Material material, String[] lore) {
+            this.name = "§f" + name;
+            this.material = material;
+            List<String> coloredLore = new ArrayList<>();
+            for(String string : lore)
+                coloredLore.add("§7" + string);
+
+            this.lore = coloredLore;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public Material getMaterial() {
+            return material;
+        }
+
+        public List<String> getLore() {
+            return lore;
+        }
+
+        public ItemStack getItem() {
+            return new ItemBuilder(material).setName(name).setLore(lore).build();
+        }
+    }
+}

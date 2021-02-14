@@ -16,6 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import sk.westland.core.utils.ChatInfo;
 
 import java.util.*;
 
@@ -234,8 +235,7 @@ public class ItemBuilder {
      * @param lines Array of lore
      */
     @NotNull
-    public ItemBuilder addLore(String... lines)
-    {
+    public ItemBuilder addLore(String... lines) {
         if (lines == null || lines.length == 0)
             return this;
         ItemMeta im = is.getItemMeta();
@@ -357,6 +357,65 @@ public class ItemBuilder {
         return setLore(Arrays.asList(lore));
     }
 
+    public ItemBuilder removeLoreLine(final String line) {
+        ItemMeta im = is.getItemMeta();
+        if (im == null || im.getLore() == null)
+            return this;
+
+        List<String> lore = new ArrayList<>(im.getLore());
+        if (!lore.contains(line)) {
+            return this;
+        }
+        lore.remove(line);
+        im.setLore((List)lore);
+        this.is.setItemMeta(im);
+        return this;
+    }
+
+    public ItemBuilder removeLoreLine(final int index) {
+        ItemMeta im = is.getItemMeta();
+        if (im == null)
+            return this;
+
+        final List<String> lore = new ArrayList<>(im.getLore());
+        if (index < 0 || index > lore.size()) {
+            return this;
+        }
+        lore.remove(index - 1);
+        im.setLore(lore);
+        this.is.setItemMeta(im);
+        return this;
+    }
+
+    /**
+     * Set the lore line of the item.
+     *
+     * @param text The lore to change it to.
+     * @param pos The position of line to change.
+     */
+    public ItemBuilder setLoreLine(int pos, String text) {
+        ItemMeta im = is.getItemMeta();
+        ChatInfo.GENERAL_INFO.sendAll("0");
+        if (im == null)
+            return this;
+        ChatInfo.GENERAL_INFO.sendAll("1");
+        if (im.getLore() == null)
+            im.setLore(Collections.singletonList(""));
+
+        ChatInfo.GENERAL_INFO.sendAll("2");
+        List<String> lore = new ArrayList<>(im.getLore());
+        for (int i = 0; i <= pos + 1 && lore.size() <= pos; ++i) {
+            lore.add("§f ");
+            ChatInfo.GENERAL_INFO.sendAll("3: " + i);
+        }
+        lore.set(pos, "§f" + text);
+        ChatInfo.GENERAL_INFO.sendAll("TEXT: " + text);
+        im.setLore(lore);
+        is.setItemMeta(im);
+
+        return this;
+    }
+
     /**
      * Set the displayname of the item.
      *
@@ -374,102 +433,6 @@ public class ItemBuilder {
         return this;
     }
 
-    @NotNull
-    public ItemBuilder addLore(@NotNull BaseComponent component)
-    {
-        BaseComponent[] components = getLoreComponents();
-        if(components == null)
-            return setLore(new BaseComponent[] { component });
-        else
-        {
-            components = Arrays.copyOf(components, components.length + 1);
-            components[components.length - 1] = component;
-            return setLore(components);
-        }
-    }
-
-    @NotNull
-    public ItemBuilder addLocalizedLore(@NotNull String localizedKey)
-    {
-        TranslatableComponent component = new TranslatableComponent(localizedKey);
-        component.setColor(net.md_5.bungee.api.ChatColor.WHITE);
-
-        return addLore(component);
-    }
-
-    @NotNull
-    public ItemBuilder addLocalizedLore(@NotNull String localizedKey, @NotNull BaseComponent... with)
-    {
-        TranslatableComponent component = new TranslatableComponent(localizedKey);
-        component.setColor(net.md_5.bungee.api.ChatColor.WHITE);
-
-        for(BaseComponent w : with)
-        {
-            if(w == null)
-                component.addWith(new TextComponent());
-            else
-                component.addWith(w);
-        }
-
-        return addLore(component);
-    }
-
-    @NotNull
-    public ItemBuilder addLocalizedLore(@NotNull String localizedKey, @NotNull String... with)
-    {
-        TranslatableComponent component = new TranslatableComponent(localizedKey);
-        component.setColor(net.md_5.bungee.api.ChatColor.WHITE);
-
-        for(String w : with)
-            component.addWith(w);
-
-        return addLore(component);
-    }
-
-    @NotNull
-    public ItemBuilder setLore(@NotNull BaseComponent[] components)
-    {
-        String[] texts = new String[components.length];
-        for(int i = 0; i < components.length; i++)
-            texts[i] = ComponentSerializer.toString(components[i]);
-
-        is = Nbt.setNbt_StringArray(is, "display.Lore", texts);
-
-        return this;
-    }
-
-    @NotNull
-    public ItemBuilder setLocalizedLore(@NotNull String[] localizedKeys)
-    {
-        String[] texts = new String[localizedKeys.length];
-        for(int i = 0; i < localizedKeys.length; i++)
-        {
-            TranslatableComponent component = new TranslatableComponent(localizedKeys[0]);
-            component.setColor(net.md_5.bungee.api.ChatColor.WHITE);
-            texts[i] = ComponentSerializer.toString(component);
-        }
-
-        is = Nbt.setNbt_StringArray(is, "display.Lore", texts);
-
-        return this;
-    }
-
-    @Nullable
-    public BaseComponent[] getLoreComponents()
-    {
-        String[] textLore = Nbt.getNbt_StringArray(is, "display.Lore");
-        if(textLore == null)
-            return new BaseComponent[0];
-
-        BaseComponent[] lore = new BaseComponent[textLore.length];
-        for(int i = 0; i < textLore.length; i++)
-        {
-            BaseComponent[] components = ComponentSerializer.parse(textLore[i]);
-            assert components.length <= 1;
-            lore[i] = components.length == 0 ? null : components[0];
-        }
-        return lore;
-    }
 
     @NotNull
     public ItemBuilder setAttackDamageBonus(double amount)
