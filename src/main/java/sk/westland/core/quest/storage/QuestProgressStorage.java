@@ -6,10 +6,13 @@ import sk.westland.core.quest.QuestState;
 import sk.westland.core.quest.QuestTask;
 import sk.westland.core.quest.action.ActionDataStorage;
 
+import javax.annotation.Generated;
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class QuestProgressStorage {
+public abstract class QuestProgressStorage implements Serializable {
 
     protected Player player;
     protected Quest quest;

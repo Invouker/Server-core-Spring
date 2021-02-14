@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+
 public class QuestProgressStorageOrderIndependent extends QuestProgressStorage {
 
     private Map<Integer, ActionDataStorage> actionDataStorageMap;

@@ -6,13 +6,17 @@ import org.bukkit.Sound;
 import org.bukkit.craftbukkit.libs.jline.internal.Log;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import sk.westland.core.database.player.UserQuestData;
 import sk.westland.core.database.player.UserQuestRepository;
 import sk.westland.core.event.PluginEnableEvent;
+import sk.westland.core.event.player.WLPlayerJoinEvent;
+import sk.westland.core.event.player.WLPlayerQuitEvent;
 import sk.westland.core.utils.ChatInfo;
 import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.quest.*;
@@ -26,6 +30,7 @@ import sk.westland.core.utils.BookPageFactory;
 import javax.management.openmbean.KeyAlreadyExistsException;
 import java.util.*;
 
+@Service
 public class QuestService implements Listener {
 
     @Autowired
@@ -60,7 +65,45 @@ public class QuestService implements Listener {
             //List<QuestTask> tasks = questProgressStorage.getActiveTasks().get(questProgressStorage.getActiveTasks().size()-1);
         }
     }
+/*
+    @EventHandler
+    public void onWLPlayerJoin(WLPlayerJoinEvent event) {
+        if(!activeQuestProgressMap.containsKey(event.getPlayer()))
+            activeQuestProgressMap.put(event.getPlayer(), event.getWlPlayer().getUserData().getActiveQuestProgressMap());
 
+        //if(!progressStorageMap.containsKey(event.getPlayer()))
+          //  progressStorageMap.put(event.getPlayer(), new ArrayList<>(event.getWlPlayer().getUserData().getActiveQuestProgressMap()));
+
+        ChatInfo.GENERAL_INFO.sendAll("Join");
+
+    }
+
+
+    public static <T> List<T> convertArrayListToLinkedList(List<T> aL) {
+        List<T> lL = new LinkedList<>();
+        for (T t : aL)
+            lL.add(t);
+        return lL;
+    }
+
+    @EventHandler
+    public void onWLPlayerQuit(WLPlayerQuitEvent event) {
+        if(activeQuestProgressMap.containsKey(event.getPlayer())) {
+            List<QuestProgressStorage> activeQuestProgress = activeQuestProgressMap.get(event.getPlayer());
+            LinkedList<QuestProgressStorage> questProgressStorages = new LinkedList<>(activeQuestProgress);
+            event.getWlPlayer().getUserData().setActiveQuestProgressMap(questProgressStorages);
+            activeQuestProgressMap.remove(event.getPlayer());
+            ChatInfo.GENERAL_INFO.sendAll("Remove");
+        }
+
+/*        if(progressStorageMap.containsKey(event.getPlayer())) {
+            event.getWlPlayer().getUserData().setProgressStorageMap(progressStorageMap.get(event.getPlayer()));
+            progressStorageMap.remove(event.getPlayer());
+        }
+
+        ChatInfo.GENERAL_INFO.sendAll("Quit");
+    }
+*/
     ////
 
     public Set<String> getQuestIds() {

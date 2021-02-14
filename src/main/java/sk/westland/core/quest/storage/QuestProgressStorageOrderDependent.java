@@ -7,11 +7,15 @@ import sk.westland.core.quest.QuestState;
 import sk.westland.core.quest.QuestTask;
 import sk.westland.core.quest.action.ActionDataStorage;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Entity;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class QuestProgressStorageOrderDependent extends QuestProgressStorage {
+
+public class  QuestProgressStorageOrderDependent extends QuestProgressStorage {
 
     private int activeTaskId;
     private QuestTask activeTask;

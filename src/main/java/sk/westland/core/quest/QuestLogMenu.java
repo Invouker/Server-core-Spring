@@ -19,6 +19,7 @@ import sk.westland.core.services.PlayerService;
 import sk.westland.core.services.QuestService;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class QuestLogMenu extends ItemMenu {
@@ -33,7 +34,9 @@ public class QuestLogMenu extends ItemMenu {
     }
 
     @Override
-    protected void itemInit() { }
+    protected void itemInit() {
+        setItemCloseInventory(4, 5);
+    }
 
     @Override
     protected void onClick(@NotNull Player player, int slot, @Nullable ItemStack item, @Nullable ItemStack cursor, @NotNull InventoryClickEvent event) {
@@ -44,7 +47,44 @@ public class QuestLogMenu extends ItemMenu {
 
     @Override
     protected void onOpen(@NotNull Player player) {
+        getInventory().clear();
 
+        setItemsRange(0, 9, new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName(" ").build());
+        setItemsRange(9 * 5, 9, new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName(" ").build());
+
+        setItemsRangeHorizontal(0, 0, 6, new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName(" ").build());
+        setItemsRangeHorizontal(8, 0, 6, new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName(" ").build());
+
+
+        WLPlayer wlPlayer = this.playerService.getWLPlayer(player);
+
+        if(wlPlayer == null) {
+            return;
+        }
+
+        List<QuestProgressStorage> storageList = questService.getAllQuestProgressList(wlPlayer);
+
+        List<QuestProgressStorage> doneQuestStorageList = new LinkedList<>();
+
+        int a = 0;
+        for (int i = 0; i < storageList.size(); i++) {
+            QuestProgressStorage progressStorage = storageList.get(i);
+
+            if(progressStorage.getQuestState() == QuestState.Completed) {
+                doneQuestStorageList.add(progressStorage);
+                continue;
+            }
+
+            int index = a++;
+
+            setItem(1 + (index % 7),1 + (index / 7), createQuestItemInfo(wlPlayer, progressStorage));
+        }
+
+        for (int i = 0; i < doneQuestStorageList.size(); i++) {
+            QuestProgressStorage progressStorage = doneQuestStorageList.get(i);
+
+            setItem(1 + (i % 7),4 - (i / 7), createQuestItemInfo(wlPlayer, progressStorage));
+        }
     }
 
     private static String X_CHAR = ChatColor.RED + "✖";
