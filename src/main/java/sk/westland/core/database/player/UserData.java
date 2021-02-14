@@ -1,9 +1,12 @@
 package sk.westland.core.database.player;
 
+import org.bukkit.entity.Player;
+import sk.westland.core.quest.storage.QuestProgressStorage;
+import sk.westland.core.utils.converter.QuestProgressStorageConverter;
 import sk.westland.core.utils.converter.StringConverter;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.*;
 
 @Table(name = "wl_player_data")
 @Entity
@@ -31,17 +34,26 @@ public class UserData {
     private int activeJoinMessage = -1;
     private int activeQuitMessage = -1;
 
+    //@Convert(converter = QuestProgressStorageConverter.class)
+    //private LinkedList<QuestProgressStorage> progressStorageMap;
+
+   // @Convert(converter = QuestProgressStorageConverter.class)
+    //private LinkedList<QuestProgressStorage> activeQuestProgressMap;
+
     public UserData() { }
 
-    public UserData(String name, String uuid, double gems, int level, int exp, int activeJoinMessage, int activeQuitMessage) {
+    public UserData(String name, String uuid, double gems, double shards, int level, int exp, int activeJoinMessage, int activeQuitMessage) {
         this.name = name;
         this.uuid = uuid;
         this.gems = gems;
+        this.shards = shards;
         this.level = level;
         this.exp = exp;
         this.activeJoinMessage = activeJoinMessage;
         this.activeQuitMessage = activeQuitMessage;
     }
+
+
 
     public long getId() {
         return id;
