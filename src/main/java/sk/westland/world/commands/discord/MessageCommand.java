@@ -1,0 +1,57 @@
+package sk.westland.world.commands.discord;
+
+import com.gmail.chickenpowerrr.ranksync.lib.jda.jda.api.Permission;
+import com.gmail.chickenpowerrr.ranksync.lib.jda.jda.api.entities.TextChannel;
+import com.gmail.chickenpowerrr.ranksync.lib.jda.jda.api.entities.User;
+import com.gmail.chickenpowerrr.ranksync.lib.jda.jda.api.events.message.MessageReceivedEvent;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import sk.westland.core.discord.Command;
+import sk.westland.core.discord.ICommand;
+import sk.westland.core.services.DiscordService;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+public class MessageCommand implements ICommand {
+
+    @Override
+    @Command(command = "msg", description = "For admins")
+    public void onCommand(User user, String command, String[] args, String arg, MessageReceivedEvent event) {
+        //System.out.println("textChannel: " + event.getTextChannel() + " CMD: " + command);
+        String channelName = args[0];
+        if(args == null || args.length < 1) {
+            errorMessage(event.getTextChannel(), "!" + command + " <channel> <text>");
+            channelName = event.getTextChannel().getName();
+        }
+
+        List<TextChannel> channels = event.getJDA().getTextChannelsByName(channelName.toLowerCase(), true);
+        if(channels == null || channels.isEmpty()) {
+            errorMessage(event.getMessage().getTextChannel(), "Neznámy channel");
+            return;
+        }
+
+        TextChannel channel = channels.get(0);
+        channel.sendMessage(buildOffsetMessage(args, 1)).queue();
+
+    }
+
+    public void errorMessage(TextChannel textChannel, String message) {
+        errorMessage(textChannel, message, 5);
+    }
+
+    public void errorMessage(TextChannel textChannel, String message, int seconds) {
+        textChannel.sendMessage("[ERROR]" + message).queue((text) -> {
+            text.delete().queueAfter(seconds, TimeUnit.SECONDS);
+        });
+    }
+
+    public String buildOffsetMessage(String[] string, int offset) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = offset; i < string.length; i++) {
+            stringBuilder.append(string[i] + " ");
+        }
+        return stringBuilder.toString();
+    }
+
+}
