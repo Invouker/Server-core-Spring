@@ -1,6 +1,7 @@
 package sk.westland.world.items.blocks.multiblocks;
 
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Dispenser;
 import org.bukkit.entity.Player;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Component;
 import sk.westland.core.blocks.multiblock.IMBRecipe;
 import sk.westland.core.blocks.multiblock.MultiBlock;
 import sk.westland.core.blocks.multiblock.MultiBlockType;
+import sk.westland.core.items.ItemBuilder;
+import sk.westland.core.utils.Utils;
 import sk.westland.world.items.Materials;
 
 import java.util.EnumSet;
@@ -19,15 +22,17 @@ import java.util.EnumSet;
 public class Grinder extends MultiBlock implements Listener {
 
     public Grinder() {
-        super(Material.WARPED_FENCE, MultiBlockType.Grinder, EnumSet.of(BlockFace.DOWN));
+        super(Material.WARPED_FENCE, MultiBlockType.Grinder,
+                EnumSet.of(BlockFace.DOWN));
         setBlockMaterial(Material.CAULDRON, Material.DISPENSER, Material.WARPED_FENCE);
 
-        addRecipe(Materials.Items.BETTER_HOE.getItem(),
-                new ItemStack(Material.WHEAT_SEEDS), new ItemStack(Material.WHEAT));
+        addRecipe(Material.FLINT, Material.GRAVEL);
+        addRecipe(Material.COBBLESTONE, Material.STONE);
+        addRecipe(new ItemBuilder(Material.REDSTONE).setAmount(9).build(), Material.REDSTONE_BLOCK);
     }
-
 
     @Override
     public void onMultiBlockActivation(Player player, Dispenser dispenser, IMBRecipe imbRecipe, PlayerInteractEvent event) {
+        Utils.playSound(dispenser.getLocation(), Sound.BLOCK_GRINDSTONE_USE);
     }
 }

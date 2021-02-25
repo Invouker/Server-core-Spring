@@ -92,6 +92,14 @@ public class Materials {
         public ItemStack getItem() {
             return customResourceItem.getItem();
         }
+
+        public static Resources findItemName(String name){
+            for(Resources item : Resources.values()) {
+                if(item.name().toLowerCase().equals(name.toLowerCase()))
+                    return item;
+            }
+            return null;
+        }
     }
 
 }

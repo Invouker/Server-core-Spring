@@ -8,8 +8,9 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import sk.westland.core.enums.QuitMessages;
 import sk.westland.core.utils.ChatInfo;
-import sk.westland.core.inventory.CustomOwnerInventory;
+import sk.westland.core.inventory.OwnerItemMenu;
 import sk.westland.core.items.ItemBuilder;
 import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.services.MessageService;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ChangeQuitMessageInventory extends CustomOwnerInventory {
+public class ChangeQuitMessageItemMenu extends OwnerItemMenu {
 
     List<ItemStack> items = new ArrayList<>();
     private ItemBuilder item = new ItemBuilder(Material.RED_CONCRETE_POWDER).setName("§cNONE");
@@ -26,7 +27,7 @@ public class ChangeQuitMessageInventory extends CustomOwnerInventory {
 
     private MessageService messageService;
 
-    public ChangeQuitMessageInventory(WLPlayer player, MessageService messageService) {
+    public ChangeQuitMessageItemMenu(WLPlayer player, MessageService messageService) {
         super(player, Type.Chest5, "§7Zmena odpájacích správ");
 
         this.messageService = messageService;
@@ -38,7 +39,7 @@ public class ChangeQuitMessageInventory extends CustomOwnerInventory {
         getInventory().clear();
         if(items.size() > 0)
             for (int i = 0; i < items.size(); i++) {
-                if(i == wlPlayer.getActiveQuitMessage()) {
+                if(i == getWlPlayer().getActiveQuitMessage()) {
                     ItemBuilder itemBuilder = new ItemBuilder(items.get(i));
                     itemBuilder.addEnchant(Enchantment.DAMAGE_ALL, 1)
                             .setMaterial(Material.GREEN_CONCRETE_POWDER)
@@ -56,8 +57,8 @@ public class ChangeQuitMessageInventory extends CustomOwnerInventory {
     @Override
     protected void itemInit() {
         getInventory().clear();
-        for(MessageService.QuitMessage quitMessage : MessageService.QuitMessage.values()) {
-            String lore = quitMessage.formattedJoinMessageWithoutPrefix().replaceAll("%player%",  wlPlayer.getName());
+        for(QuitMessages quitMessage : QuitMessages.values()) {
+            String lore = quitMessage.formattedJoinMessageWithoutPrefix().replaceAll("%player%",  getPlayer().getName());
             items.add(item.setName(quitMessage.getName()).setLore(getItemLore(lore)).build().clone());
         }
     }
@@ -70,19 +71,19 @@ public class ChangeQuitMessageInventory extends CustomOwnerInventory {
     protected void onClick(int slot, @Nullable ItemStack item, @Nullable ItemStack cursor, @NotNull InventoryClickEvent event) {
         event.setCancelled(true);
 
-        if(!wlPlayer.hasPermission("westland.message.quit")) {
-            ChatInfo.ERROR.send(wlPlayer, "Zakúp si VIP pre využitie tejto výhody!");
-            close(wlPlayer);
+        if(!getPlayer().hasPermission("westland.message.quit")) {
+            ChatInfo.ERROR.send(getWlPlayer(), "Zakúp si VIP pre využitie tejto výhody!");
+            close(getPlayer());
             return;
         }
 
         if(slot < 30)
-            wlPlayer.setActiveQuitMessage(slot);
+            getWlPlayer().setActiveQuitMessage(slot);
 
         updateInventory();
 
         if(slot == 40)
-            close(wlPlayer);
+            close(getPlayer());
 
     }
 

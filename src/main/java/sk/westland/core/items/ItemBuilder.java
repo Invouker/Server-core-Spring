@@ -1,12 +1,15 @@
 package sk.westland.core.items;
 
+import jdk.jfr.internal.Logger;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.TranslatableComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
+import net.minecraft.server.v1_16_R3.Item;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
@@ -18,6 +21,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import sk.westland.core.utils.ChatInfo;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.*;
 
 public class ItemBuilder {
@@ -259,6 +264,102 @@ public class ItemBuilder {
         is.setAmount(amount);
         return this;
     }
+/*
+    public static void setSize(ItemStack stack, int size) {
+        Material material = stack.getType();
+        try {
+            Class<?> cbclass = getNMSClass("org.bukkit.craftbukkit", "util.CraftMagicNumbers");
+            Method m = cbclass.getDeclaredMethod("getItem", Material.class);
+            Class<?> result = m.invoke(stack, material).getClass();
+            if (!result.getCanonicalName().split("\\.")[result.getCanonicalName().split("\\.").length-1].toLowerCase().equalsIgnoreCase("item")) {
+                while(!result.getCanonicalName().split("\\.")[result.getCanonicalName().split("\\.").length-1].toLowerCase().equalsIgnoreCase("item")) {
+                    result = result.getSuperclass();
+                }
+            }
+            Object myItem = getNMSClass("net.minecraft.server", "Items").getDeclaredField(material.name()).get(null);
+            Field f = result.getDeclaredField("maxStackSize");
+            f.setAccessible(true);
+            f.setInt(myItem, size);
+        } catch (Exception e) {e.printStackTrace();}
+
+        //return CraftItemStack.asBukkitCopy(myItem);
+    }
+
+    private static Class<?> getNMSClass(String path, String name) {
+        String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+        try {
+            return Class.forName(path + "." + version + "." + name);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static void setMaxStackSize(Material m, int amount) {
+        try {
+            String packageVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+            Class<?> magicClass = Class.forName("org.bukkit.craftbukkit." + packageVersion + ".util.CraftMagicNumbers");
+            Method method = magicClass.getDeclaredMethod("getItem", Material.class);
+            Object item = method.invoke(null, m);
+            Class<?> itemClass = Class.forName("net.minecraft.server." + packageVersion + ".Item");
+            Field field = itemClass.getDeclaredField("maxStackSize");
+            field.setAccessible(true);
+            field.setInt(item, amount);
+            Field mf = Material.class.getDeclaredField("maxStack");
+            mf.setAccessible(true);
+            mf.setInt(m, amount);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static ItemStack setStackSize(ItemStack itemStack, int size) {
+        net.minecraft.server.v1_16_R3.ItemStack nmsIS = null;
+        try {
+            itemStack.getType().getMaxStackSize();
+            nmsIS = CraftItemStack.asNMSCopy(itemStack);
+
+            Field maxStackSizeField = Item.class.getDeclaredField("maxStackSize");
+            maxStackSizeField.setAccessible(true);
+            maxStackSizeField.setInt(Item., size);
+            System.out.println("Max Stack size: " + maxStackSizeField.getInt(item));
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+            CraftItemStack craftstack = (CraftItemStack) items;
+            net.minecraft.server.v1_16_R3.ItemStack nmsStack = craftstack.getMaxStackSize()
+
+            Field maxStack = nmsStack.getItem().getClass().getDeclaredField("maxStackSize");
+            maxStack.setAccessible(true);
+            maxStack.setInt(nmsStack, amount);
+
+            int nmsStackSize = maxStack.invoke(nmsStack.getItem());
+        }
+        catch(Throwable t)    {    }
+
+        return CraftItemStack.asBukkitCopy(nmsIS);
+    }
+
+
+    public ItemBuilder setMaxStackSize(int amount) {
+        net.minecraft.server.v1_16_R3.ItemStack otherItem = CraftItemStack.asNMSCopy(this.is);
+        otherItem.setCount(amount);
+        is = CraftItemStack.asBukkitCopy(otherItem);
+        return this;
+    }*/
+
+    public static void modifyMaxStack(Item item, int amount) {
+        try {
+            Field f = Item.class.getDeclaredField("maxStackSize");
+            f.setAccessible(true);
+            f.setInt(item, amount);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+    }
 
     /**
      * Change the durability of the item.
@@ -268,6 +369,7 @@ public class ItemBuilder {
     @NotNull
     public ItemBuilder setDurability(short dur)
     {
+
         ItemMeta im = is.getItemMeta();
         if (im instanceof Damageable)
         {

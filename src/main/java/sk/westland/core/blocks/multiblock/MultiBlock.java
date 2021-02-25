@@ -17,6 +17,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.springframework.beans.factory.annotation.Autowired;
 import sk.westland.core.services.BlockService;
+import sk.westland.core.utils.Utils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -67,6 +68,26 @@ public abstract class MultiBlock implements IMultiBlock {
     @Override
     public Material getInteractableBlock() {
         return interactableMaterial;
+    }
+
+    protected void addRecipe(Material result, ItemStack... ingredients) {
+        this.addRecipe(new ItemStack(result), ingredients);
+    }
+
+    protected void addRecipe(ItemStack result, Material... ingredients) {
+        ItemStack[] itemStacks = new ItemStack[ingredients.length];
+        for (int i = 0; i < ingredients.length; i++) {
+            itemStacks[i] = new ItemStack(ingredients[i]);
+        }
+        this.addRecipe(result, itemStacks);
+    }
+
+    protected void addRecipe(Material result, Material... ingredients) {
+        ItemStack[] itemStacks = new ItemStack[ingredients.length];
+        for (int i = 0; i < ingredients.length; i++) {
+            itemStacks[i] = new ItemStack(ingredients[i]);
+        }
+        this.addRecipe(new ItemStack(result), itemStacks);
     }
 
     protected void addRecipe(ItemStack result, ItemStack... ingredients) {
@@ -166,7 +187,7 @@ public abstract class MultiBlock implements IMultiBlock {
         if(!checkConstruction(block))
             return;
 
-        playArmAnimation(event.getPlayer());
+        Utils.playArmAnimation(event.getPlayer());
 
         Dispenser dispenser = getDispenserConstruction(block);
         IMBRecipe imbRecipe = getRecipe(Arrays.asList(dispenser.getInventory().getContents()));
@@ -174,17 +195,19 @@ public abstract class MultiBlock implements IMultiBlock {
         onMultiBlockActivation(event.getPlayer(), dispenser, imbRecipe, event);
     }
 
-    public void playArmAnimation(Player player) {
-        ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-        PacketContainer animation = protocolManager.createPacket(PacketType.Play.Server.ANIMATION, false);
-
-        animation.getEntityModifier(player.getWorld()).write(0, player);
-        animation.getIntegers().write(1, 0); // 0 arm swing, 3
-
-        protocolManager.broadcastServerPacket(animation, player.getLocation(), 25);
-    }
-
     protected void takeItems(IMBRecipe imbRecipe, Inventory inventory) {
+        if(imbRecipe == null)
+            return;
+
+        if(imbRecipe.getItems().isEmpty() || imbRecipe.getResult() == null)
+            return;
+
+        if(inventory == null)
+            return;
+
+        if(inventory.getContents().length <= 0)
+            return;
+
         main: for(ItemStack itemStack : imbRecipe.getItems()) {
             for(ItemStack inventoryItem : inventory.getContents()) {
                 if(inventoryItem != null && itemStack != null  && inventoryItem.isSimilar(itemStack)) {
@@ -192,7 +215,7 @@ public abstract class MultiBlock implements IMultiBlock {
                     if(firstEmpty == -1)
                         return;
 
-                    inventory.setItem(firstEmpty, imbRecipe.getResult());
+                    inventory.addItem(imbRecipe.getResult());
 
                     inventoryItem.setAmount(inventoryItem.getAmount() - itemStack.getAmount());
                     continue main;

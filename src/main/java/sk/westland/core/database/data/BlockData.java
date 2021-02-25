@@ -105,4 +105,16 @@ public class BlockData {
     public void setItems(Map<Integer, ItemStack> items) {
         this.items = items;
     }
+
+    @Override
+    public String toString() {
+        return "BlockData{" +
+                "id=" + id +
+                ", ownerUUID=" + ownerUUID +
+                ", ownerName='" + ownerName + '\'' +
+                ", blockLocation=" + blockLocation.toString() +
+                ", blockLevel=" + blockLevel.toString() +
+                ", blockType=" + blockType.toString() +
+                '}';
+    }
 }

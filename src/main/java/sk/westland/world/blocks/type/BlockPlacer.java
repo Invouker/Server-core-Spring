@@ -65,6 +65,9 @@ public class BlockPlacer extends CustomBlock {
         if(!itemStack.getType().isBlock())
             return;
 
+        if(!(block.getBlockData() instanceof Directional))
+            return;
+
        Directional facingDirection = (Directional) block.getBlockData();
        Block relativeBlock = block.getRelative(facingDirection.getFacing());
 

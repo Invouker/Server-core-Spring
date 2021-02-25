@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.event.player.WLPlayerDamageEvent;
 import sk.westland.core.items.*;
+import sk.westland.core.utils.Utils;
 
 @Component
 public class BetterHoe extends CustomItem implements Listener, Craftable {
@@ -91,6 +92,9 @@ public class BetterHoe extends CustomItem implements Listener, Craftable {
         if (event.getItem().hasItemMeta() && !event.getItem().getItemMeta().isUnbreakable() && count > 0) {
             ItemStack damagedItem = new ItemBuilder(event.getItem()).applyDurability((short) 1).build();
             player.getInventory().setItemInMainHand(damagedItem);
+            Utils.playSound(player.getLocation(), Sound.ITEM_HOE_TILL, 4);
+
+            Utils.playArmAnimation(player);
         }
         switch(block.getType()) {
             case WHEAT: {
@@ -126,9 +130,7 @@ public class BetterHoe extends CustomItem implements Listener, Craftable {
                 }
                 break;
             }
-
         }
-
     }
 
     public boolean seed(Block seedBlock) {
