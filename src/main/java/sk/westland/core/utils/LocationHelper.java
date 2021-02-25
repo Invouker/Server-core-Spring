@@ -24,7 +24,12 @@ public class LocationHelper {
     }
 
     public static World getWorld(String worldName) {
-        return Bukkit.getWorld(worldName);
+        World world = Bukkit.getWorld(worldName);
+
+        if(world == null)
+            throw new NullPointerException("World doesnt exists");
+
+        return world;
     }
 
     public static Location getLocation(String world, float x, float y, float z) {

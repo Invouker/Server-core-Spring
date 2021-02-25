@@ -21,7 +21,7 @@ public class Application {
     public MessageService messageService() { return new MessageService(); }
 
     @Bean
-    public PermissionService permissionService() { return new PermissionService(); }
+    public VaultService permissionService() { return new VaultService(); }
 
     @Bean
     public ItemInteractionService itemInteractionService() { return new ItemInteractionService(); }

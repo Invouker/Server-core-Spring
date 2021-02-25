@@ -15,6 +15,10 @@ import java.util.Objects;
 
 public abstract class ItemMenu extends CustomInventory {
 
+    public ItemMenu(@NotNull Type type, @NotNull String title, String nc) {
+        super(type, title);
+    }
+
     public ItemMenu(@NotNull Type type, @NotNull String title) {
         super(type, title);
         itemInit();
@@ -61,7 +65,7 @@ public abstract class ItemMenu extends CustomInventory {
         if(clickedItem == null)
             return;
 
-        if(clickedItem.isSimilar(CLOSE_INVENTORY_ITEM)) {
+        if(clickedItem.isSimilar(CLOSE_INVENTORY_ITEM) || clickedItem.isSimilar(STICK_CLOSE)) {
             close(player);
             return;
         }

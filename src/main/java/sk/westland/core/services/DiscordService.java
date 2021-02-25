@@ -219,6 +219,12 @@ public class DiscordService implements Listener {
 
     @EventHandler
     private void onPluginDisable(PluginDisableEvent event) {
+        if(commandRegister == null)
+            return;
+
+        if(jda == null)
+            return;
+
         jda.removeEventListener(commandRegister);
         //statusChannel.getManager().setName("Server is offline").complete();
         pluginDisable();
@@ -227,7 +233,6 @@ public class DiscordService implements Listener {
         jda = null;
         guild = null;
 
-        System.out.println("Disable Plugin !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     }
 
     public JDA getJDA() {

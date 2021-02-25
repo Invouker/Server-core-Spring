@@ -7,30 +7,36 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import sk.westland.core.entity.player.WLPlayer;
 
-public abstract class CustomOwnerInventory extends ItemMenu{
+public abstract class OwnerItemMenu extends ItemMenu {
 
-    protected WLPlayer wlPlayer;
+    private WLPlayer wlPlayer;
+    private Player player;
 
-    public CustomOwnerInventory(WLPlayer wlPlayer,  Type type,  String title) {
+    public OwnerItemMenu(WLPlayer wlPlayer, Type type, String title) {
         super(type, title);
         this.wlPlayer = wlPlayer;
+        this.player = wlPlayer.getPlayer();
     }
+
+    public OwnerItemMenu(WLPlayer wlPlayer, Type type, String title, String n) {
+        super(type, title, "");
+        this.wlPlayer = wlPlayer;
+        this.player = wlPlayer.getPlayer();
+    }
+
 
     @Override
     protected void onClick(@NotNull Player player, int slot, @Nullable ItemStack item, @Nullable ItemStack cursor, @NotNull InventoryClickEvent event) {
-
         if(player.getName().equals(wlPlayer.getName()))
             this.onClick(slot, item, cursor, event);
     }
 
+
     protected abstract void onClick(int slot, @Nullable ItemStack item, @Nullable ItemStack cursor, @NotNull InventoryClickEvent event);
 
-        public WLPlayer getWlPlayer() {
+    public WLPlayer getWlPlayer() {
         return wlPlayer;
     }
-
-    public void setWlPlayer(WLPlayer wlPlayer) {
-        this.wlPlayer = wlPlayer;
-    }
+    public Player getPlayer() { return player; }
 
 }
