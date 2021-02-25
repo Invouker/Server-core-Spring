@@ -164,10 +164,14 @@ public abstract class CustomBlock implements Listener {
     public String toString() {
         return "CustomBlock{" +
                 "owner='" + owner + '\'' +
-                ", ownerUUID=" + ownerUUID + '\'' +
-                ", location=" + location+ '\'' +
-                ", blockLevel=" + blockLevel+ '\'' +
-                ", blockType=" + blockType +
+                ", ownerUUID=" + ownerUUID.toString() +
+                ", location=" + location.toString() +
+                ", blockLevel=" + blockLevel.toString() +
+                ", blockType=" + blockType.toString() +
+                ", blockData=" + blockData.toString() +
+                ", lastUpdated=" + lastUpdated +
+                ", block=" + block +
+                ", canBeActive=" + canBeActive +
                 '}';
     }
 }

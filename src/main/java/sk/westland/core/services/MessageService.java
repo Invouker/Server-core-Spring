@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import picocli.CommandLine;
+import sk.westland.core.enums.JoinMessages;
+import sk.westland.core.enums.QuitMessages;
 import sk.westland.core.event.player.WLPlayerJoinEvent;
 import sk.westland.core.event.player.WLPlayerQuitEvent;
 import sk.westland.core.entity.player.WLPlayer;
@@ -29,7 +31,7 @@ public class MessageService implements Listener{
     private PlayerService playerService;
 
     @Autowired
-    private PermissionService permissionService;
+    private VaultService vaultService;
 
     private List<Player> activeAdminChat = new ArrayList<>();
 
@@ -87,7 +89,7 @@ public class MessageService implements Listener{
         if(!wlPlayer.hasPermission("westland.message.quit"))
             return;
 
-        String activeQuitMessage = QuitMessage.values()[wlPlayer.getActiveQuitMessage()].formattedJoinMessage();
+        String activeQuitMessage = QuitMessages.values()[wlPlayer.getActiveQuitMessage()].formattedJoinMessage();
         String quitMessage = activeQuitMessage.replace("%player%", player.getName());
 
         sendMessage(getListOfActiveMessage(true), quitMessage);
@@ -110,7 +112,7 @@ public class MessageService implements Listener{
         if(!wlPlayer.hasPermission("westland.message.quit"))
             return;
 
-        String activeJoinMessage = JoinMessage.values()[wlPlayer.getActiveJoinMessage()].formattedJoinMessage();
+        String activeJoinMessage = JoinMessages.values()[wlPlayer.getActiveJoinMessage()].formattedJoinMessage();
         String joinMessage = activeJoinMessage.replace("%player%", player.getName());
 
         sendMessage(getListOfActiveMessage(true), joinMessage);
@@ -133,105 +135,4 @@ public class MessageService implements Listener{
 
         return players;
     }
-
-    public enum JoinMessage {
-
-        KING("Si kráľ?", "Kráľ %player% sa pripojil!", ChatColor.of("#269900") + "§l[!]", ChatColor.of("#53ff1a"), ChatColor.of("#33cc00")),
-        QUEEN("Si královna?", "Královna %player% sa pripojila!", ChatColor.of("#269900")+"§l[!]", ChatColor.of("#53ff1a"), ChatColor.of("#33cc00"));
-
-
-        private String name;
-        private String joinMessage;
-        private String prefix;
-
-        private ChatColor nameColor;
-        private ChatColor textColor;
-
-        JoinMessage(String name, String joinMessage, String prefix, ChatColor nameColor, ChatColor textColor) {
-            this.name = name;
-            this.joinMessage = joinMessage;
-            this.prefix = prefix;
-            this.nameColor =  nameColor;
-            this.textColor = textColor;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getJoinMessage() {
-            return joinMessage;
-        }
-
-        public String getPrefix() {
-            return prefix;
-        }
-
-        public ChatColor getNameColor() {
-            return nameColor;
-        }
-
-        public ChatColor getTextColor() {
-            return textColor;
-        }
-
-        public String formattedJoinMessage() {
-            return getPrefix() + " " + getTextColor() + getJoinMessage().replace("%player%", getNameColor() + "%player%" + getTextColor());
-        }
-
-        public String formattedJoinMessageWithoutPrefix() {
-            return getTextColor() + getJoinMessage().replace("%player%", getNameColor() + "%player%" + getTextColor());
-        }
-    }
-
-    public enum QuitMessage {
-
-        KING("Si kráľ?", "Kráľ %player% sa odpojil!", ChatColor.of("#269900") + "§l[!]", ChatColor.of("#53ff1a"), ChatColor.of("#33cc00")),
-        QUEEN("Si královna?", "Královna %player% sa odpojila!", ChatColor.of("#269900")+"§l[!]", ChatColor.of("#53ff1a"), ChatColor.of("#33cc00"));
-
-
-        private String name;
-        private String joinMessage;
-        private String prefix;
-
-        private ChatColor nameColor;
-        private ChatColor textColor;
-
-        QuitMessage(String name, String joinMessage, String prefix, ChatColor nameColor, ChatColor textColor) {
-            this.name = name;
-            this.joinMessage = joinMessage;
-            this.prefix = prefix;
-            this.nameColor =  nameColor;
-            this.textColor = textColor;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getJoinMessage() {
-            return joinMessage;
-        }
-
-        public String getPrefix() {
-            return prefix;
-        }
-
-        public ChatColor getNameColor() {
-            return nameColor;
-        }
-
-        public ChatColor getTextColor() {
-            return textColor;
-        }
-
-        public String formattedJoinMessage() {
-            return getPrefix() + " " + getTextColor() + getJoinMessage().replace("%player%", getNameColor() + "%player%" + getTextColor());
-        }
-
-        public String formattedJoinMessageWithoutPrefix() {
-            return getTextColor() + getJoinMessage().replace("%player%", getNameColor() + "%player%" + getTextColor());
-        }
-    }
-
 }

@@ -2,6 +2,7 @@ package sk.westland.core.database.player;
 
 import org.bukkit.entity.Player;
 import sk.westland.core.quest.storage.QuestProgressStorage;
+import sk.westland.core.utils.converter.ListConverter;
 import sk.westland.core.utils.converter.QuestProgressStorageConverter;
 import sk.westland.core.utils.converter.StringConverter;
 
@@ -31,6 +32,10 @@ public class UserData {
     @Convert(converter = StringConverter.class)
     private List<String> craftingRecipe;
 
+    @Column(columnDefinition = "text", nullable = false)
+    @Convert(converter = ListConverter.class)
+    private Map<String, List<Integer>> alreadyJobRewarded;
+
     private int activeJoinMessage = -1;
     private int activeQuitMessage = -1;
 
@@ -52,8 +57,6 @@ public class UserData {
         this.activeJoinMessage = activeJoinMessage;
         this.activeQuitMessage = activeQuitMessage;
     }
-
-
 
     public long getId() {
         return id;
@@ -133,5 +136,13 @@ public class UserData {
 
     public void setCraftingRecipe(List<String> craftingRecipe) {
         this.craftingRecipe = craftingRecipe;
+    }
+
+    public Map<String, List<Integer>> getAlreadyJobRewarded() {
+        return alreadyJobRewarded == null ? new HashMap<>() : alreadyJobRewarded;
+    }
+
+    public void setAlreadyJobRewarded(Map<String, List<Integer>> alreadyJobRewarded) {
+        this.alreadyJobRewarded = alreadyJobRewarded;
     }
 }

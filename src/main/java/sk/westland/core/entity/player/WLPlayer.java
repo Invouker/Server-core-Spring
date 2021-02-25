@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import sk.westland.core.WestLand;
 import sk.westland.core.database.player.UserData;
 import sk.westland.core.database.player.UserOption;
+import sk.westland.core.enums.JobList;
 import sk.westland.core.services.PlayerDataStorageService;
 import sk.westland.world.items.Materials;
 
@@ -100,6 +101,56 @@ public class WLPlayer  {
 
     public void setActiveQuitMessage(int activeQuitMessage) {
         getUserData().setActiveQuitMessage(activeQuitMessage);
+    }
+
+    public int getHighestLevelClaimed(JobList job) {
+        Map<String, List<Integer>> rewarded = userData.getUserData().getAlreadyJobRewarded();
+
+        if(!rewarded.containsKey(job.getName()))
+            return -1;
+
+        int highest = 0;
+        for (Integer integer : rewarded.get(job.getName())) {
+            if(integer > highest)
+                highest = integer;
+        }
+        return highest;
+    }
+
+    public boolean isJobRewardClaimed(JobList job, int level) {
+        Map<String, List<Integer>> rewarded = userData.getUserData().getAlreadyJobRewarded();
+
+        if(rewarded.containsKey(job.getName()))
+            return rewarded.get(job.getName()).contains(level);
+
+        return false;
+    }
+
+    public void jobRewardClaim(JobList job, int levelClaimed, int... levelClaimeds) {
+        Map<String, List<Integer>> rewarded = userData.getUserData().getAlreadyJobRewarded();
+        if(rewarded == null)
+            rewarded = new HashMap<>();
+
+        List<Integer> integerList = null;
+        if(rewarded.containsKey(job.getName())) {
+            integerList = rewarded.get(job.getName());
+        }
+
+        if(integerList == null)
+            integerList = new ArrayList<>();
+
+        if(levelClaimeds.length > 0)
+            for (int pos = 0; pos < levelClaimed; pos++) {
+                if(integerList.contains(levelClaimeds[pos])) continue;
+                integerList.add(levelClaimeds[pos]);
+            }
+
+        if(integerList.contains(levelClaimed))
+            return;
+        integerList.add(levelClaimed);
+        rewarded.put(job.getName(), integerList);
+
+        userData.getUserData().setAlreadyJobRewarded(rewarded);
     }
 
     //////////////

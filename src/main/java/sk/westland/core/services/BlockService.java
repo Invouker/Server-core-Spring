@@ -44,25 +44,50 @@ public class BlockService implements Listener {
         List<BlockData> blockDataList = blockDataRepository.findAll();
 
         Bukkit.getScheduler().runTaskTimer(event.getWestLand(), this::blockUpdate, RunnableDelay.DELAY(), 10l); // Must be before check size of blockDataList
-        Bukkit.getScheduler().runTaskTimer(event.getWestLand(), this::saveBlocksData, RunnableDelay.DELAY(), 20*30l);
+        Bukkit.getScheduler().runTaskTimerAsynchronously(event.getWestLand(), this::saveBlocksData, RunnableDelay.DELAY(), 20*30l);
 
-        if(blockDataList.size() <= 0)
+        if(blockDataList.isEmpty())
             return;
 
         for(BlockData blockData : blockDataList) {
+            if(blockData.getOwnerName() == null || blockData.getOwnerUUID() == null || blockData.getBlockLocation() == null) {
+                blockDataRepository.delete(blockData);
+                return;
+            }
+
+            if(blockData.getBlockLevel() == null)
+                blockData.setBlockLevel(BlockLevel.UNCOMMON);
+
+            CustomBlock block = null;
             LOADED_BLOCKS++;
             switch(blockData.getBlockType()) {
                 case BLOCK_PLACER: {
-                    CustomBlock block = new BlockPlacer(blockData.getOwnerName(), blockData.getOwnerUUID(), blockData.getBlockLocation(), blockData.getBlockLevel(), blockData, this);
-                    blockHashMap.put(blockData.getBlockLocation(), block);
+                    //(String owner, UUID ownerUUID, Location location, BlockLevel blockLevel, BlockData blockData, BlockService blockService)
+                    block =
+                            new BlockPlacer(
+
+                            blockData.getOwnerName(),
+
+                            blockData.getOwnerUUID(),
+
+                            blockData.getBlockLocation(),
+
+                            blockData.getBlockLevel(),
+
+                            blockData,
+
+                            this);
                     break;
                 }
                 case BLOCK_BREAKER: {
-                    CustomBlock block = new BlockBreaker(blockData.getOwnerName(), blockData.getOwnerUUID(), blockData.getBlockLocation(), blockData.getBlockLevel(), blockData, this);
-                    blockHashMap.put(blockData.getBlockLocation(), block);
+                    block = new BlockBreaker(blockData.getOwnerName(), blockData.getOwnerUUID(), blockData.getBlockLocation(), blockData.getBlockLevel(), blockData, this);
                     break;
                 }
             }
+            if(block == null)
+                return;
+
+            blockHashMap.put(blockData.getBlockLocation(), block);
         }
     }
 

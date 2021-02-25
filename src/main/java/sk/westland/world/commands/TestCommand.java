@@ -6,13 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine;
 import sk.westland.core.database.player.UserData;
+import sk.westland.core.enums.JobList;
 import sk.westland.core.quest.QuestLogMenu;
-import sk.westland.core.services.HorseService;
-import sk.westland.core.services.MessageService;
-import sk.westland.core.services.PlayerService;
-import sk.westland.core.services.QuestService;
-import sk.westland.world.inventories.ChangeJoinMessageInventory;
-import sk.westland.world.inventories.ChangeQuitMessageInventory;
+import sk.westland.core.services.*;
+import sk.westland.core.utils.ChatInfo;
+import sk.westland.world.commands.suggestion.JobsSuggestion;
+import sk.westland.world.inventories.ChangeJoinMessageItemMenu;
+import sk.westland.world.inventories.ChangeQuitMessageItemMenu;
+import sk.westland.world.inventories.JobsInventory;
 import sk.westland.world.inventories.entities.HorseUpgradeInventory;
 import sk.westland.world.items.Materials;
 
@@ -38,10 +39,10 @@ public class TestCommand implements Runnable {
     @Override
     public void run() {
         if(join) {
-            ChangeJoinMessageInventory testInventory = new ChangeJoinMessageInventory(playerService.getWLPlayer(context.getPlayer()), messageService);
+            ChangeJoinMessageItemMenu testInventory = new ChangeJoinMessageItemMenu(playerService.getWLPlayer(context.getPlayer()), messageService);
             testInventory.open(context.getPlayer());
         }else {
-            ChangeQuitMessageInventory testInventory = new ChangeQuitMessageInventory(playerService.getWLPlayer(context.getPlayer()), messageService);
+            ChangeQuitMessageItemMenu testInventory = new ChangeQuitMessageItemMenu(playerService.getWLPlayer(context.getPlayer()), messageService);
             testInventory.open(context.getPlayer());
         }
     }
@@ -136,6 +137,70 @@ public class TestCommand implements Runnable {
         public void run() {
             HorseUpgradeInventory horseUpgradeInventory = new HorseUpgradeInventory(horseService);
             horseUpgradeInventory.open(context.getPlayer());
+        }
+    }
+
+    @Component
+    @CommandLine.Command(name = "6")
+    @HasPermission("commands.test6")
+    class Test6 implements Runnable {
+
+        @Autowired
+        private Context context;
+
+        @CommandLine.Parameters(index = "0", completionCandidates = JobsSuggestion.class)
+        private String job;
+
+        @Autowired
+        private PlayerService playerService;
+
+        @Autowired
+        private QuestService questService;
+
+        @Autowired
+        private MoneyService moneyService;
+
+        @Override
+        public void run() {
+            JobList jobList = JobList.findByName(job);
+            if(jobList == null) {
+                ChatInfo.ERROR.send(context.getPlayer(), "Zadal si nesprávny názov práce!");
+                return;
+            }
+
+            JobsInventory jobsInventory =
+                    new JobsInventory(moneyService,
+                            playerService,
+                            playerService.getWLPlayer(context.getPlayer()),
+                            jobList,
+                            0);
+            jobsInventory.open(context.getPlayer());
+        }
+    }
+
+    @Component
+    @CommandLine.Command(name = "7")
+    @HasPermission("commands.test7")
+    class Test7 implements Runnable {
+
+        @Autowired
+        private Context context;
+
+        @Autowired
+        private PlayerService playerService;
+
+        @Autowired
+        private QuestService questService;
+
+        @Autowired
+        private MoneyService moneyService;
+
+        @Override
+        public void run() {
+            context.getPlayer().getInventory().addItem(
+              Materials.
+                      Items.BLOCK_PLACER.getItem()
+            );
         }
     }
 }

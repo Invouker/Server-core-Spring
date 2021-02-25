@@ -71,6 +71,8 @@
             <url>https://repo.codemc.org/repository/maven-public/</url>
         </repository>
 
+
+
     </repositories>
 
     <dependencies>
@@ -188,16 +190,34 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.12XpresS12.PikaQuests</groupId>
-            <artifactId>quests-main</artifactId>
-            <version>master-4ef366fc70-1</version>
+            <groupId>com.gmail.chickenpowerrr.ranksync</groupId>
+            <artifactId>ranksync</artifactId>
+            <version>1.4.0</version>
         </dependency>
-        <!--my comment      <dependency>
-            <groupId>com.zrips</groupId>
-            <artifactId>cmi-api</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
-        </dependency>-->
+
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.12</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.Zrips</groupId>
+            <artifactId>Jobs</artifactId>
+            <version>4.16.3</version> <!-- Change the LATEST to the current version of jobs -->
+        </dependency>
+        <!--
+                <dependency>
+                    <groupId>com.github.12XpresS12.PikaQuests</groupId>
+                    <artifactId>quests-main</artifactId>
+                    <version>master-4ef366fc70-1</version>
+                </dependency>
+                     <dependency>
+                    <groupId>com.zrips</groupId>
+                    <artifactId>cmi-api</artifactId>
+                    <version>1.0</version>
+                    <scope>provided</scope>
+                </dependency>-->
 
     </dependencies>
 

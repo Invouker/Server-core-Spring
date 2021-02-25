@@ -93,6 +93,15 @@ public class PlayerDataStorageService implements Listener {
 
     public void saveAllUsers() {
         for(PlayerDataStorageService.Data data : userMap.values()) {
+            if(data == null)
+                data = new Data();
+
+            if(data.getUserData() == null)
+                data.setUserData(new UserData());
+
+            if(data.getUserOption() == null)
+                data.setUserOption(new UserOption());
+
             this.userRepository.save(data.getUserData());
         }
 
@@ -109,6 +118,11 @@ public class PlayerDataStorageService implements Listener {
         public Data(UserData userData, UserOption userOption) {
             this.userData = userData;
             this.userOption = userOption;
+        }
+
+        public Data() {
+            userData = new UserData();
+            userOption = new UserOption();
         }
 
         public UserData getUserData() {

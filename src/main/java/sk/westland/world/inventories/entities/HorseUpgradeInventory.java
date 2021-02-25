@@ -110,11 +110,11 @@ public class HorseUpgradeInventory extends NCCustomInventory {
 
     private void update(Player player, HorseStats horseStats){
         saddle = getInventory().getItem(SADDLE_ITEM);
-        int tier = Nbt.getNbt_Int(saddle, horseStats.getStatName(), -1);
+        int tier = Nbt.getNbt_Int(saddle, horseStats.getStatName(), 0);
         if(tier >= HorseTier.getMaxTier())
             return;
 
-        ChatInfo.SUCCESS.send(player, "Úspešne si si kúpil " + StringUtils.capitalise(horseStats.name().toLowerCase()) + " upgrade (§oTier: " + tier + ") §ana koňa.");
+        ChatInfo.SUCCESS.send(player, "Úspešne si si kúpil " + StringUtils.capitalise(horseStats.name().toLowerCase()) + " upgrade (§oTier: " + tier + 1 + ") §ana koňa.");
         saddle = horseService.applyStats(saddle, horseStats, tier+1);
         getInventory().setItem(SADDLE_ITEM, saddle);
 
