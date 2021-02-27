@@ -6,15 +6,17 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.PluginDisableEvent;
+import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.codehaus.plexus.util.StringUtils;
@@ -59,6 +61,16 @@ public class HorseService implements Listener {
 
     public ItemStack applyStats(ItemStack itemStack, HorseStats horseStats, int value) {
         switch (horseStats) {
+            case COLOR:
+                return new ItemBuilder(itemStack)
+                        .setNbt_Int(horseStats.getStatName(), value)
+                        .setLoreLine(0, "§f" + StringUtils.capitalise(SaddleItem.Colors.findById(value).getName().replace("_", " ") + "") + " kôň")
+                        .build();
+            case STYLE:
+                return new ItemBuilder(itemStack)
+                        .setNbt_Int(HorseStats.STYLE.getStatName(), value)
+                        .setLoreLine(1, "§7Štýl: §f" + StringUtils.capitalise(SaddleItem.Style.findById(value).getName().toLowerCase()))
+                        .build();
             case JUMP:
                 return new ItemBuilder(itemStack)
                         .setNbt_Int(horseStats.getStatName(), value)
@@ -71,20 +83,7 @@ public class HorseService implements Listener {
                 return new ItemBuilder(itemStack)
                         .setNbt_Int(horseStats.getStatName(), value)
                         .setLoreLine(5, "§7Health Tier: §f" + value).build();
-            case COLOR:
-                return new ItemBuilder(itemStack)
-                        .setNbt_Int(horseStats.getStatName(), value)
-                        .setLoreLine(0, "§f" + StringUtils.capitalise(SaddleItem.Colors.findById(value).getName().replace("_", " ") + "") + " kôň")
-                        .build();
-            case STYLE:
-                return new ItemBuilder(itemStack)
-                        .setNbt_Int(HorseStats.STYLE.getStatName(), value)
-                        .setLoreLine(1, "§7Štýl: §f" + StringUtils.capitalise(SaddleItem.Style.findById(value).getName().toLowerCase()))
-                        .build();
             case ARMOR:
-                return new ItemBuilder(itemStack)
-                        .setNbt_Int(horseStats.getStatName(), value)
-                        .build();
             case ARMOR_COLOR:
                 return new ItemBuilder(itemStack)
                         .setNbt_Int(horseStats.getStatName(), value)
@@ -103,17 +102,21 @@ public class HorseService implements Listener {
         return true;
     }
 
-    public Horse removePlayer(Player player) {
+    public void removePlayer(Player player) {
         if(!activateHorse.containsKey(player))
-            return null;
+            return;
 
         Horse horse = getPlayerHorse(player);
         horse.remove();
 
-        ItemBuilder itemStack = new ItemBuilder(findSaddleInInventory(player));
+        ItemStack saddle = findSaddleInInventory(player);
+        if(saddle == null)
+            return;
+
+        ItemBuilder itemStack = new ItemBuilder(saddle);
         itemStack.setNbt_Bool(HorseStats.SPAWNED.getStatName(), false);
 
-        return activateHorse.remove(player);
+        activateHorse.remove(player);
     }
 
     private ItemStack findSaddleInInventory(Player player) {
@@ -133,34 +136,31 @@ public class HorseService implements Listener {
 
     public void applyStat(Horse horse, ItemStack itemStack, HorseStats horseStat) {
         String statName = horseStat.getStatName();
+        int id = Nbt.getNbt_Int(itemStack, statName, 1);
+        HorseTier horseTier = HorseTier.findById(id);
+        System.out.println("statName: " + statName + ", ID: " + id + ", HorseTier: " + horseTier);
         switch(horseStat) {
             case JUMP: { // 0 - 2
-                HorseTier horseTier = HorseTier.findById(Nbt.getNbt_Int(itemStack, statName, 0));
-                horse.getAttribute(Attribute.HORSE_JUMP_STRENGTH).setBaseValue(horseTier.getJumpValue());
+               horse.getAttribute(Attribute.HORSE_JUMP_STRENGTH).setBaseValue(horseTier.getJumpValue());
                 break;
             }
             case SPEED: {
-                HorseTier horseTier = HorseTier.findById(Nbt.getNbt_Int(itemStack, statName, 0));
                 horse.getAttribute( Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(horseTier.getSpeedValue());
                 break;
             }
             case HEALTH: {
-                HorseTier horseTier = HorseTier.findById(Nbt.getNbt_Int(itemStack, statName, 0));
-                setHorseHealth(horse, horseTier.getHealthValue());
+                 setHorseHealth(horse, horseTier.getHealthValue());
                 break;
             }
             case COLOR: {
-                int id = Nbt.getNbt_Int(itemStack, statName, -1);
                 horse.setColor(Horse.Color.values()[id]);
                 break;
             }
             case STYLE: {
-                int id = Nbt.getNbt_Int(itemStack, statName, -1);
                 horse.setStyle(Horse.Style.values()[id]);
                 break;
             }
             case ARMOR: {
-                int id = Nbt.getNbt_Int(itemStack, statName, -1);
                 if(id == -1)
                     return;
 
@@ -196,19 +196,17 @@ public class HorseService implements Listener {
         }
     }
 
-    private boolean setHorseHealth(Horse horse, double health) {
+    private void setHorseHealth(Horse horse, double health) {
         if(health > HORSE_MAX_HEALTH)
-            return false;
+            return;
 
         horse.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(health);
-        return true;
     }
 
     @EventHandler
     private void onPluginDisable(PluginDisableEvent event) {
         activateHorse.forEach(((player, horse) -> horse.remove()));
     }
-
 
     private void removeHorseOnRestart(PluginDisableEvent event) {
         if(activateHorse != null)
@@ -224,6 +222,42 @@ public class HorseService implements Listener {
 
         Player player = (Player) event.getEntity();
         removePlayer(player);
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onInventoryDrag(InventoryDragEvent event) {
+        ChatInfo.ERROR.sendAll("Drag Event");
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    private void onInventoryMoveItem(InventoryEvent event) { // TODO: zabraniť daniu špecialneho sedla na koňa
+        System.out.println("Inventory Event");
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    private void onInventoryClick(InventoryClickEvent event) {
+        if(event.getClickedInventory() == null)
+            return;
+
+        if(event.getCurrentItem() == null || event.getCursor() == null)
+            return;
+
+        if(event.getClickedInventory() instanceof HorseInventory) {
+            System.out.println("clickType: " + event.getClick());
+
+            if(event.getClick() == ClickType.SHIFT_RIGHT || event.getClick() == ClickType.NUMBER_KEY || event.getClick() == ClickType.SHIFT_LEFT)
+
+            if(!Nbt.getNbt_Bool(event.getCursor(), HorseStats.SADDLE.getStatName(), false))
+                return;
+
+            event.setCancelled(true);
+            event.setResult(Event.Result.DENY);
+
+            ItemStack cursorItem = event.getCursor();
+            event.setCursor(null);
+
+            event.getWhoClicked().getInventory().addItem(cursorItem);
+        }
     }
 
     @EventHandler(ignoreCancelled = true)

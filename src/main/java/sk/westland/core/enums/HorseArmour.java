@@ -5,6 +5,7 @@ import org.bukkit.Material;
 public enum HorseArmour {
 
     NONE(Material.AIR, -1),
+
     LEATHER(Material.LEATHER_HORSE_ARMOR, 0),
     IRON(Material.IRON_HORSE_ARMOR, 1),
     GOLDEN(Material.GOLDEN_HORSE_ARMOR, 2),
@@ -34,5 +35,14 @@ public enum HorseArmour {
         return id;
     }
 
+    public static int getMaxTier() {
+        int highest = 0;
+        for (HorseArmour horseTier : HorseArmour.values()) {
+            if(horseTier.getId() > highest) {
+                highest = horseTier.getId();
+            }
+        }
+        return highest;
+    }
 
 }

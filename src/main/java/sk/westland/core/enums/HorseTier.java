@@ -2,33 +2,14 @@ package sk.westland.core.enums;
 
 public enum HorseTier {
 
-    UNCOMMON(0, 0.5,0.15,10),
-    COMMON(1, 0.6,0.25,20),
-    BASIC(2,0.7,0.35,30),
-    RARE(3,0.8,0.45,40),
-    LEGENDARY(4,0.9,0.55,50)
+    NONE(0, 0.5,0.15,10), // Tento nikto nikdy nedostane
+    COMMON(1, 0.5,0.25,15),
+    BASIC(2,0.6,0.30,20),
+    EPIC(3,0.7,0.35,25),
+    RARE(4,0.8,0.40,30),
+    ULTRA(5,0.9,0.45,35),
+    LEGENDARY(6,1,0.50,40)
     ;
-
-    // Jump
-    // 0.5 - tier 1
-    // 0.6 - tier 2
-    // 0.7 - tier 3
-    // 0.8 - tier 4
-    // 0.9 - tier 5
-
-    // Speed
-    // 0.1 - tier 1
-    // 0.2 - tier 2
-    // 0.3 - tier 3
-    // 0.4 - tier 4
-    // 0.5 - tier 5
-
-    // Health
-    // 10 - tier 1
-    // 20 - tier 2
-    // 30 - tier 3
-    // 40 - tier 4
-    // 50 - tier 5
 
     private int tierID;
 
@@ -68,6 +49,12 @@ public enum HorseTier {
     }
 
     public static int getMaxTier() {
-        return 4;
+        int highest = 0;
+        for (HorseTier horseTier : HorseTier.values()) {
+            if(horseTier.getTierID() > highest) {
+                highest = horseTier.getTierID();
+            }
+        }
+        return highest;
     }
 }

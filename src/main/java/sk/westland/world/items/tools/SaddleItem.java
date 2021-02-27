@@ -15,7 +15,6 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.codehaus.plexus.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,27 +23,14 @@ import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.event.player.WLPlayerDamageEvent;
 import sk.westland.core.items.*;
 import sk.westland.core.services.HorseService;
-import sk.westland.core.utils.ChatInfo;
 
 import java.util.EnumSet;
 
 @Component
-public class SaddleItem extends CustomItem implements Listener, Craftable {
+public class SaddleItem extends CustomItem implements Listener {
 
     @Autowired
     private HorseService horseService;
-
-    @Override
-    public NamespacedKey getNamespacedKey(Plugin plugin) {
-        return new NamespacedKey(plugin, "saddle");
-    }
-
-    @Override
-    public CraftingRecipe getCraftingRecipe(Plugin plugin) {
-        return new CraftingRecipe(getNamespacedKey(plugin), RecipeType.Block, getItem())
-                .shape(" S ", "SSS", " S ")
-                .setIngredient('S', Material.STONE);
-    }
 
     public enum Colors {
         WHITE(0, "Biely"),
@@ -131,7 +117,7 @@ public class SaddleItem extends CustomItem implements Listener, Craftable {
                 // 0.8 - tier 4
                 // 0.9 - tier 5
                 .addLore("", "§7Jump Tier: §f1")
-                .setNbt_Int(HorseStats.JUMP.getStatName(), 0)
+                .setNbt_Int(HorseStats.JUMP.getStatName(), 1)
 
                 // Speed
                 // 0.1 - tier 1
@@ -140,7 +126,7 @@ public class SaddleItem extends CustomItem implements Listener, Craftable {
                 // 0.4 - tier 4
                 // 0.5 - tier 5
                 .addLore("§7Speed Tier: §f1")
-                .setNbt_Int(HorseStats.SPEED.getStatName(), 0)
+                .setNbt_Int(HorseStats.SPEED.getStatName(), 1)
 
                 // Health
                 // 10 - tier 1
@@ -149,7 +135,8 @@ public class SaddleItem extends CustomItem implements Listener, Craftable {
                 // 40 - tier 4
                 // 50 - tier 5
                 .addLore("§7Health Tier: §f1")
-                .setNbt_Int(HorseStats.HEALTH.getStatName(), 0)
+                .setNbt_Int(HorseStats.HEALTH.getStatName(), 1)
+
                 .setNbt_Int(HorseStats.COLOR.getStatName(), color)
                 .setNbt_Int(HorseStats.STYLE.getStatName(), Random.nextInt(3))
                 .setNbt_Int(HorseStats.ARMOR.getStatName(), -1)
@@ -168,7 +155,7 @@ public class SaddleItem extends CustomItem implements Listener, Craftable {
 
     @Override
     protected void onPluginEnable(PluginEnableEvent event) {
-        getCraftingRecipe(event.getWestLand()).register();
+
     }
 
     @Override
