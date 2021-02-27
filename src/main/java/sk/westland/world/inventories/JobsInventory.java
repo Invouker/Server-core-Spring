@@ -3,15 +3,14 @@ package sk.westland.world.inventories;
 import com.gamingmesh.jobs.Jobs;
 import com.gamingmesh.jobs.container.Job;
 import com.gamingmesh.jobs.container.JobProgression;
-import net.minecraft.server.v1_16_R3.Item;
-import org.bukkit.Bukkit;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import sk.westland.core.WestLand;
 import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.enums.JobList;
 import sk.westland.core.inventory.OwnerItemMenu;
@@ -23,6 +22,7 @@ import sk.westland.core.jobs.rewards.JIReward;
 import sk.westland.core.services.MoneyService;
 import sk.westland.core.services.PlayerService;
 import sk.westland.core.utils.ChatInfo;
+import sk.westland.core.utils.Utils;
 
 import java.util.List;
 
@@ -51,10 +51,10 @@ public class JobsInventory extends OwnerItemMenu {
         this.playerService = playerService;
         this.page = page;
         this.fromLevel = page * 21 == 0 ? 1 : page * 21;
-        this.untilLevel = job.getMaxLevel();
+        this.untilLevel = job.getMaxLevel()+1;
         this.jobRewards = new JobRewards(moneyService);
 
-        /*
+        /* DEBUG
         jobRewards.getJobStorage().forEach((name, jobRewards) -> {
             System.out.println("Name: " + name);
             jobRewards.forEach((list) -> {
@@ -73,63 +73,77 @@ public class JobsInventory extends OwnerItemMenu {
 
     @Override
     protected void itemInit() {
-        for (int i = 0; i < getInventory().getContents().length; i++) {
-            if(!isRewardPosition(i)) {
-                getInventory().setItem(i, new ItemStack(Material.AIR));
-            }
-        }
-
         int level = fromLevel;
         for (int i = 0; i < position.length; i++) {
 
-            if(level > untilLevel) {
-                getInventory().setItem(i, STICK_EMPTY);
+            if(level >= untilLevel) {
+                setItem(position[i], STICK_EMPTY);
                 continue;
-            }
+            } // zabrať pozicie kde level prekročil limit
 
             if(position[i] == 9 && page == 0 && level == 1) {
-                getInventory().setItem(9, new ItemBuilder(Material.RED_STAINED_GLASS_PANE)
+                Material mat = Material.RED_STAINED_GLASS_PANE;
+
+                ItemBuilder itemBuilder =  new ItemBuilder(mat)
                         .setName("§b§lLevel 1")
                         .setLore("",
                                 "§7Začiatočný level",
-                                "§7neobnáša odmenu.")
-                        .build());
+                                "§7neobnáša odmenu.");
+                if(isInJob()) {
+                    mat = Material.LIME_STAINED_GLASS_PANE;
+                    itemBuilder.addLore("", "§aLevel splnený!");
+                    itemBuilder.setMaterial(mat);
+                }
+
+
+                getInventory().setItem(9, itemBuilder.build());
                 level++;
                 continue;
-            }
+            } // level 1 logika
 
             if(getWlPlayer().isJobRewardClaimed(job, level)) {
                 getInventory().setItem(position[i], alreadyClaimedItem(level++));
             }else {
-                if((getJobLevel() != -1 && getJobLevel() <= level) || getWlPlayer().getHighestLevelClaimed(job) < level) {
+                if(getJobLevel() != -1 && getJobLevel() >= level ) { // || getWlPlayer().getHighestLevelClaimed(job) < level) {
                     getInventory().setItem(position[i], renderUnlockedItem(level++));
                 } else {
                     getInventory().setItem(position[i], renderLockedItem(level++));
                 }
             }
         }
+        {
+            setItem(4, 5, new ItemBuilder(STICK_CLOSE).setName("§cZatvoriť").build());
+            if (page > 0) setItem(3, 5, pageInventory(Direction.Left));
+            else setItem(3, 5, STICK_EMPTY);
 
-        setItem(4, 5, STICK_CLOSE);
-        if(page > 0) setItem(3, 5, pageInventory("Vrátiť sa"));
-        if((job.getMaxLevel() / 21) >= page) setItem(5, 5, pageInventory("Ďalšia strana"));
+            if ((job.getMaxLevel() / 21) - 1 >= page) setItem(5, 5, pageInventory(Direction.Right));
+            else setItem(5, 5, STICK_EMPTY);
+        } // Next / Previous Pages
+        {
+            if (isInJob())
+                setItem(0, 5, new ItemBuilder(Material.DIAMOND).setName("§bInformácie")
+                        .setLore("§8STRANA " + (page + 1),
+                                "",
+                                PlaceholderAPI.setPlaceholders(getPlayer(), "&7Level: &f%jobsr_user_jlevel_" + job.getName() + "%/%jobsr_user_jmaxlvl_" + job.getName() + "%"),
+                                PlaceholderAPI.setPlaceholders(getPlayer(), "&7EXP: &f%jobsr_user_jexp_" + job.getName() + "%/%jobsr_user_jmaxexp_" + job.getName() + "%")
+                        )
+                        .setAmount(page + 1).build());
+            else
 
-        setItem(0, 5, new ItemBuilder(Material.DIAMOND).setName("§fUnnamed").build());
-        //setItem(0, 0, ItemBuilder.setStackSize(new ItemBuilder(job.getIcon()).setName("§b" + job.getName()).build(), 100));
-        getInventory().setMaxStackSize(100);
-        //setItem(0, 0, new ItemBuilder(job.getIcon()).setName("§b" + job.getName()).setMaxStackSize(100).build());
-        setItem(1, 0, new ItemBuilder(job.getIcon()).setName("§b" + job.getName()).setAmount(85).build());
-        getInventory().setMaxStackSize(30);
-        Bukkit.getScheduler().runTask(WestLand.getInstance(), () -> getPlayer().updateInventory());
-    }
+                setItem(0, 5, new ItemBuilder(Material.DIAMOND).setName("§bInformácie")
+                        .setLore("§8STRANA " + (page + 1),
+                                "",
+                                "§7Štatistiky sa zobrazia až keď",
+                                "§7sa zamestnáš ako §f" + job.getName() + "§7."
+                        )
+                        .setAmount(page + 1).build());
+        } // Informacie
 
-    private ItemStack pageInventory(String name) {
-        return new ItemBuilder(Material.ARROW)
-                .setName("§c" + name)
-                .build();
+        setItem(0, 0, new ItemBuilder(job.getIcon()).setName("§b" + job.getName()).build());
     }
 
     private ItemStack alreadyClaimedItem(int level) {
-        return new ItemBuilder(Material.GREEN_STAINED_GLASS_PANE)
+        return new ItemBuilder(Material.LIME_STAINED_GLASS_PANE)
                 .setName("§b§lLevel " + level)
                 .setLore("§8ODOMKNUTÉ",
                         "",
@@ -152,17 +166,17 @@ public class JobsInventory extends OwnerItemMenu {
         String[] lore = new String[rewardList.size()];
         for (int i = 0; i < rewardList.size(); i++) {
             JIReward jiReward = rewardList.get(i);
-            lore[i] = jiReward.render();
+            lore[i] =  "§6" + jiReward.render();
         }
 
         return new ItemBuilder(Material.YELLOW_STAINED_GLASS_PANE)
                 .setName("§b§lLevel " + level)
                 .setLore("§8ODOMKNUTÉ",
                         "",
-                        "§7Splň tento level a získaj",
-                        "§7následovnú odmenu:",
+                        "§7Odomknutím tohto levelu",
+                        "§7si získal prístup k odmene.",
                         "",
-                        "§f§lODMENA")
+                        "§f§lODMENA:")
                 .addLore(lore)
                 .addLore("", "§aKlikni pre vyzdvihnutie!")
                 .setNbt_Int(NBT_KEY_LEVE_ID, level)
@@ -178,15 +192,15 @@ public class JobsInventory extends OwnerItemMenu {
         String[] lore = new String[rewardList.size()];
         for (int i = 0; i < rewardList.size(); i++) {
             JIReward jiReward = rewardList.get(i);
-            lore[i] = jiReward.render();
+            lore[i] = "§a" + jiReward.render();
         }
 
         return new ItemBuilder(Material.RED_STAINED_GLASS_PANE)
                 .setName("§b§lLevel " + level)
-                .setLore("§8UZAMKNUTÉ",
+                .setLore("§8ZAMKNUTÉ",
                         "",
                         "§7Splň tento level a získaj",
-                        "§7následovnú odmenu:",
+                        "§7svoju zaslúženú odmenu.",
                         "",
                         "§f§lODMENA:")
                 .addLore(lore)
@@ -200,6 +214,8 @@ public class JobsInventory extends OwnerItemMenu {
         switch (slot) {
             case 48: { // previous page
                 if(page > 0) {
+                    Utils.playSound(getPlayer(), Sound.UI_BUTTON_CLICK);
+
                     close(getPlayer());
 
                     if (page - 1 >= 0) {
@@ -215,7 +231,8 @@ public class JobsInventory extends OwnerItemMenu {
             }
 
             case 50: { // next page
-                if((job.getMaxLevel() / 21) >= page) {
+                if((job.getMaxLevel() / 21)-1 >= page) {
+                    Utils.playSound(getPlayer(), Sound.UI_BUTTON_CLICK);
                     close(getPlayer());
 
                     if (page >= 0) {
@@ -238,11 +255,13 @@ public class JobsInventory extends OwnerItemMenu {
             if(level == -1 || level == 1)
                 return;
 
+            Utils.playSound(getPlayer(), Sound.UI_BUTTON_CLICK);
+
             if(getJobLevel() < level || getJobLevel() == -1)
                 return;
 
             if(getWlPlayer().isJobRewardClaimed(job, level)) {
-                ChatInfo.ERROR.sendAll("Already claimed");
+                ChatInfo.ERROR.sendAll("Už si si vybral odmenu pre tento level!");
                 return;
             }
 
@@ -256,10 +275,16 @@ public class JobsInventory extends OwnerItemMenu {
                 reward.reward(getPlayer());
             }
             playerService.getWLPlayer(getPlayer()).jobRewardClaim(job, level);
-            ChatInfo.SUCCESS.sendAll("Claimed a reward for " + job.getName() + " for level " + level);
+            ChatInfo.SUCCESS.sendAll("Úspešne si si vybral odmenu za " + job.getName() + ", pre level " + level);
+            Utils.playSound(getPlayer(), Sound.ENTITY_PLAYER_LEVELUP);
 
             itemInit();
         }
+    }
+
+    private boolean isInJob() {
+        Job jobs = getJobFromName(job.getName());
+        return Jobs.getPlayerManager().getJobsPlayer(getPlayer()).isInJob(jobs);
     }
 
     private int getJobLevel() {

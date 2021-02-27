@@ -25,9 +25,9 @@ public class JMoneyReward implements JIReward {
     @Override
     public String render() {
         switch (moneyType) {
-            case Money: return "§6+" + moneyValue + "$";
-            case Shard: return "§b" + moneyValue + "x Shard";
-            case Gems: return "§2" + moneyValue + "x Gem";
+            case Money: return moneyValue + "$";
+            case Shard: return moneyValue + "x Shard";
+            case Gems: return moneyValue + "x Gem";
         }
         return null;
     }

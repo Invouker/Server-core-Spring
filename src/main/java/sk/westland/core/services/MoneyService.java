@@ -18,6 +18,31 @@ public class MoneyService {
     @Autowired
     private VaultService vaultService;
 
+    public boolean remove(Player player, MoneyType moneyType, double amount) {
+        return this.remove(playerService.getWLPlayer(player), moneyType, amount);
+    }
+
+    public boolean give(Player player, MoneyType moneyType, double amount) {
+        return this.give(playerService.getWLPlayer(player), moneyType, amount);
+    }
+
+    public boolean set(Player player, MoneyType moneyType, double amount) {
+        return this.set(playerService.getWLPlayer(player), moneyType, amount);
+    }
+
+    public boolean pay(Player player, MoneyType moneyType, double amount) {
+        return this.pay(playerService.getWLPlayer(player), moneyType, amount);
+    }
+
+    public double get(Player player, MoneyType moneyType) {
+        return this.get(playerService.getWLPlayer(player), moneyType);
+    }
+
+    public boolean hasPay(Player player, MoneyType moneyType, double amount) {
+        return this.hasPay(playerService.getWLPlayer(player), moneyType, amount);
+    }
+
+
     public boolean hasPay(WLPlayer wlPlayer, MoneyType moneyType, double amount) {
         switch (moneyType) {
             case Gems:
@@ -97,7 +122,7 @@ public class MoneyService {
                 return true;
             }
             case Money: {
-                return vaultService.getEconomy().withdrawPlayer(getOfflinePlayer(wlPlayer), amount).transactionSuccess();
+                return vaultService.getEconomy().depositPlayer(getOfflinePlayer(wlPlayer), amount).transactionSuccess();
 
             }
         }
@@ -130,6 +155,10 @@ public class MoneyService {
 
     private OfflinePlayer getOfflinePlayer(WLPlayer wlPlayer) {
         return Bukkit.getOfflinePlayer(wlPlayer.getPlayer().getUniqueId());
+    }
+
+    public VaultService getVaultService() {
+        return vaultService;
     }
 
     private OfflinePlayer getOfflinePlayer(Player player) {

@@ -11,6 +11,10 @@ import org.bukkit.entity.Player;
 
 public class Utils {
 
+    public static void playSound(Player player, Sound sound) {
+        player.playSound(player.getLocation(), sound, 1f ,1f);
+    }
+
     public static void playSound(Location location, Sound sound, int distance) {
         playSound(location, sound, distance, 1, 1);
     }

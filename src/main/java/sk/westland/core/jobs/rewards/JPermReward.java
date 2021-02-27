@@ -7,10 +7,17 @@ public class JPermReward implements JIReward {
 
     private String permission;
     private String permName;
+    private PermRenderType permRenderType;
 
     public JPermReward(String permission, String permName) {
         this.permission = permission;
         this.permName = permName;
+    }
+
+    public JPermReward(String permission, String permName, PermRenderType permRenderType) {
+        this.permission = permission;
+        this.permName = permName;
+        this.permRenderType = permRenderType;
     }
 
     @Override
@@ -24,6 +31,18 @@ public class JPermReward implements JIReward {
 
     @Override
     public String render() {
-        return "&5Limitovaný príkaz &7(/" + permName + ")";
+        switch (permRenderType) {
+            case HIDE:
+                return permName;
+
+            default:
+            case SHOW:
+                return "Limitovaný príkaz &7(/" + permName + ")";
+        }
+    }
+
+    public enum PermRenderType {
+        SHOW,
+        HIDE
     }
 }

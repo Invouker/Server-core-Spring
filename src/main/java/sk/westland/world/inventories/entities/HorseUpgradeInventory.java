@@ -5,9 +5,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.codehaus.plexus.util.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import sk.westland.core.enums.HorseArmour;
 import sk.westland.core.enums.HorseStats;
 import sk.westland.core.enums.HorseTier;
 import sk.westland.core.inventory.NCCustomInventory;
@@ -18,14 +20,15 @@ import sk.westland.core.utils.ChatInfo;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class HorseUpgradeInventory extends NCCustomInventory {
 
-    private static final int[] UPGRADE_POSITION = new int[] { 12,13,14,15,16,    22,24 };
+    private static final int[] UPGRADE_POSITION = new int[] { 12,13,14,15,16,    23 };
     private static final int SADDLE_ITEM = 19;
     private HorseService horseService;
     private ItemStack saddle = null;
+
+    private boolean closeClick = true;
 
     public HorseUpgradeInventory(HorseService horseService) {
         super(Type.Chest5, "Horse Inventory Upgrade");
@@ -90,19 +93,21 @@ public class HorseUpgradeInventory extends NCCustomInventory {
                 saddle = getInventory().getItem(SADDLE_ITEM);
                 HorseColorInventory horseColorInventory = new HorseColorInventory(horseService, saddle);
                 horseColorInventory.open(player);
+                closeClick = false;
                 break;
             }
             case 16: {
                 update(player, HorseStats.SPEED);
                 break;
             }
-            case 22: {
+            case 23: {
                 if(getInventory().getItem(SADDLE_ITEM) == null) {
                     return;
                 }
                 saddle = getInventory().getItem(SADDLE_ITEM);
                 HorseStyleInventory horseStyleInventory = new HorseStyleInventory(horseService, saddle);
                 horseStyleInventory.open(player);
+                closeClick = false;
                 break;
             }
         }
@@ -110,14 +115,24 @@ public class HorseUpgradeInventory extends NCCustomInventory {
 
     private void update(Player player, HorseStats horseStats){
         saddle = getInventory().getItem(SADDLE_ITEM);
-        int tier = Nbt.getNbt_Int(saddle, horseStats.getStatName(), 0);
-        if(tier >= HorseTier.getMaxTier())
-            return;
+        int tier = Nbt.getNbt_Int(saddle, horseStats.getStatName(), 1);
+        System.out.println("Tier: " + tier);
 
-        ChatInfo.SUCCESS.send(player, "Úspešne si si kúpil " + StringUtils.capitalise(horseStats.name().toLowerCase()) + " upgrade (§oTier: " + tier + 1 + ") §ana koňa.");
+        if(horseStats == HorseStats.ARMOR) {
+            if(tier >= HorseArmour.getMaxTier()) {
+                ChatInfo.ERROR.send(player, "Už máš maximálny zakúpený tier!");
+                return;
+            }
+        }
+
+        if(tier >= HorseTier.getMaxTier()) {
+            ChatInfo.ERROR.send(player, "Už máš maximálny zakúpený tier!");
+            return;
+        }
+
+        ChatInfo.SUCCESS.send(player, "Úspešne si si kúpil " + StringUtils.capitalise(horseStats.name().toLowerCase()) + " upgrade (§oTier: " + (tier + 1) + ") §ana koňa.");
         saddle = horseService.applyStats(saddle, horseStats, tier+1);
         getInventory().setItem(SADDLE_ITEM, saddle);
-
     }
 
     @Override
@@ -126,20 +141,23 @@ public class HorseUpgradeInventory extends NCCustomInventory {
 
     @Override
     protected void onClose(@NotNull Player player) {
+        saddle = getInventory().getItem(SADDLE_ITEM);
         if(saddle == null)
             return;
 
-        player.getInventory().addItem(saddle);
+        if(closeClick)
+            player.getInventory().addItem(saddle);
+
     }
 
     private enum HorseUpgradeItem {
-        HEALTH("Health Upgrade", Material.REDSTONE, new String[]{"", "Možno navýšiť", "zdravie koňa", "", "§eCena upgradu §f20$"}),
-        ARMOR("Armor Upgrade", Material.IRON_HORSE_ARMOR, new String[]{"", "Možno navýšiť", "brnenie koňa", "", "§eCena upgradu §f25$"}),
-        JUMP("Jump Upgrade", Material.IRON_BOOTS, new String[]{"", "Možno navýšiť", "dosah výskoku koňa", "", "§eCena upgradu §f60$"}),
+        HEALTH("Health Upgrade", Material.REDSTONE, new String[]{"", "Možno navýšiť", "zdravie koňa", "Max tier: 6", "", "§eCena upgradu §f20$"}),
+        ARMOR("Armor Upgrade", Material.IRON_HORSE_ARMOR, new String[]{"", "Možno navýšiť", "brnenie koňa", "Max tier: 6", "", "§eCena upgradu §f25$"}),
+        JUMP("Jump Upgrade", Material.IRON_BOOTS, new String[]{"", "Možno navýšiť", "dosah výskoku koňa", "Max tier: 6", "", "§eCena upgradu §f60$"}),
         COLOUR("Color Select", Material.BLACK_DYE, new String[]{"", "Možno si vybrať", "farbu koňa", "", "§eCena upgradu §f23$"}),
-        SPEED("Speed Upgrade", Material.SUGAR, new String[]{"", "Možno navýšiť", "rýchlosť koňa", "", "§eCena upgradu §f50$"}),
+        SPEED("Speed Upgrade", Material.SUGAR, new String[]{"", "Možno navýšiť", "rýchlosť koňa", "Max tier: 6", "", "§eCena upgradu §f50$"}),
         STYLE("Style Select", Material.BLAZE_POWDER, new String[]{"", "Možno si vybrať", "štýL koňa", "", "§eCena upgradu §f20$"}),
-        ARMOR_COLOUR("Armor Colour Select", Material.LEATHER_HORSE_ARMOR, new String[]{"", "Možno vybrať", "farbu armoru", "", "§eCena upgradu §f30$"})
+        //ARMOR_COLOUR("Armor Colour Select", Material.LEATHER_HORSE_ARMOR, new String[]{"", "Možno vybrať", "farbu armoru", "", "§eCena upgradu §f30$"})
         ;
 
         private String name;

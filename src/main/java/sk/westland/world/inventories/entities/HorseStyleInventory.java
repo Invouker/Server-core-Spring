@@ -8,7 +8,6 @@ import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.codehaus.plexus.util.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import sk.westland.core.WestLand;
@@ -17,7 +16,6 @@ import sk.westland.core.inventory.NCCustomInventory;
 import sk.westland.core.items.ItemBuilder;
 import sk.westland.core.items.Nbt;
 import sk.westland.core.services.HorseService;
-import sk.westland.world.items.tools.SaddleItem;
 
 public class  HorseStyleInventory extends NCCustomInventory {
 

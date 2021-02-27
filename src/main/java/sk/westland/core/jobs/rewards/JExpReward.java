@@ -19,6 +19,6 @@ public class JExpReward implements JIReward {
 
     @Override
     public String render() {
-        return "§d" + exp + " exp";
+        return exp + " exp";
     }
 }
