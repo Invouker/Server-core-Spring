@@ -497,21 +497,17 @@ public class ItemBuilder {
      */
     public ItemBuilder setLoreLine(int pos, String text) {
         ItemMeta im = is.getItemMeta();
-        ChatInfo.GENERAL_INFO.sendAll("0");
         if (im == null)
             return this;
-        ChatInfo.GENERAL_INFO.sendAll("1");
+
         if (im.getLore() == null)
             im.setLore(Collections.singletonList(""));
 
-        ChatInfo.GENERAL_INFO.sendAll("2");
         List<String> lore = new ArrayList<>(im.getLore());
         for (int i = 0; i <= pos + 1 && lore.size() <= pos; ++i) {
             lore.add("§f ");
-            ChatInfo.GENERAL_INFO.sendAll("3: " + i);
         }
         lore.set(pos, "§f" + text);
-        ChatInfo.GENERAL_INFO.sendAll("TEXT: " + text);
         im.setLore(lore);
         is.setItemMeta(im);
 

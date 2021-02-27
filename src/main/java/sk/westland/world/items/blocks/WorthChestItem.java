@@ -18,30 +18,31 @@ import sk.westland.core.blocks.BlockType;
 import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.event.player.WLPlayerDamageEvent;
 import sk.westland.core.items.*;
-import sk.westland.world.blocks.type.BlockPlacer;
+import sk.westland.world.blocks.type.BlockBreaker;
+import sk.westland.world.blocks.type.WorthChest;
 
 @Component
-public class BlockPlacerItem extends CustomItem implements Craftable, Listener {
+public class WorthChestItem extends CustomItem implements Craftable, Listener {
 
     @Override
     public NamespacedKey getNamespacedKey(Plugin plugin) {
-        return new NamespacedKey(plugin, "blockPlacer");
+        return new NamespacedKey(plugin, "worthChest");
     }
 
     @Override
     public CraftingRecipe getCraftingRecipe(Plugin plugin) {
         return new CraftingRecipe(getNamespacedKey(plugin), RecipeType.Block, getItem())
-                .shape(" S ", " S ", " S ")
+                .shape("SSS", "   ", "SSS")
                 .setIngredient('S', Material.STONE);
     }
 
     @Override
     public ItemStack getItem() {
-        return new ItemBuilder(Material.DISPENSER)
-                .setName("§fBlock placer")
+        return new ItemBuilder(BlockType.WORTH_CHEST.getMaterial())
+                .setName("§8Worth chest")
                 .setModelId(getModelID())
-                .setNbt_Int(WestLand.CUSTOM_BLOCK_NBT, BlockType.BLOCK_PLACER.getId())
-                .setLore("", "§7Automatický pokladá bloky", "§7ktoré sa do neho dajú!", "").build();
+                .setNbt_Int(WestLand.CUSTOM_BLOCK_NBT, BlockType.WORTH_CHEST.getId())
+                .setLore("", "§7Automatický predáva blocky", "a itemy ktoré do nej vložité.", "").build();
     }
 
     @Override
@@ -55,32 +56,24 @@ public class BlockPlacerItem extends CustomItem implements Craftable, Listener {
     }
 
     @Override
-    protected void onPlayerInteractWithItem(PlayerInteractEvent event) {
-
-    }
-
-    @Override
-    protected void onPlayerDamageWithItem(WLPlayerDamageEvent event) {
-
-    }
-
-    @Override
-    protected void onPlayerInteractAtEntityWithItem(PlayerInteractAtEntityEvent event) {
-
-    }
-
-    @Override
     protected void onPlayerBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
         Block block = event.getBlock();
 
-        boolean place = blockService.registerNewBlock(new BlockPlacer(player.getName(), player.getUniqueId(), block.getLocation(), BlockLevel.UNCOMMON, blockService));
+        boolean place = blockService.registerNewBlock(new WorthChest(player.getName(), player.getUniqueId(), block.getLocation(), BlockLevel.UNCOMMON, blockService));
         event.setBuild(place);
         event.setCancelled(!place);
     }
 
     @Override
-    protected void onPlayerBlockBreak(BlockBreakEvent event) {
+    protected void onPlayerInteractWithItem(PlayerInteractEvent event) { }
 
-    }
+    @Override
+    protected void onPlayerDamageWithItem(WLPlayerDamageEvent event) { }
+
+    @Override
+    protected void onPlayerInteractAtEntityWithItem(PlayerInteractAtEntityEvent event) { }
+
+    @Override
+    protected void onPlayerBlockBreak(BlockBreakEvent event) { }
 }

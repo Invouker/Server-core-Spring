@@ -1,9 +1,11 @@
-main: sk.westland.core.WestLand
-author: XpresS
-website: WestLand.eu
-version: 1.0
-
-api-version: 1.13
-description: This plugin is developed for WestLand.eu
-
 name: WestLand
+main: sk.westland.core.WestLand
+depend: [Vault, RankSync, AuthMe, Citizens, PlaceholderAPI, CMI]
+load: POSTWORLD
+
+author: XpresS
+version: 1.0
+api-version: 1.13
+
+website: WestLand.eu
+description: This plugin is developed for WestLand.eu

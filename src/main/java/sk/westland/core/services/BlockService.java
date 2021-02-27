@@ -26,6 +26,7 @@ import sk.westland.core.database.data.BlockData;
 import sk.westland.core.database.data.BlockDataRepository;
 import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.utils.RunnableDelay;
+import sk.westland.world.blocks.type.WorthChest;
 
 import java.util.*;
 
@@ -34,6 +35,9 @@ public class BlockService implements Listener {
 
     @Autowired
     private BlockDataRepository blockDataRepository;
+
+    @Autowired
+    private MoneyService moneyService;
 
     private HashMap<Location, CustomBlock> blockHashMap = new HashMap<>();
 
@@ -63,24 +67,15 @@ public class BlockService implements Listener {
             switch(blockData.getBlockType()) {
                 case BLOCK_PLACER: {
                     //(String owner, UUID ownerUUID, Location location, BlockLevel blockLevel, BlockData blockData, BlockService blockService)
-                    block =
-                            new BlockPlacer(
-
-                            blockData.getOwnerName(),
-
-                            blockData.getOwnerUUID(),
-
-                            blockData.getBlockLocation(),
-
-                            blockData.getBlockLevel(),
-
-                            blockData,
-
-                            this);
+                    block = new BlockPlacer(blockData.getOwnerName(), blockData.getOwnerUUID(), blockData.getBlockLocation(), blockData.getBlockLevel(), blockData, this);
                     break;
                 }
                 case BLOCK_BREAKER: {
                     block = new BlockBreaker(blockData.getOwnerName(), blockData.getOwnerUUID(), blockData.getBlockLocation(), blockData.getBlockLevel(), blockData, this);
+                    break;
+                }
+                case WORTH_CHEST: {
+                    block = new WorthChest(blockData.getOwnerName(), blockData.getOwnerUUID(), blockData.getBlockLocation(), blockData.getBlockLevel(), blockData, this);
                     break;
                 }
             }
@@ -114,10 +109,6 @@ public class BlockService implements Listener {
         });
 
         return blockDataRepository.saveAll(blockDataList);
-    }
-
-    public boolean registerNewBlockPlacer(String name, UUID uuid, Location location, BlockLevel blockLevel) {
-        return this.registerNewBlock(new BlockPlacer(name, uuid, location, blockLevel, this));
     }
 
     public boolean registerNewBlock(CustomBlock block) {
@@ -227,7 +218,7 @@ public class BlockService implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     private void onInit(BlockBreakEvent event) {
-        if(event.getBlock().getType() != Material.DISPENSER || event.getBlock().getType() != Material.DROPPER)
+        if(!isBlockTypeMaterial(event.getBlock().getType()))
             return;
 
         Block block = event.getBlock();
@@ -242,8 +233,20 @@ public class BlockService implements Listener {
         event.setCancelled(true);
     }
 
+    private boolean isBlockTypeMaterial(Material material) {
+        for (BlockType blockType : BlockType.values()) {
+            if(blockType.getMaterial() == material)
+                return true;
+        }
+        return false;
+    }
+
     public BlockDataRepository getBlockDataRepository() {
         return blockDataRepository;
+    }
+
+    public MoneyService getMoneyService() {
+        return moneyService;
     }
 }
 

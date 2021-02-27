@@ -60,8 +60,7 @@ public class BlockBreaker extends CustomBlock {
                 Material.HOPPER, Material.REDSTONE_WIRE, Material.REDSTONE_TORCH,
                 Material.OBSERVER, Material.END_GATEWAY,
                 Material.END_PORTAL, Material.END_PORTAL_FRAME, Material.ENDER_CHEST,
-                Material.NETHER_PORTAL)) {
-
+                Material.NETHER_PORTAL, Material.CHEST, Material.TRAPPED_CHEST)) {
 
             relativeBlock.breakNaturally(getItems().get(13)); // BLOCK_POSITION IN BlockBreakInventory
         }

@@ -76,6 +76,35 @@ public abstract class CustomInventory implements InventoryHolder, Listener {
     }
 
 
+    protected enum Direction {
+        Down,
+        Up,
+        Right,
+        Left;
+    }
+
+    protected ItemStack pageInventory(Direction direction) {
+        switch (direction) {
+            case Left:
+                return new ItemBuilder(STICK_LEFT)
+                        .setName("§cVrátiť sa")
+                        .build();
+            case Right:
+                return new ItemBuilder(STICK_RIGHT)
+                        .setName("§cĎalšia strana")
+                        .build();
+            case Up:
+                return new ItemBuilder(STICK_UP)
+                        .setName("§cHore")
+                        .build();
+            default:
+            case Down:
+                return new ItemBuilder(STICK_DOWN)
+                        .setName("§cDole")
+                        .build();
+        }
+    }
+
     /**
      * Do not use this method to open the inventory, use show(Player) instead.
      */
@@ -345,6 +374,10 @@ public abstract class CustomInventory implements InventoryHolder, Listener {
 
     protected void setItem(int x, int y, ItemStack itemStack) {
         inv.setItem(x + (y * getType().columns), itemStack);
+    }
+
+    protected void setItem(int pos, ItemStack itemStack) {
+        inv.setItem(pos, itemStack);
     }
 
     protected void setItemWithOffset(int xOff, int yOff, int index, ItemStack itemStack) {

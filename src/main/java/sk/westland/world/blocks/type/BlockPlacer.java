@@ -100,8 +100,6 @@ public class BlockPlacer extends CustomBlock {
             return;
 
         ItemStack selectedItem = null;
-
-        ChatInfo.SUCCESS.sendAll("BlockRedstoneEvent ");
     }
 
     @Override

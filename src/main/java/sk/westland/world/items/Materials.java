@@ -7,6 +7,7 @@ import sk.westland.core.items.CustomItem;
 import sk.westland.core.items.CustomResourceItem;
 import sk.westland.world.items.blocks.BlockBreakerItem;
 import sk.westland.world.items.blocks.BlockPlacerItem;
+import sk.westland.world.items.blocks.WorthChestItem;
 import sk.westland.world.items.resources.IronRod;
 import sk.westland.world.items.tools.BetterHoe;
 import sk.westland.world.items.tools.Crowbar;
@@ -20,10 +21,12 @@ public class Materials {
         CROWBAR(new Crowbar(), null),
         HAMMER(new Hammer(), null),
         BETTER_HOE(new BetterHoe(), null),
-        SADDLE_ITEM(new SaddleItem(), null),
 
+        // Items
         BLOCK_PLACER(new BlockPlacerItem(), null),
-        BLOCK_BREAKER(new BlockBreakerItem(), null);
+        BLOCK_BREAKER(new BlockBreakerItem(), null),
+        WORTH_CHEST(new WorthChestItem(), null),
+        SADDLE_ITEM(null, new SaddleItem());
 
         private Craftable craftable;
         private CustomItem customItem;
