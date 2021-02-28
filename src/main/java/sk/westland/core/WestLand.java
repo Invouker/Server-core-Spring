@@ -1,5 +1,7 @@
 package sk.westland.core;
 
+import com.bekvon.bukkit.residence.containers.Flags;
+import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import dev.alangomes.springspigot.SpringSpigotInitializer;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -92,6 +94,7 @@ public class WestLand extends JavaPlugin {
             }));
         }
 
+        FlagPermissions.addFlag("mob-catch");
 
         Bukkit.getConsoleSender().sendMessage("§aLoaded " + Materials.Items.values().length + " custom items!");
         Bukkit.getConsoleSender().sendMessage("§aLoaded " + Materials.Resources.values().length + " resource items!");

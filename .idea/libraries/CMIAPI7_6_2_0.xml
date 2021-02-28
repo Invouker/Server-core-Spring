@@ -1,9 +1,11 @@
 <component name="libraryTable">
   <library name="CMIAPI7.6.2.0">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/.server/plugins/CMIAPI7.6.2.0.jar!/" />
+      <root url="jar://E:/Minecraft/CMI-API.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://E:/Minecraft/CMI-API.jar!/" />
+    </SOURCES>
   </library>
 </component>

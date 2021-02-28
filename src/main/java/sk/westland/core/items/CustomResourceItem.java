@@ -24,18 +24,15 @@ public abstract class CustomResourceItem  {
     @Autowired
     protected RecipeService recipeService;
 
-
     public abstract ItemStack getItem();
 
     public abstract int getModelID();
 
     protected abstract void onPluginEnable(PluginEnableEvent event);
 
-    public static int RESOURCE_ITEM_COUNT = 0;
     @EventHandler(priority = EventPriority.HIGHEST)
     private void onPluginInit(PluginEnableEvent event) {
         this.onPluginEnable(event);
-        RESOURCE_ITEM_COUNT++;
     }
 
 }

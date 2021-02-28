@@ -1,8 +1,10 @@
 package sk.westland.world.items.tools;
 
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.enchantments.Enchantment;
+import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.Ageable;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -17,58 +19,60 @@ import sk.westland.core.items.*;
 import sk.westland.world.items.Materials;
 
 @Component
-public class Crowbar extends CustomItem implements Craftable, Listener {
+public class BetterPickaxe extends CustomItem implements Listener, Craftable {
 
     @Override
     public NamespacedKey getNamespacedKey(Plugin plugin) {
-        return new NamespacedKey(plugin, "crowbar");
+        return new NamespacedKey(plugin, "betterPickaxe");
     }
 
     @Override
     public CraftingRecipe getCraftingRecipe(Plugin plugin) {
-        return new CraftingRecipe(getNamespacedKey(plugin), RecipeType.Item, getItem())
-                .shape("ABB", "AAB", "BBA")
-                .setIngredient('B', recipeService.item(Materials.Resources.COPPER_DUST.getItem()))
-                .setIngredient('A', recipeService.item(Materials.Resources.IRON_ROD.getItem()));
+        return new CraftingRecipe(getNamespacedKey(plugin), RecipeType.Item, getItem(), CraftingType.ShapedRecipe)
+                .shape( "ISI",
+                        " R ",
+                        " R ")
+                .setIngredient('S', Material.NETHER_STAR)
+                .setIngredient('I', Material.NETHERITE_INGOT)
+                .setIngredient('R', recipeService.item(Materials.Resources.IRON_ROD.getItem()));
     }
 
     @Override
     public ItemStack getItem() {
-        return new ItemBuilder(Material.STICK)
+        return new ItemBuilder(Material.NETHERITE_PICKAXE)
+                .setName("§bBetter Pickaxe")
                 .setModelId(getModelID())
-                .setName("Crowbar")
-                .addEnchant(Enchantment.DAMAGE_ALL, 3)
-                .build();
+
+                .setLore("",
+                        "§7Na ťaženie lepších",
+                        "§7rúd z orečok",
+                        "").build();
     }
 
     @Override
     public int getModelID() {
-        return 0;
+        return 2;
     }
 
     @Override
     protected void onPluginEnable(PluginEnableEvent event) {
-        recipeService.registerRecipe(getCraftingRecipe(event.getWestLand()));
+        getCraftingRecipe(event.getWestLand()).register();
     }
 
     @Override
-    protected void onPlayerInteractWithItem(PlayerInteractEvent event) {
-        event.getPlayer().sendMessage("INTERAKCIA? " + event.toString());
-    }
+    protected void onPlayerInteractWithItem(PlayerInteractEvent event) { }
 
     @Override
     protected void onPlayerDamageWithItem(WLPlayerDamageEvent event) {
-        event.getPlayer().sendMessage("DAMAGE? " + event.toString());
-        event.setDamage(3);
     }
 
     @Override
     protected void onPlayerInteractAtEntityWithItem(PlayerInteractAtEntityEvent event) {
-        event.getPlayer().sendMessage("INTERAKCIA S ENTITOU? " + event.toString());
     }
 
     @Override
-    protected void onPlayerBlockPlace(BlockPlaceEvent event) { }
+    protected void onPlayerBlockPlace(BlockPlaceEvent event) {
+    }
 
     @Override
     protected void onPlayerBlockBreak(BlockBreakEvent event) {

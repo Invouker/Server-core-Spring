@@ -8,11 +8,10 @@ import sk.westland.core.items.CustomResourceItem;
 import sk.westland.world.items.blocks.BlockBreakerItem;
 import sk.westland.world.items.blocks.BlockPlacerItem;
 import sk.westland.world.items.blocks.WorthChestItem;
+import sk.westland.world.items.resources.CopperDust;
+import sk.westland.world.items.resources.CopperIngot;
 import sk.westland.world.items.resources.IronRod;
-import sk.westland.world.items.tools.BetterHoe;
-import sk.westland.world.items.tools.Crowbar;
-import sk.westland.world.items.tools.Hammer;
-import sk.westland.world.items.tools.SaddleItem;
+import sk.westland.world.items.tools.*;
 
 public class Materials {
 
@@ -21,6 +20,7 @@ public class Materials {
         CROWBAR(new Crowbar(), null),
         HAMMER(new Hammer(), null),
         BETTER_HOE(new BetterHoe(), null),
+        BETTER_PICKAXE(new BetterPickaxe(), null),
 
         // Items
         BLOCK_PLACER(new BlockPlacerItem(), null),
@@ -76,7 +76,10 @@ public class Materials {
 
     public enum Resources {
         // MODEL ID // MATERIAL
-        IRON_ROD(new IronRod());        // 1201     // paper
+        IRON_ROD(new IronRod()),        // 5     // stick
+        COPPER_DUST(new CopperDust()),
+        COPPER_INGOT(new CopperIngot())
+        ;
 
         private CustomResourceItem customResourceItem;
 

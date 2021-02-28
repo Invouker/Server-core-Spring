@@ -10,6 +10,12 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="quests-dist" target="1.8" />
+      <module name="quests-main" target="1.8" />
+      <module name="quests-parent" target="1.8" />
+      <module name="quests-v1_8_R1" target="1.8" />
+      <module name="quests-v1_8_R2" target="1.8" />
+      <module name="quests-v1_8_R3" target="1.8" />
       <module name="WildLand" target="1.8" />
     </bytecodeTargetLevel>
   </component>

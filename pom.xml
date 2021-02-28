@@ -219,6 +219,12 @@
             <artifactId>shopgui-api</artifactId>
             <version>2.1.1</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.bekvon.bukkit.residence</groupId>
+            <artifactId>residence</artifactId>
+            <version>4.9.2.4</version>
+        </dependency>
         <!--
                 <dependency>
                     <groupId>com.github.12XpresS12.PikaQuests</groupId>

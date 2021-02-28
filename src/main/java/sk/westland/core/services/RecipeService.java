@@ -7,6 +7,7 @@ import net.minecraft.server.v1_16_R3.MinecraftKey;
 import net.minecraft.server.v1_16_R3.Recipes;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
+import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import org.bukkit.craftbukkit.v1_16_R3.CraftServer;
 import org.bukkit.entity.Player;
@@ -17,11 +18,14 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sk.westland.core.WestLand;
 import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.event.player.WLPlayerJoinEvent;
 import sk.westland.core.items.CraftingRecipe;
 import sk.westland.core.entity.player.WLPlayer;
+import sk.westland.world.items.Materials;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,19 +36,30 @@ public class RecipeService implements Listener {
     @Autowired
     private PlayerService playerService;
 
-    private static Map<String, CraftingRecipe> craftingRecipes = new HashMap<>();
+    private Map<String, CraftingRecipe> craftingRecipes = new HashMap<>();
+    private List<FurnaceRecipe> furnaceRecipes = new ArrayList<>();
 
     @EventHandler(priority = EventPriority.LOWEST)
     private void onPluginInit(PluginEnableEvent event) {
        Bukkit.getScheduler().runTaskLater(event.getWestLand(), ()->{
-           if (craftingRecipes == null)
-               return;
+           if (!(craftingRecipes == null && craftingRecipes.isEmpty()))
+               craftingRecipes.forEach((name, craftingRecipe) -> craftingRecipe.register());
 
-           craftingRecipes.forEach((name, craftingRecipe) -> craftingRecipe.register());
+           if (!(furnaceRecipes == null && furnaceRecipes.isEmpty()))
+               furnaceRecipes.forEach((furnaceRecipe) ->  {
+                   NamespacedKey namespacedKey = furnaceRecipe.getKey();
+                   if(Bukkit.getRecipe(namespacedKey) != null) {
+                        Bukkit.removeRecipe(namespacedKey);
+                   }
+
+                   Bukkit.addRecipe(furnaceRecipe);
+               }
+
+              );
        }, 40l);
     }
 
-    public static Map<String, CraftingRecipe> getCraftingRecipes() {
+    public Map<String, CraftingRecipe> getCraftingRecipes() {
         return craftingRecipes;
     }
 
@@ -115,13 +130,25 @@ public class RecipeService implements Listener {
             return;
 
         wlPlayer.getUserData().getCraftingRecipe().stream().forEach((nameKey) -> {
-            RecipeService.getCraftingRecipes().forEach((name, craftingRecipe) -> {
+            getCraftingRecipes().forEach((name, craftingRecipe) -> {
                 if (craftingRecipe.getNamespacedKey().getKey().equals(nameKey)) {
                     wlPlayer.getPlayer().discoverRecipe(craftingRecipe.getNamespacedKey());
                 }
             });
         });
     }
+
+    //Furnace recipes
+
+    public void addFurnaceRecipe(String key, Materials.Resources input, Materials.Resources output, float exp, int cookingTime) {
+        this.addFurnaceRecipe(key, input.getItem(),  output.getItem(), exp, cookingTime);
+    }
+
+    public void addFurnaceRecipe(String key, ItemStack input, ItemStack output, float exp, int cookingTime) {
+        FurnaceRecipe furnaceRecipe = new FurnaceRecipe(new NamespacedKey(WestLand.getInstance(), key), input, item(output), exp, cookingTime*20);
+        furnaceRecipes.add(furnaceRecipe);
+    }
+
 }
 /*
     private void onPlayerRoleLeft(PlayerLeftRoleEvent event) {

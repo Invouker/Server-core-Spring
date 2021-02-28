@@ -11,6 +11,7 @@ sk\westland\core\jobs\rewards\JMoneyReward.class
 sk\westland\world\commands\PMoneyCommands$SetMoney.class
 sk\westland\core\quest\Quest.class
 sk\westland\core\utils\BookPageFactory.class
+sk\westland\world\items\resources\CopperDust.class
 sk\westland\core\blocks\multiblock\MultiBlock$2.class
 sk\westland\core\jobs\rewards\JPermReward$PermRenderType.class
 sk\westland\world\inventories\entities\HorseStyleInventory$1.class
@@ -41,7 +42,6 @@ sk\westland\world\items\resources\IronRod.class
 sk\westland\core\services\QuestService.class
 sk\westland\core\items\ItemBuilder.class
 sk\westland\core\utils\converter\UUIDConverter.class
-sk\westland\world\items\blocks\multiblocks\Grinder.class
 sk\westland\core\Application.class
 sk\westland\core\utils\BookFactory.class
 sk\westland\core\quest\QuestState.class
@@ -59,6 +59,8 @@ sk\westland\world\inventories\entities\HorseColorInventory.class
 sk\westland\core\quest\IReward.class
 sk\westland\world\events\JobsEvent.class
 sk\westland\core\inventory\CustomInventory$Type$InventoryCreateFunc.class
+sk\westland\world\events\EggEvents.class
+sk\westland\world\items\resources\CopperIngot.class
 sk\westland\core\inventory\CustomInventory$Direction.class
 sk\westland\core\enums\JobList.class
 sk\westland\core\jobs\JobRewards.class
@@ -144,6 +146,7 @@ sk\westland\core\services\RecipeService.class
 sk\westland\world\inventories\ChangeQuitMessageItemMenu.class
 sk\westland\world\inventories\entities\HorseUpgradeInventory.class
 sk\westland\core\items\CraftingRecipe.class
+sk\westland\world\commands\player\NightVisionCommand.class
 sk\westland\core\services\DiscordService$3.class
 sk\westland\core\quest\storage\QuestProgressStorageOrderIndependent.class
 sk\westland\core\utils\converter\ListConverter.class
@@ -176,12 +179,14 @@ sk\westland\world\items\Materials.class
 sk\westland\core\blocks\CustomBlock.class
 sk\westland\core\quest\action\event\TaskEnabledEvent.class
 sk\westland\core\items\Nbt.class
+sk\westland\world\blocks\type\multiblocks\Grinder.class
 sk\westland\core\quest\action\type\OpenBookWithTextAction.class
 sk\westland\world\commands\admin\WLRecipe.class
 sk\westland\core\enums\HorseStats.class
 sk\westland\core\blocks\BlockType.class
 sk\westland\core\items\CraftingRecipe$1.class
 sk\westland\core\utils\HashListMap.class
+sk\westland\world\items\tools\BetterPickaxe.class
 sk\westland\world\commands\PMoneyCommands.class
 sk\westland\core\utils\RunnableDelay.class
 sk\westland\world\commands\QuestCommands.class

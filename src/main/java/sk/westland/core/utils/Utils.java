@@ -25,7 +25,7 @@ public class Utils {
 
     public static void playSound(Location location, Sound sound, int distance, float a, float b) {
         Bukkit.getOnlinePlayers().stream()
-                .filter((player) -> player.getLocation().distance(location) < distance)
+                .filter((player) -> player.getLocation().getWorld().getName().equals(location.getWorld().getName()) && player.getLocation().distance(location) < distance)
                 .forEach((player -> player.playSound(location, sound, a, b)));
     }
 
@@ -38,4 +38,6 @@ public class Utils {
 
         protocolManager.broadcastServerPacket(animation, player.getLocation(), 25);
     }
+
+
 }

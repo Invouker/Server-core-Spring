@@ -26,8 +26,10 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,7 @@ import sk.westland.core.event.player.WLPlayerMoveEvent;
 import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.services.DiscordService;
 import sk.westland.core.services.PlayerService;
+import sk.westland.world.items.Materials;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
@@ -105,4 +108,19 @@ public class BasicEvents implements Listener {
         }, 0l, 2l);
     }
 
+    @EventHandler(ignoreCancelled = true)
+    private void onPrepareAnvil(PrepareAnvilEvent event) {
+        AnvilInventory anvilInventory = event.getInventory();
+        for (Materials.Items items : Materials.Items.values()) {
+            if(anvilInventory.getItem(0) == null)
+                return;
+
+            if(anvilInventory.getItem(0).isSimilar(items.getItem())) {
+                event.getInventory().setRepairCost(999);
+                event.setResult(null);
+            }
+        }
+
+
+    }
 }

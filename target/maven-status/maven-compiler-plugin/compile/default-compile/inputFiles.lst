@@ -39,12 +39,12 @@ D:\GitHub\Westland\src\main\java\sk\westland\core\utils\ChatInfo.java
 D:\GitHub\Westland\src\main\java\sk\westland\core\event\NPCEvent.java
 D:\GitHub\Westland\src\main\java\sk\westland\world\items\tools\Hammer.java
 D:\GitHub\Westland\src\main\java\sk\westland\core\quest\action\type\InteractWithNPCAction.java
+D:\GitHub\Westland\src\main\java\sk\westland\world\events\EggEvents.java
 D:\GitHub\Westland\src\main\java\sk\westland\core\quest\reward\QuestReward.java
 D:\GitHub\Westland\src\main\java\sk\westland\core\enums\MoneyType.java
 D:\GitHub\Westland\src\main\java\sk\westland\core\utils\Utils.java
 D:\GitHub\Westland\src\main\java\sk\westland\core\interaction\buffer\InteractionBuffer.java
 D:\GitHub\Westland\src\main\java\sk\westland\core\utils\HashListMap.java
-D:\GitHub\Westland\src\main\java\sk\westland\world\items\blocks\multiblocks\Grinder.java
 D:\GitHub\Westland\src\main\java\sk\westland\core\quest\action\ActionDataStorage.java
 D:\GitHub\Westland\src\main\java\sk\westland\core\quest\QuestState.java
 D:\GitHub\Westland\src\main\java\sk\westland\core\services\ItemInteractionService.java
@@ -55,6 +55,7 @@ D:\GitHub\Westland\src\main\java\sk\westland\world\items\blocks\BlockPlacerItem.
 D:\GitHub\Westland\src\main\java\sk\westland\core\utils\ComponentBuilder.java
 D:\GitHub\Westland\src\main\java\sk\westland\core\utils\converter\LocationConverter.java
 D:\GitHub\Westland\src\main\java\sk\westland\world\inventories\JobsInventory.java
+D:\GitHub\Westland\src\main\java\sk\westland\world\items\resources\CopperIngot.java
 D:\GitHub\Westland\src\main\java\sk\westland\core\jobs\rewards\JItemReward.java
 D:\GitHub\Westland\src\main\java\sk\westland\core\database\data\BlockDataRepository.java
 D:\GitHub\Westland\src\main\java\sk\westland\core\quest\action\type\GiveItemToNpcAction.java
@@ -68,6 +69,8 @@ D:\GitHub\Westland\src\main\java\sk\westland\core\database\player\UserQuestData.
 D:\GitHub\Westland\src\main\java\sk\westland\core\items\Nbt.java
 D:\GitHub\Westland\src\main\java\sk\westland\core\blocks\CustomBlock.java
 D:\GitHub\Westland\src\main\java\sk\westland\core\enums\HorseStats.java
+D:\GitHub\Westland\src\main\java\sk\westland\world\commands\player\NightVisionCommand.java
+D:\GitHub\Westland\src\main\java\sk\westland\world\items\tools\BetterPickaxe.java
 D:\GitHub\Westland\src\main\java\sk\westland\world\commands\admin\WLRecipe.java
 D:\GitHub\Westland\src\main\java\sk\westland\core\event\player\WLPlayerMoveEvent.java
 D:\GitHub\Westland\src\main\java\sk\westland\core\items\ItemBuilder.java
@@ -108,6 +111,7 @@ D:\GitHub\Westland\src\main\java\sk\westland\world\inventories\entities\HorseCol
 D:\GitHub\Westland\src\main\java\sk\westland\core\utils\converter\ListConverter.java
 D:\GitHub\Westland\src\main\java\sk\westland\core\jobs\rewards\JIReward.java
 D:\GitHub\Westland\src\main\java\sk\westland\world\events\ServerEvent.java
+D:\GitHub\Westland\src\main\java\sk\westland\world\items\resources\CopperDust.java
 D:\GitHub\Westland\src\main\java\sk\westland\world\inventories\ChangeQuitMessageItemMenu.java
 D:\GitHub\Westland\src\main\java\sk\westland\core\enums\QuitMessages.java
 D:\GitHub\Westland\src\main\java\sk\westland\world\commands\suggestion\CraftingSuggestion.java
@@ -149,6 +153,7 @@ D:\GitHub\Westland\src\main\java\sk\westland\core\database\player\UserData.java
 D:\GitHub\Westland\src\main\java\sk\westland\core\jobs\rewards\JMoneyReward.java
 D:\GitHub\Westland\src\main\java\sk\westland\core\services\VaultService.java
 D:\GitHub\Westland\src\main\java\sk\westland\world\inventories\blocks\BreakerInventory.java
+D:\GitHub\Westland\src\main\java\sk\westland\world\blocks\type\multiblocks\Grinder.java
 D:\GitHub\Westland\src\main\java\sk\westland\core\database\player\UserRepository.java
 D:\GitHub\Westland\src\main\java\sk\westland\world\commands\QuestCommands.java
 D:\GitHub\Westland\src\main\java\sk\westland\core\quest\Quest.java

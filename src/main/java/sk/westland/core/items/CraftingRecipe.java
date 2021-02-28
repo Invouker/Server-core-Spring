@@ -1,5 +1,6 @@
 package sk.westland.core.items;
 
+import com.Zrips.CMI.CMI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -107,13 +108,17 @@ public class CraftingRecipe {
 
        switch(craftingType) {
             case ShapedRecipe: {
-                if(Bukkit.getRecipe(shapedRecipe.getKey()) == null)
-                    Bukkit.addRecipe(shapedRecipe);
+                if(Bukkit.getRecipe(shapedRecipe.getKey()) != null)
+                    Bukkit.removeRecipe(shapedRecipe.getKey());
+
+                Bukkit.addRecipe(shapedRecipe);
                 break;
             }
             case ShapelessRecipe: {
-                if(Bukkit.getRecipe(shapelessRecipe.getKey()) == null)
-                    Bukkit.addRecipe(shapelessRecipe);
+                if(Bukkit.getRecipe(shapelessRecipe.getKey()) != null)
+                    Bukkit.removeRecipe(shapelessRecipe.getKey());
+
+                Bukkit.addRecipe(shapelessRecipe);
                 break;
             }
         }

@@ -226,12 +226,12 @@ public class HorseService implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onInventoryDrag(InventoryDragEvent event) {
-        ChatInfo.ERROR.sendAll("Drag Event");
+
     }
 
     @EventHandler(ignoreCancelled = true)
     private void onInventoryMoveItem(InventoryEvent event) { // TODO: zabraniť daniu špecialneho sedla na koňa
-        System.out.println("Inventory Event");
+
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -243,7 +243,6 @@ public class HorseService implements Listener {
             return;
 
         if(event.getClickedInventory() instanceof HorseInventory) {
-            System.out.println("clickType: " + event.getClick());
 
             if(event.getClick() == ClickType.SHIFT_RIGHT || event.getClick() == ClickType.NUMBER_KEY || event.getClick() == ClickType.SHIFT_LEFT)
 
