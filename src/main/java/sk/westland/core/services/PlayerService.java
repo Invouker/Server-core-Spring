@@ -117,6 +117,10 @@ public class PlayerService implements Listener {
         Bukkit.getLogger().info("§aLoading player from database " + player.getName() + " [" + player.getUniqueId() +"]");
     }
 
+    public void save(WLPlayer wlPlayer) {
+        save(wlPlayer.getPlayer());
+    }
+
     public void save(Player player) {
         if(!isLoaded(player))
             loadUser(player);
@@ -130,13 +134,6 @@ public class PlayerService implements Listener {
         wlPlayer.setPlayerData(playerDataRepository.save(playerData));
         wlPlayer.setPlayerOptions(playerOptionsRepository.save(playerOptions));
     }
-
-
-
-
-
-
-
 
 
 

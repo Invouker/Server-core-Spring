@@ -130,6 +130,55 @@ public class PMoneyCommands implements Runnable {
     }
 
     @Component
+    @CommandLine.Command(name = "remove")
+    @HasPermission("commands.pmoney.remove")
+    public static class RemoveMoney implements Runnable {
+
+        @CommandLine.Parameters(index = "2", defaultValue = "@s", converter = PlayerArgConverter.class)
+        private Player targetPlayerArg;
+
+        @CommandLine.Parameters(index = "0", completionCandidates = MoneySuggestion.class)
+        private MoneyType moneyType;
+
+        @CommandLine.Parameters(index = "1")
+        private double amount;
+
+        @Autowired
+        private Context context;
+
+        @Autowired
+        private MoneyService moneyService;
+
+        @Autowired
+        private PlayerService playerService;
+
+        @Override
+        public void run() {
+            WLPlayer targetPlayer;
+            if(targetPlayerArg == context.getPlayer()) {
+                Player player = context.getPlayer();
+                if(player == null) {
+                    ChatInfo.ERROR.send(context.getSender(), "Príkaz iba pre  hráčov");
+                    return;
+                }
+                targetPlayer = playerService.getWLPlayer(player);
+            } else if(targetPlayerArg == null) {
+                ChatInfo.ERROR.send(context.getSender(), "Hráč nebyl nalezen!");
+                return;
+            } else
+                targetPlayer = playerService.getWLPlayer(targetPlayerArg);
+
+            if(targetPlayer == null) {
+                ChatInfo.ERROR.send(context.getSender(), "Hráč nebyl nalezen!");
+                return;
+            }
+
+            moneyService.give(targetPlayer, moneyType, -amount);
+            ChatInfo.SUCCESS.send(targetPlayer, "Aktuálne máš " + targetPlayer.getShards() + " shardov!");
+        }
+    }
+
+    @Component
     @CommandLine.Command(name = "give")
     @HasPermission("commands.pmoney.give")
     public static class GiveMoney implements Runnable {
@@ -140,7 +189,7 @@ public class PMoneyCommands implements Runnable {
         @CommandLine.Parameters(index = "1")
         private double amount;
 
-        @CommandLine.Parameters(index = "2", completionCandidates = PlayerSuggestion.class)
+        @CommandLine.Parameters(index = "2", completionCandidates = PlayerSuggestion.class, defaultValue = "@me")
         private String targetPlayerArg;
 
         @Autowired
@@ -189,6 +238,8 @@ public class PMoneyCommands implements Runnable {
             if(moneyService.give(targetPlayer, moneyType, amount))
                 ChatInfo.SUCCESS.send(targetPlayer, "Aktuálne máš " + moneyService.get(targetPlayer, moneyType) + " " + moneyType.name() + "!");
             else ChatInfo.ERROR.send(context.getSender(), "Error ");
+
+            playerService.save(targetPlayer);
         }
 
         private boolean runOffline(String targetPlayer, MoneyType moneyType, int amount) {
@@ -207,10 +258,18 @@ public class PMoneyCommands implements Runnable {
 
             PlayerData playerData = playerDataOptional.get();
             switch (moneyType) {
-                case Shard:
+                case Shard: {
                     playerData.setShards(playerData.getShards() + amount);
-                case Gems:
+                    break;
+                }
+                case Gems: {
                     playerData.setGems(playerData.getGems() + amount);
+                    break;
+                }
+                case Money: {
+                    moneyService.getVaultService().getEconomy().depositPlayer(Bukkit.getOfflinePlayer(targetPlayer), amount);
+                    break;
+                }
             }
 
             playerDataRepository.save(playerData);

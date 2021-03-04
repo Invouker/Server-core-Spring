@@ -15,9 +15,6 @@ public class Application {
     }
 
     @Bean
-    public PlayerDataStorageService playerDataStorageService() { return new PlayerDataStorageService(); }
-
-    @Bean
     public MessageService messageService() { return new MessageService(); }
 
     @Bean

@@ -14,6 +14,7 @@ import sk.westland.core.event.PluginDisableEvent;
 import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.services.BlockService;
 import sk.westland.core.services.PlayerService;
+import sk.westland.core.utils.PlaceHolder;
 import sk.westland.world.items.Materials;
 
 import java.io.IOException;
@@ -28,6 +29,8 @@ public class WestLand extends JavaPlugin {
     public static WestLand westLand;
     private ConfigurableApplicationContext context;
     private ClassLoader defaultClassLoader;
+
+    private PlaceHolder placeHolder;
 
     @Autowired
     private PlayerService playerService;
@@ -82,9 +85,10 @@ public class WestLand extends JavaPlugin {
 
         try {
             // Disable for NOW
-            //new PlaceHolder(this, playerService).register();
+            placeHolder = new PlaceHolder(this, playerService);
+            placeHolder.register();
         }  catch (Exception ex) {
-            System.out.println("While hooling into PlaceholderAPI: " + ex.getLocalizedMessage());
+            System.out.println("While hooking into PlaceholderAPI: " + ex.getLocalizedMessage());
         }
         if(Bukkit.getOnlinePlayers().size() > 0) {
             Bukkit.getOnlinePlayers().forEach((player ->  {
@@ -106,6 +110,8 @@ public class WestLand extends JavaPlugin {
     @Override
     public void onDisable() {
         super.onDisable();
+
+        placeHolder.unregister();
 
         if(Bukkit.getOnlinePlayers().size() > 0)
         Bukkit.getOnlinePlayers().forEach((player ->  {
