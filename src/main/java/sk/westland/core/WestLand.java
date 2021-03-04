@@ -1,6 +1,5 @@
 package sk.westland.core;
 
-import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import dev.alangomes.springspigot.SpringSpigotInitializer;
 import org.bukkit.Bukkit;
@@ -15,8 +14,6 @@ import sk.westland.core.event.PluginDisableEvent;
 import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.services.BlockService;
 import sk.westland.core.services.PlayerService;
-import sk.westland.core.services.QuestService;
-import sk.westland.core.utils.PlaceHolder;
 import sk.westland.world.items.Materials;
 
 import java.io.IOException;
@@ -35,8 +32,6 @@ public class WestLand extends JavaPlugin {
     @Autowired
     private PlayerService playerService;
 
-    @Autowired
-    private QuestService questService;
 
     @Autowired
     private BlockService blockService;
@@ -74,8 +69,11 @@ public class WestLand extends JavaPlugin {
             ex.printStackTrace();
         }
 
-        this.context = application.run();
-
+        try {
+            this.context = application.run();
+        }catch (Exception ex) {
+            ex.printStackTrace();
+        }
         setupDatabase(properties);
 
         application.setDefaultProperties(properties);
@@ -98,7 +96,6 @@ public class WestLand extends JavaPlugin {
 
         Bukkit.getConsoleSender().sendMessage("§aLoaded " + Materials.Items.values().length + " custom items!");
         Bukkit.getConsoleSender().sendMessage("§aLoaded " + Materials.Resources.values().length + " resource items!");
-        Bukkit.getConsoleSender().sendMessage("§aLoaded " + questService.getQuestIds().size() + " quests!");
         Bukkit.getConsoleSender().sendMessage("§aLoaded " + blockService.getLOADED_BLOCKS() + " blocks!");
 
         Bukkit.getConsoleSender().sendMessage("§a");
@@ -112,7 +109,7 @@ public class WestLand extends JavaPlugin {
 
         if(Bukkit.getOnlinePlayers().size() > 0)
         Bukkit.getOnlinePlayers().forEach((player ->  {
-            playerService.saveAndUnloadUser(player);
+            playerService.save(player);
         }));
 
         Bukkit.getPluginManager().callEvent(new PluginDisableEvent(this));
@@ -120,7 +117,9 @@ public class WestLand extends JavaPlugin {
         Thread.currentThread().setContextClassLoader(defaultClassLoader);
 
         if(context != null) {
-            context.close();
+            try {
+                context.close();
+            }catch (Exception ignored) {}
             context = null;
         }
     }

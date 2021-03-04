@@ -1,32 +1,18 @@
 package sk.westland.core.services;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLib;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.wrappers.WrappedDataWatcher;
-import com.comphenix.protocol.wrappers.WrappedWatchableObject;
-import net.minecraft.server.v1_16_R3.DataWatcher;
-import net.minecraft.server.v1_16_R3.PacketPlayOutEntityMetadata;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.scoreboard.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sk.westland.core.database.player.UserData;
-import sk.westland.core.event.PluginEnableEvent;
-import sk.westland.core.event.player.WLPlayerJoinEvent;
-import sk.westland.core.event.player.WLPlayerQuitEvent;
+import sk.westland.core.WestLand;
+import sk.westland.core.database.player.*;
 import sk.westland.core.entity.player.WLPlayer;
+import sk.westland.core.event.player.WLPlayerQuitEvent;
 
 import java.util.*;
 
@@ -34,30 +20,128 @@ import java.util.*;
 public class PlayerService implements Listener {
 
     @Autowired
-    private PlayerDataStorageService playerDataStorageService;
+    private UserDataRepository userDataRepository;
 
-    private static HashMap<Player, WLPlayer> wlPlayers = new HashMap<>();
+    @Autowired
+    private PlayerDataRepository playerDataRepository;
+
+    @Autowired
+    private PlayerOptionsRepository playerOptionsRepository;
+
+    private final HashMap<Player, WLPlayer> wlPlayerHashMap = new HashMap<>();
+    //private static final HashMap<UUID, UserData> userDataHashMap = new HashMap<>();
+
+    public PlayerService() {
+        Bukkit.getScheduler()
+                .runTaskTimerAsynchronously(WestLand.getInstance(), this::saveAllUsers, 20* 5L,20*60L); // Every 1 minutes will save the userRepository
+    }
 
     @EventHandler(priority = EventPriority.LOWEST)
     private void onPlayerConnect(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        WLPlayer wlPlayer = loadUser(player);
-        Bukkit.getPluginManager().callEvent(new WLPlayerJoinEvent(wlPlayer));
+        loadUser(player);
+        //WLPlayer wlPlayer = loadUser(player);
+        //Bukkit.getPluginManager().callEvent(new WLPlayerJoinEvent(wlPlayer));
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     private void onPlayerDisconnect(PlayerQuitEvent event) {
         Player player = event.getPlayer();
 
+        save(player);
         Bukkit.getPluginManager().callEvent(new WLPlayerQuitEvent(getWLPlayer(player)));
-        saveAndUnloadUser(player);
+        unloadPlayer(player);
+
+        //saveAndUnloadUser(player);
+    }
+
+    public void unloadPlayer(Player player) {
+        if(isLoaded(player)) {
+            wlPlayerHashMap.remove(player);
+            Bukkit.getLogger().info("§cUnloading player from database " + player.getName() + " [" + player.getUniqueId() +"]");
+        }
     }
 
     public WLPlayer getWLPlayer(Player player) {
-        return wlPlayers.get(player);
+        return wlPlayerHashMap.get(player);
     }
 
+    public boolean isLoaded(Player player) {
+        return wlPlayerHashMap.containsKey(player);
+    }
+
+    public void saveAllUsers() {
+        Bukkit.getOnlinePlayers().forEach((this::save));
+    }
+
+    public HashMap<Player, WLPlayer> getWlPlayerHashMap() {
+        return wlPlayerHashMap;
+    }
+
+    public List<WLPlayer> getWlPlayerList() {
+        List<WLPlayer> wlPlayersList = new ArrayList<>();
+        if(wlPlayerHashMap.isEmpty())
+            return wlPlayersList;
+
+        wlPlayerHashMap.forEach((player, wlPlayer) -> { wlPlayersList.add(wlPlayer); });
+        return wlPlayersList;
+    }
+
+    public void loadUser(Player player) {
+        if(isLoaded(player))
+            return;
+
+        UUID uuid = player.getUniqueId();
+        Optional<UserData> userDataOptional = userDataRepository.findByUuid(uuid.toString());
+
+        UserData userData = userDataOptional.orElseGet(
+                () -> new UserData(player.getName(), uuid.toString())
+        );
+
+        userDataRepository.save(userData);
+        long id = userData.getId();
+
+        Optional<PlayerOptions> playerOptionsOptional = playerOptionsRepository.findByPlayerId(id);
+        Optional<PlayerData> playerDataOptional = playerDataRepository.findByPlayerId(id);
+
+        PlayerOptions playerOptions = playerOptionsOptional.orElseGet(() -> new PlayerOptions(id));
+        PlayerData playerData = playerDataOptional.orElseGet(() -> new PlayerData(id));
+
+        playerOptionsRepository.save(playerOptions);
+        playerDataRepository.save(playerData);
+
+        WLPlayer wlPlayer = new WLPlayer(player, userData, playerData, playerOptions);
+        wlPlayerHashMap.put(player, wlPlayer);
+
+        Bukkit.getLogger().info("§aLoading player from database " + player.getName() + " [" + player.getUniqueId() +"]");
+    }
+
+    public void save(Player player) {
+        if(!isLoaded(player))
+            loadUser(player);
+
+        WLPlayer wlPlayer = wlPlayerHashMap.get(player);
+        UserData userData = wlPlayer.getUserData();
+        PlayerOptions playerOptions = wlPlayer.getPlayerOptions();
+        PlayerData playerData = wlPlayer.getPlayerData();
+
+        wlPlayer.setUserData(userDataRepository.save(userData));
+        wlPlayer.setPlayerData(playerDataRepository.save(playerData));
+        wlPlayer.setPlayerOptions(playerOptionsRepository.save(playerOptions));
+    }
+
+
+
+
+
+
+
+
+
+
+
+    /*
     public HashMap<Player, WLPlayer> getWLPlayers() {
         return wlPlayers;
     }
@@ -75,8 +159,9 @@ public class PlayerService implements Listener {
     }
 
     public WLPlayer loadUser(Player player) {
+        ChatInfo.GENERAL_INFO.sendAll("event:player" + player.getName());
         PlayerDataStorageService.Data data = playerDataStorageService.load(player);
-        UserData user =  data.getUserData();
+        PlayerData user =  data.getUserData();
         WLPlayer wlPlayer = new WLPlayer(player, data);
         wlPlayers.put(player, wlPlayer);
         Bukkit.getConsoleSender().sendMessage("§aLoading player with his name: " + user.getName() + ", UUID[" + user.getUuid()+"]");
@@ -92,7 +177,7 @@ public class PlayerService implements Listener {
         if(wlPlayers.containsKey(player))
             wlPlayers.remove(player);
     }
-
+/*
     private void spawnPacketEntity(double x, double y, double z) {
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
 
@@ -157,7 +242,7 @@ public class PlayerService implements Listener {
             onlinePlayer.setScoreboard(board);
 
         }*/
-    }
+
 
 
 }

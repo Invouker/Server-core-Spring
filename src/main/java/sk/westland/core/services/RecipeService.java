@@ -88,6 +88,7 @@ public class RecipeService implements Listener {
                 if (recipe instanceof Keyed) {
                     if (((Keyed) recipe).getKey().getNamespace().equalsIgnoreCase("minecraft"))
                         continue;
+
                     player.undiscoverRecipe(((Keyed) recipe).getKey());
                 }
             }
@@ -126,16 +127,14 @@ public class RecipeService implements Listener {
         WLPlayer wlPlayer = event.getWlPlayer();
         clearRecipes(wlPlayer.getPlayer());
 
-        if (wlPlayer.getUserData().getCraftingRecipe() == null)
+        if (wlPlayer.getCraftingRecipes() == null)
             return;
 
-        wlPlayer.getUserData().getCraftingRecipe().stream().forEach((nameKey) -> {
-            getCraftingRecipes().forEach((name, craftingRecipe) -> {
-                if (craftingRecipe.getNamespacedKey().getKey().equals(nameKey)) {
-                    wlPlayer.getPlayer().discoverRecipe(craftingRecipe.getNamespacedKey());
-                }
-            });
-        });
+        wlPlayer.getCraftingRecipes().forEach((nameKey) ->
+                getCraftingRecipes().forEach((name, craftingRecipe) -> {
+                    if (craftingRecipe.getNamespacedKey().getKey().equals(nameKey))
+                        wlPlayer.getPlayer().discoverRecipe(craftingRecipe.getNamespacedKey());
+        }));
     }
 
     //Furnace recipes

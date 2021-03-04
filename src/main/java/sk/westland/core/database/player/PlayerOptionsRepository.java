@@ -6,7 +6,8 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface UserOptionRepository extends JpaRepository<UserOption, Long> {
+public interface PlayerOptionsRepository extends JpaRepository<PlayerOptions, Long> {
 
-    Optional<UserOption> findByUuid(String uuid);
+    Optional<PlayerOptions> findByPlayerId(long id);
+    //List<UserOption> findByUuid(String uuid);
 }

@@ -7,22 +7,27 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import sk.westland.core.WestLand;
+import sk.westland.core.database.player.PlayerData;
 import sk.westland.core.database.player.UserData;
-import sk.westland.core.database.player.UserOption;
+import sk.westland.core.database.player.PlayerOptions;
 import sk.westland.core.enums.JobList;
-import sk.westland.core.services.PlayerDataStorageService;
+import sk.westland.core.items.CraftingRecipe;
 import sk.westland.world.items.Materials;
 
 import java.util.*;
 
 public class WLPlayer  {
 
-    private Player player;
-    private PlayerDataStorageService.Data userData;
+    private final Player player;
+    private UserData userData;
+    private PlayerData playerData;
+    private PlayerOptions playerOptions;
 
-    public WLPlayer(Player player, PlayerDataStorageService.Data userData) {
+    public WLPlayer(Player player, UserData userData, PlayerData playerData, PlayerOptions playerOptions) {
         this.player = player;
         this.userData = userData;
+        this.playerData = playerData;
+        this.playerOptions = playerOptions;
     }
 
     public Player getPlayer() {
@@ -56,11 +61,27 @@ public class WLPlayer  {
     /////
 
     public UserData getUserData() {
-        return userData.getUserData();
+        return userData;
     }
 
-    public UserOption getUserOption() {
-        return userData.getUserOption();
+    public PlayerData getPlayerData() {
+        return playerData;
+    }
+
+    public PlayerOptions getPlayerOptions() {
+        return playerOptions;
+    }
+
+    public void setUserData(UserData userData) {
+        this.userData = userData;
+    }
+
+    public void setPlayerData(PlayerData playerData) {
+        this.playerData = playerData;
+    }
+
+    public void setPlayerOptions(PlayerOptions playerOptions) {
+        this.playerOptions = playerOptions;
     }
 
     ///////////////
@@ -68,19 +89,19 @@ public class WLPlayer  {
     // USER DATA
 
     public double getShards() {
-        return getUserData().getShards();
+        return playerData.getShards();
     }
 
     public void setShards(double shards) {
-        getUserData().setShards(shards);
+        playerData.setShards(shards);
     }
 
     public double getGems() {
-        return getUserData().getGems();
+        return playerData.getGems();
     }
 
     public void setGems(double gems) {
-        getUserData().setGems(gems);
+        playerData.setGems(gems);
     }
 
     public void giveShards(double shards) { setShards(getShards() + shards); }
@@ -88,23 +109,27 @@ public class WLPlayer  {
     public void giveGems(double gems) { setGems(getGems() + gems); }
 
     public int getActiveJoinMessage() {
-        return getUserData().getActiveJoinMessage();
+        return playerData.getActiveJoinMessage();
     }
 
     public void setActiveJoinMessage(int activeJoinMessage) {
-        getUserData().setActiveJoinMessage(activeJoinMessage);
+        playerData.setActiveJoinMessage(activeJoinMessage);
     }
 
     public int getActiveQuitMessage() {
-        return getUserData().getActiveQuitMessage();
+        return playerData.getActiveQuitMessage();
     }
 
     public void setActiveQuitMessage(int activeQuitMessage) {
-        getUserData().setActiveQuitMessage(activeQuitMessage);
+        playerData.setActiveQuitMessage(activeQuitMessage);
+    }
+
+    public List<String> getCraftingRecipes() {
+        return playerData.getCraftingRecipe();
     }
 
     public int getHighestLevelClaimed(JobList job) {
-        Map<String, List<Integer>> rewarded = userData.getUserData().getAlreadyJobRewarded();
+        Map<String, List<Integer>> rewarded = playerData.getAlreadyJobRewarded();
 
         if(!rewarded.containsKey(job.getName()))
             return -1;
@@ -118,7 +143,7 @@ public class WLPlayer  {
     }
 
     public boolean isJobRewardClaimed(JobList job, int level) {
-        Map<String, List<Integer>> rewarded = userData.getUserData().getAlreadyJobRewarded();
+        Map<String, List<Integer>> rewarded = playerData.getAlreadyJobRewarded();
 
         if(rewarded.containsKey(job.getName()))
             return rewarded.get(job.getName()).contains(level);
@@ -127,7 +152,7 @@ public class WLPlayer  {
     }
 
     public void jobRewardClaim(JobList job, int levelClaimed, int... levelClaimeds) {
-        Map<String, List<Integer>> rewarded = userData.getUserData().getAlreadyJobRewarded();
+        Map<String, List<Integer>> rewarded = playerData.getAlreadyJobRewarded();
         if(rewarded == null)
             rewarded = new HashMap<>();
 
@@ -150,7 +175,7 @@ public class WLPlayer  {
         integerList.add(levelClaimed);
         rewarded.put(job.getName(), integerList);
 
-        userData.getUserData().setAlreadyJobRewarded(rewarded);
+        playerData.setAlreadyJobRewarded(rewarded);
     }
 
     //////////////
@@ -185,10 +210,10 @@ public class WLPlayer  {
     }
 
     public List<String> getKnownCraftingRecipes() {
-        if(this.getUserData().getCraftingRecipe() == null)
-            this.getUserData().setCraftingRecipe(new ArrayList<>());
+        if(this.playerData.getCraftingRecipe() == null)
+            this.playerData.setCraftingRecipe(new ArrayList<>());
 
-        return this.getUserData().getCraftingRecipe();
+        return this.playerData.getCraftingRecipe();
     }
 
 

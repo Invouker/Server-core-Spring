@@ -6,54 +6,58 @@ import org.bukkit.event.Listener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sk.westland.core.WestLand;
-import sk.westland.core.database.player.UserData;
-import sk.westland.core.database.player.UserOption;
-import sk.westland.core.database.player.UserOptionRepository;
-import sk.westland.core.database.player.UserRepository;
+import sk.westland.core.database.player.PlayerOptionsRepository;
+import sk.westland.core.database.player.PlayerDataRepository;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
-@Service
-public class PlayerDataStorageService implements Listener {
+public class PlayerDataStorageService {
 
-    private static Map<Player, Data> userMap = new HashMap<>();
+    //private static Map<Player, Data> userMap = new HashMap<>();
 
     public PlayerDataStorageService() {
-        Bukkit.getScheduler().runTaskTimerAsynchronously(WestLand.getInstance(), () -> {
-            saveAllUsers();
-        }, 20*5l,20*60l); // Every 1 minutes will save the userRepository
+
     }
 
     @Autowired
-    private UserRepository userRepository;
+    private PlayerDataRepository playerDataRepository;
 
     @Autowired
-    private UserOptionRepository userOptionRepository;
+    private PlayerOptionsRepository playerOptionsRepository;
 
+
+    /*
     public Data load(Player player) {
+
+        ChatInfo.GENERAL_INFO.sendAll("event:player" + player.getName());
         UUID uuid = player.getUniqueId();
         if(isUserLoaded(player))
             return userMap.get(player);
 
         if(isUserRegistered(player)) {
-            Optional<UserData> userData = userRepository.findByUuid(uuid.toString());
-            Optional<UserOption> userOption = userOptionRepository.findByUuid(uuid.toString());
-            if(userData.isPresent() && userOption.isPresent()) {
-                Data data = new Data(userData.get(), userOption.get());
+            Optional<PlayerData> userDataOptional = playerDataRepository.findByUuid(uuid.toString());
+            Optional<UserOption> userOptionOptional = userOptionRepository.findByUuid(uuid.toString());
+            if(userDataOptional.isPresent() && userOptionOptional.isPresent()) {
+
+                PlayerData playerData = userDataOptional.get();
+                if(playerData.getAlreadyJobRewarded() == null)
+                    playerData.setAlreadyJobRewarded(new HashMap<>());
+
+                if(playerData.getCraftingRecipe() == null)
+                    playerData.setCraftingRecipe(new ArrayList<>());
+
+                Data data = new Data(playerData, userOptionOptional.get());
                 userMap.put(player, data);
                 Bukkit.getConsoleSender().sendMessage("Loading player from database!");
                 return data;
             }
         }
 
-        if(!userRepository.findByUuid(uuid.toString()).isPresent()) {
+        if(!playerDataRepository.findByUuid(uuid.toString()).isPresent()) {
 
-            UserData userData = new UserData(player.getName(), player.getUniqueId().toString(), 0, 0, 1, 0, -1, -1);
+            PlayerData playerData = new PlayerData(player.getName(), player.getUniqueId().toString(), 0, 0, 1, 0, -1, -1);
             UserOption userOption = new UserOption(player.getName(), player.getUniqueId().toString(), true, false, true);
-            Data data = new Data(userData, userOption);
+            Data data = new Data(playerData, userOption);
             userMap.put(player, data);
             Bukkit.getConsoleSender().sendMessage("Registring new user " + player.getName() + " to database!");
             return data;
@@ -62,7 +66,7 @@ public class PlayerDataStorageService implements Listener {
     }
 
     public void save(Player player) {
-        if(userRepository == null || userOptionRepository == null)
+        if(playerDataRepository == null || userOptionRepository == null)
             throw new NullPointerException("userRepository == null");
 
         if(player == null)
@@ -71,27 +75,37 @@ public class PlayerDataStorageService implements Listener {
         if(this.getUser(player) == null)
             load(player);
 
-        this.userRepository.save(this.getUser(player).getUserData());
+        Data data = this.getUser(player);
+
+        if(data.getUserData().getCraftingRecipe() == null)
+            data.getUserData().setCraftingRecipe(new ArrayList<>());
+
+        if(data.getUserData().getAlreadyJobRewarded() == null)
+            data.getUserData().setAlreadyJobRewarded(new HashMap<>());
+
         this.userOptionRepository.save(this.getUser(player).getUserOption());
+        this.playerDataRepository.save(this.getUser(player).getUserData());
     }
 
     public Data getUser(Player player) {
-        return this.userMap.getOrDefault(player, null);
+        return userMap.getOrDefault(player, null);
     }
 
     public boolean isUserLoaded(Player player) {
-        return this.userMap.containsKey(player);
+        return userMap.containsKey(player);
     }
 
     public boolean isUserRegistered(Player player) {
-        return this.userRepository.findByUuid(player.getUniqueId().toString()).isPresent();
+        return this.playerDataRepository.findByUuid(player.getUniqueId().toString()).isPresent();
     }
 
     public boolean unloadUser(Player player) {
-        return this.userMap.remove(player) != null;
+        return userMap.remove(player) != null;
     }
 
     public void saveAllUsers() {
+        Bukkit.getOnlinePlayers().forEach(this::save);
+        /*
         for(PlayerDataStorageService.Data data : userMap.values()) {
             if(data == null)
                 data = new Data();
@@ -102,35 +116,47 @@ public class PlayerDataStorageService implements Listener {
             if(data.getUserOption() == null)
                 data.setUserOption(new UserOption());
 
+            if(data.getUserData().getCraftingRecipe() == null) {
+                data.getUserData().setCraftingRecipe(new ArrayList<>());
+                System.out.println("== null Crafting");
+            }
+            if(data.getUserData().getAlreadyJobRewarded() == null) {
+                data.getUserData().setAlreadyJobRewarded(new HashMap<>());
+                System.out.println("== null Already job rewarded");
+            }
+
+
+            ChatInfo.GENERAL_INFO.sendAll(data.getUserData().getAlreadyJobRewarded().toString());
+
             this.userRepository.save(data.getUserData());
         }
 
         for(PlayerDataStorageService.Data data : userMap.values()) {
             this.userOptionRepository.save(data.getUserOption());
-        }
+        }*
     }
 
     public class Data {
 
-        private UserData userData;
+        private PlayerData playerData;
         private UserOption userOption;
 
-        public Data(UserData userData, UserOption userOption) {
-            this.userData = userData;
+        public Data(PlayerData playerData, UserOption userOption) {
+            this.playerData = playerData;
             this.userOption = userOption;
         }
 
         public Data() {
-            userData = new UserData();
+            playerData = new PlayerData();
             userOption = new UserOption();
         }
 
-        public UserData getUserData() {
-            return userData;
+        public PlayerData getUserData() {
+            return playerData;
         }
 
-        public void setUserData(UserData userData) {
-            this.userData = userData;
+        public void setUserData(PlayerData playerData) {
+            this.playerData = playerData;
         }
 
         public UserOption getUserOption() {
@@ -141,6 +167,6 @@ public class PlayerDataStorageService implements Listener {
             this.userOption = userOption;
         }
     }
-
+*/
 
 }

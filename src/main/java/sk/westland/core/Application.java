@@ -30,9 +30,6 @@ public class Application {
     public RecipeService recipeService() { return new RecipeService(); }
 
     @Bean
-    public QuestService questService() { return new QuestService(); }
-
-    @Bean
     public BlockService blockService() { return new BlockService(); }
 
     @Bean

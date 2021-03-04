@@ -5,9 +5,8 @@ import dev.alangomes.springspigot.security.HasPermission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine;
-import sk.westland.core.database.player.UserData;
+import sk.westland.core.database.player.PlayerData;
 import sk.westland.core.enums.JobList;
-import sk.westland.core.quest.QuestLogMenu;
 import sk.westland.core.services.*;
 import sk.westland.core.utils.ChatInfo;
 import sk.westland.world.commands.suggestion.JobsSuggestion;
@@ -67,33 +66,12 @@ public class TestCommand implements Runnable {
             context.getPlayer().getInventory().addItem(Materials.Items.BLOCK_PLACER.getItem());
             context.getSender().sendMessage("Pridal sa ti item do inventára!");
 
-            UserData userData = playerService.getWLPlayer(context.getPlayer()).getUserData();
+            PlayerData playerData = playerService.getWLPlayer(context.getPlayer()).getPlayerData();
 
-            List<String> recipes = userData.getCraftingRecipe();
+            List<String> recipes = playerData.getCraftingRecipe();
         }
     }
 
-    @Component
-    @CommandLine.Command(name = "3")
-    @HasPermission("commands.test3")
-    class Test3 implements Runnable {
-
-        @Autowired
-        private Context context;
-
-        @Autowired
-        private PlayerService playerService;
-
-        @Autowired
-        private QuestService questService;
-
-
-        @Override
-        public void run() {
-            QuestLogMenu questLogMenu = new QuestLogMenu(playerService, questService);
-            questLogMenu.open(context.getPlayer());
-        }
-    }
 
     @Component
     @CommandLine.Command(name = "4")
@@ -105,10 +83,6 @@ public class TestCommand implements Runnable {
 
         @Autowired
         private PlayerService playerService;
-
-        @Autowired
-        private QuestService questService;
-
 
         @Override
         public void run() {
@@ -126,9 +100,6 @@ public class TestCommand implements Runnable {
 
         @Autowired
         private PlayerService playerService;
-
-        @Autowired
-        private QuestService questService;
 
         @Autowired
         private HorseService horseService;
@@ -153,9 +124,6 @@ public class TestCommand implements Runnable {
 
         @Autowired
         private PlayerService playerService;
-
-        @Autowired
-        private QuestService questService;
 
         @Autowired
         private MoneyService moneyService;
@@ -188,9 +156,6 @@ public class TestCommand implements Runnable {
 
         @Autowired
         private PlayerService playerService;
-
-        @Autowired
-        private QuestService questService;
 
         @Autowired
         private MoneyService moneyService;

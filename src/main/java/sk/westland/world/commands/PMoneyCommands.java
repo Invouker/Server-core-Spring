@@ -7,9 +7,11 @@ import org.bukkit.entity.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine;
-import sk.westland.core.enums.MoneyType;
 import sk.westland.core.database.player.UserData;
-import sk.westland.core.database.player.UserRepository;
+import sk.westland.core.database.player.UserDataRepository;
+import sk.westland.core.enums.MoneyType;
+import sk.westland.core.database.player.PlayerData;
+import sk.westland.core.database.player.PlayerDataRepository;
 import sk.westland.core.services.MoneyService;
 import sk.westland.core.utils.ChatInfo;
 import sk.westland.core.entity.player.WLPlayer;
@@ -148,7 +150,10 @@ public class PMoneyCommands implements Runnable {
         private PlayerService playerService;
 
         @Autowired
-        private UserRepository userRepository;
+        private PlayerDataRepository playerDataRepository;
+
+        @Autowired
+        private UserDataRepository userDataRepository;
 
         @Autowired
         private MoneyService moneyService;
@@ -187,21 +192,28 @@ public class PMoneyCommands implements Runnable {
         }
 
         private boolean runOffline(String targetPlayer, MoneyType moneyType, int amount) {
-            Optional<UserData> userDataOptional = userRepository.findByName(targetPlayer);
+            Optional<UserData> userDataOptional = userDataRepository.findByUserName(targetPlayer);
             if(!userDataOptional.isPresent()) {
                 ChatInfo.ERROR.sendAdmin("Hráč " + targetPlayer + " nebol najdený v DB a tak mu neboli pripočítané " + moneyType.name() + "!");
                 return false;
             }
+            long id = userDataOptional.get().getId();
 
-            UserData userData = userDataOptional.get();
-            switch (moneyType) {
-                case Shard:
-                    userData.setShards(userData.getShards() + amount);
-                case Gems:
-                    userData.setGems(userData.getGems() + amount);
+            Optional<PlayerData> playerDataOptional = playerDataRepository.findById(id);
+            if(!playerDataOptional.isPresent()) {
+                ChatInfo.ERROR.sendAdmin("Hráč " + targetPlayer + " nebol najdený v DB a tak mu neboli pripočítané " + moneyType.name() + "!");
+                return false;
             }
 
-            userRepository.save(userData);
+            PlayerData playerData = playerDataOptional.get();
+            switch (moneyType) {
+                case Shard:
+                    playerData.setShards(playerData.getShards() + amount);
+                case Gems:
+                    playerData.setGems(playerData.getGems() + amount);
+            }
+
+            playerDataRepository.save(playerData);
             return true;
         }
     }

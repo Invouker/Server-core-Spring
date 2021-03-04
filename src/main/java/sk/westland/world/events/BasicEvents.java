@@ -29,8 +29,10 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -41,6 +43,7 @@ import sk.westland.core.event.player.WLPlayerMoveEvent;
 import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.services.DiscordService;
 import sk.westland.core.services.PlayerService;
+import sk.westland.world.commands.player.NightVisionCommand;
 import sk.westland.world.items.Materials;
 
 import java.lang.reflect.Field;
@@ -120,7 +123,16 @@ public class BasicEvents implements Listener {
                 event.setResult(null);
             }
         }
+    }
 
 
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        if(!NightVisionCommand.getPlayers().contains(event.getPlayer()))
+            return;
+
+        player.removePotionEffect(PotionEffectType.NIGHT_VISION);
+        NightVisionCommand.getPlayers().remove(player);
     }
 }

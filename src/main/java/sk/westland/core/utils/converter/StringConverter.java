@@ -8,8 +8,10 @@ public class StringConverter implements AttributeConverter<List<String>, String>
 
     @Override
     public String convertToDatabaseColumn(List<String> attribute) {
-        StringBuilder stringBuilder = new StringBuilder();
+        if(attribute == null)
+            return "";
 
+        StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("[");
 
         for(int i = 0; i < attribute.size(); i++) {

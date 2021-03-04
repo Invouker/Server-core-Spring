@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import sk.westland.core.database.player.UserOption;
+import sk.westland.core.database.player.PlayerOptions;
 import sk.westland.core.inventory.ItemMenu;
 import sk.westland.core.items.ItemBuilder;
 import sk.westland.core.entity.player.WLPlayer;
@@ -42,18 +42,18 @@ public class OptionInventory extends ItemMenu {
     @Override
     protected void onClick(@NotNull Player player, int slot, @Nullable ItemStack item, @Nullable ItemStack cursor, @NotNull InventoryClickEvent event) {
         WLPlayer wlPlayer = playerService.getWLPlayer(player);
-        UserOption userOption = wlPlayer.getUserOption();
+        PlayerOptions playerOptions = wlPlayer.getPlayerOptions();
         switch(slot) {
             case 0: {
-                userOption.setShowJoinMessage(!userOption.isShowJoinMessage());
+                playerOptions.setShowJoinMessage(!playerOptions.isShowJoinMessage());
                 break;
             }
             case 1: {
-                userOption.setShowQuitMessage(!userOption.isShowQuitMessage());
+                playerOptions.setShowQuitMessage(!playerOptions.isShowQuitMessage());
                 break;
             }
             case 2: {
-                userOption.setShowDeathMessage(!userOption.isShowDeathMessage());
+                playerOptions.setShowDeathMessage(!playerOptions.isShowDeathMessage());
                 break;
             }
         }
@@ -73,9 +73,9 @@ public class OptionInventory extends ItemMenu {
 
     private void initItems(Player player) {
         WLPlayer wlPlayer = playerService.getWLPlayer(player);
-        UserOption userOption = wlPlayer.getUserOption();
-        setItem(0,0, generateItem("Pripájanie hráčov", userOption.isShowJoinMessage()));
-        setItem(1,0, generateItem("Odpajánie hráčov", userOption.isShowQuitMessage()));
-        setItem(2,0, generateItem("Smrti hráčov", userOption.isShowDeathMessage()));
+        PlayerOptions playerOptions = wlPlayer.getPlayerOptions();
+        setItem(0,0, generateItem("Pripájanie hráčov", playerOptions.isShowJoinMessage()));
+        setItem(1,0, generateItem("Odpajánie hráčov", playerOptions.isShowQuitMessage()));
+        setItem(2,0, generateItem("Smrti hráčov", playerOptions.isShowDeathMessage()));
     }
 }

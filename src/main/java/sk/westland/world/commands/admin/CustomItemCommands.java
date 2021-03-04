@@ -9,7 +9,6 @@ import picocli.CommandLine;
 import sk.westland.core.utils.ChatInfo;
 import sk.westland.world.commands.suggestion.ItemResourceSuggestion;
 import sk.westland.world.commands.suggestion.ItemSuggestion;
-import sk.westland.world.commands.suggestion.QuestIdSuggestion;
 import sk.westland.world.items.Materials;
 
 @Component

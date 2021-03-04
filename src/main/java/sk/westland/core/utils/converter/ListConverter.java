@@ -13,6 +13,13 @@ public class ListConverter implements AttributeConverter<Map<String, List<Intege
         String finalString = "";
 
         int x = 0;
+        if(attribute == null)
+            return "";
+
+        if(attribute.entrySet().isEmpty())
+            return "";
+
+
         for(Map.Entry<String, List<Integer>> entry : attribute.entrySet()) {
             String jobName = entry.getKey();
             List<Integer> list = entry.getValue();

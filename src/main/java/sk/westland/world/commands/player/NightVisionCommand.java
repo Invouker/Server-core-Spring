@@ -24,17 +24,11 @@ public class NightVisionCommand implements Runnable, Listener {
     @Autowired
     private Context context;
 
-    @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        if(!players.contains(event.getPlayer()))
-            return;
-
-        player.removePotionEffect(PotionEffectType.NIGHT_VISION);
-        players.remove(player);
-    }
-
     private static final ArrayList<Player> players = new ArrayList<>();
+
+    public static ArrayList<Player> getPlayers() {
+        return players;
+    }
 
     @Override
     public void run() {
