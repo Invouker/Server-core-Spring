@@ -3,7 +3,11 @@ package sk.westland.core.utils;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import sk.westland.core.enums.EPlayerOptions;
 import sk.westland.core.services.PlayerService;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 
 public class PlaceHolder extends PlaceholderExpansion {
@@ -82,6 +86,16 @@ public class PlaceHolder extends PlaceholderExpansion {
         // %westland_shards%
         if(identifier.equals("shards")) {
             return String.valueOf(playerService.getWLPlayer(player).getShards());
+        }
+
+        {
+            String var = identifier.toLowerCase();
+            Optional<EPlayerOptions> ePlayerOptionsOptional =
+                    Arrays.stream(EPlayerOptions.values()).filter(ePlayerOptions -> ePlayerOptions.name().toLowerCase().equals(var)).findFirst();
+
+            if(ePlayerOptionsOptional.isPresent())
+                return String.valueOf(ePlayerOptionsOptional.get().getPlayerOptions(playerService.getWLPlayer(player)));
+
         }
 
         return null;

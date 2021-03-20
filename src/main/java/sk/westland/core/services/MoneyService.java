@@ -6,8 +6,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sk.westland.core.enums.MoneyType;
 import sk.westland.core.entity.player.WLPlayer;
+import sk.westland.core.enums.MoneyType;
 
 @Service
 public class MoneyService {

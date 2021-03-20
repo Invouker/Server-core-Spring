@@ -1,14 +1,10 @@
 package sk.westland.world.commands.discord;
 
-import com.gmail.chickenpowerrr.ranksync.lib.jda.jda.api.Permission;
 import com.gmail.chickenpowerrr.ranksync.lib.jda.jda.api.entities.TextChannel;
 import com.gmail.chickenpowerrr.ranksync.lib.jda.jda.api.entities.User;
 import com.gmail.chickenpowerrr.ranksync.lib.jda.jda.api.events.message.MessageReceivedEvent;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import sk.westland.core.discord.Command;
 import sk.westland.core.discord.ICommand;
-import sk.westland.core.services.DiscordService;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;

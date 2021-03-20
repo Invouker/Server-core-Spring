@@ -24,11 +24,10 @@ import org.spigotmc.event.entity.EntityDismountEvent;
 import org.springframework.stereotype.Service;
 import sk.westland.core.enums.HorseArmour;
 import sk.westland.core.enums.HorseStats;
+import sk.westland.core.enums.HorseTier;
 import sk.westland.core.items.ItemBuilder;
 import sk.westland.core.items.Nbt;
-import sk.westland.core.utils.ChatInfo;
 import sk.westland.world.items.Materials;
-import sk.westland.core.enums.HorseTier;
 import sk.westland.world.items.tools.SaddleItem;
 
 import java.util.HashMap;
@@ -138,7 +137,6 @@ public class HorseService implements Listener {
         String statName = horseStat.getStatName();
         int id = Nbt.getNbt_Int(itemStack, statName, 1);
         HorseTier horseTier = HorseTier.findById(id);
-        System.out.println("statName: " + statName + ", ID: " + id + ", HorseTier: " + horseTier);
         switch(horseStat) {
             case JUMP: { // 0 - 2
                horse.getAttribute(Attribute.HORSE_JUMP_STRENGTH).setBaseValue(horseTier.getJumpValue());

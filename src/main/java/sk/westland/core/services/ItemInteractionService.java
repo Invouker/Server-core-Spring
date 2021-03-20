@@ -21,10 +21,10 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.event.player.WLPlayerDamageEvent;
 import sk.westland.core.items.InteractionItem;
 import sk.westland.core.items.ItemBuilder;
-import sk.westland.core.entity.player.WLPlayer;
 
 import java.util.HashMap;
 import java.util.Map;

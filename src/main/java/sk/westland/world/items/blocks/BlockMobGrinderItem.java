@@ -18,30 +18,30 @@ import sk.westland.core.blocks.BlockType;
 import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.event.player.WLPlayerDamageEvent;
 import sk.westland.core.items.*;
-import sk.westland.world.blocks.type.WorthChest;
+import sk.westland.world.blocks.type.MobGrinder;
 
 @Component
-public class WorthChestItem extends CustomItem implements Craftable, Listener {
+public class BlockMobGrinderItem extends CustomItem implements Craftable, Listener {
 
     @Override
     public NamespacedKey getNamespacedKey(Plugin plugin) {
-        return new NamespacedKey(plugin, "worthChest");
+        return new NamespacedKey(plugin, "mobGrinder");
     }
 
     @Override
     public CraftingRecipe getCraftingRecipe(Plugin plugin) {
         return new CraftingRecipe(getNamespacedKey(plugin), RecipeType.Block, getItem())
                 .shape("SSS", "   ", "SSS")
-                .setIngredient('S', Material.STONE);
+                .setIngredient('S', Material.ICE);
     }
 
     @Override
     public ItemStack getItem() {
-        return new ItemBuilder(BlockType.WORTH_CHEST.getMaterial())
-                .setName("§8Worth chest")
+        return new ItemBuilder(BlockType.MOB_GRINDER.getMaterial())
+                .setName("§fMob Grinder")
                 .setModelId(getModelID())
-                .setNbt_Int(WestLand.CUSTOM_BLOCK_NBT, BlockType.WORTH_CHEST.getId())
-                .setLore("", "§7Automatický predáva blocky", "a itemy ktoré do nej vložité.", "").build();
+                .setNbt_Int(WestLand.CUSTOM_BLOCK_NBT, BlockType.MOB_GRINDER.getId())
+                .setLore("", "§7Automatický ničí bloky", "").build();
     }
 
     @Override
@@ -59,7 +59,7 @@ public class WorthChestItem extends CustomItem implements Craftable, Listener {
         Player player = event.getPlayer();
         Block block = event.getBlock();
 
-        boolean place = blockService.registerNewBlock(new WorthChest(player.getName(), player.getUniqueId(), block.getLocation(), BlockLevel.UNCOMMON, blockService));
+        boolean place = blockService.registerNewBlock(new MobGrinder(player.getName(), player.getUniqueId(), block.getLocation(), BlockLevel.UNCOMMON, blockService));
         event.setBuild(place);
         event.setCancelled(!place);
     }
@@ -76,3 +76,4 @@ public class WorthChestItem extends CustomItem implements Craftable, Listener {
     @Override
     protected void onPlayerBlockBreak(BlockBreakEvent event) { }
 }
+

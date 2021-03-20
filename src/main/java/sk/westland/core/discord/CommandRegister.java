@@ -2,8 +2,6 @@ package sk.westland.core.discord;
 
 
 import com.gmail.chickenpowerrr.ranksync.lib.jda.jda.api.Permission;
-import com.gmail.chickenpowerrr.ranksync.lib.jda.jda.api.entities.Member;
-import com.gmail.chickenpowerrr.ranksync.lib.jda.jda.api.entities.User;
 import com.gmail.chickenpowerrr.ranksync.lib.jda.jda.api.events.message.MessageReceivedEvent;
 import com.gmail.chickenpowerrr.ranksync.lib.jda.jda.api.hooks.ListenerAdapter;
 import org.reflections.Reflections;

@@ -8,10 +8,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import sk.westland.core.WestLand;
 import sk.westland.core.database.player.PlayerData;
-import sk.westland.core.database.player.UserData;
 import sk.westland.core.database.player.PlayerOptions;
+import sk.westland.core.database.player.UserData;
 import sk.westland.core.enums.JobList;
-import sk.westland.core.items.CraftingRecipe;
 import sk.westland.world.items.Materials;
 
 import java.util.*;

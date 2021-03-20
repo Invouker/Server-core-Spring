@@ -1,8 +1,5 @@
 package sk.westland.world.events;
 
-import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.protection.ClaimedResidence;
-import com.bekvon.bukkit.residence.protection.ResidencePermissions;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -14,6 +11,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.springframework.stereotype.Component;
+import sk.westland.core.utils.ResFlag;
+import sk.westland.core.utils.Utils;
 
 import java.util.EnumSet;
 
@@ -36,7 +35,8 @@ public class EggEvents implements Listener {
         EnumSet<EntityType> blockedEntityTypes = EnumSet.of(EntityType.GHAST,EntityType.GUARDIAN,EntityType.HOGLIN,EntityType.PIGLIN_BRUTE,EntityType.PILLAGER,
                 EntityType.RAVAGER, EntityType.SHULKER, EntityType.STRAY, EntityType.VEX, EntityType.WITHER_SKELETON, EntityType.ZOGLIN,
                 EntityType.ENDER_DRAGON, EntityType.WITHER, EntityType.WITHER_SKULL, EntityType.PIGLIN, EntityType.STRIDER, EntityType.ENDERMAN,
-                EntityType.ZOMBIFIED_PIGLIN, EntityType.HORSE, EntityType.SKELETON_HORSE, EntityType.ZOMBIE_HORSE, EntityType.PLAYER);
+                EntityType.ZOMBIFIED_PIGLIN, EntityType.HORSE, EntityType.SKELETON_HORSE, EntityType.ZOMBIE_HORSE, EntityType.PLAYER,
+                EntityType.BLAZE);
 
         if(event.getHitEntity() == null)
             return;
@@ -52,16 +52,24 @@ public class EggEvents implements Listener {
         }
 
         Location loc = entity.getLocation();
+        if(!Utils.locationResPermission(player, loc, ResFlag.MOB_CATCH)) {
+            return;
+        }
+            /*
+
         ClaimedResidence res = Residence.getInstance().getResidenceManager().getByLoc(loc);
 
         if(res != null) {
             ResidencePermissions perms = res.getPermissions();
-            boolean hasPermission = perms.playerHas(player, "mob-catch", false);
+            boolean hasPermission = perms.playerHas(player, ResFlag.MOB_CATCH.getFlagName(), false);
             if(!hasPermission)
                 return;
-        }
+        }*/
 
         Material mat = Material.valueOf(entity.getType().toString().toUpperCase() + "_SPAWN_EGG");
+
+        if(loc.getWorld() == null)
+            return;
 
         loc.getWorld().dropItem(loc, new ItemStack(mat));
         entity.remove();

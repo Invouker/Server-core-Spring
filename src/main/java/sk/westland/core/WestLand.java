@@ -15,6 +15,7 @@ import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.services.BlockService;
 import sk.westland.core.services.PlayerService;
 import sk.westland.core.utils.PlaceHolder;
+import sk.westland.core.utils.ResFlag;
 import sk.westland.world.items.Materials;
 
 import java.io.IOException;
@@ -96,7 +97,11 @@ public class WestLand extends JavaPlugin {
             }));
         }
 
-        FlagPermissions.addFlag("mob-catch");
+        for (ResFlag resFlag : ResFlag.values()) {
+            FlagPermissions.addFlag(resFlag.getFlagName());
+        }
+
+        //FlagPermissions.addFlag("mob-catch");
 
         Bukkit.getConsoleSender().sendMessage("§aLoaded " + Materials.Items.values().length + " custom items!");
         Bukkit.getConsoleSender().sendMessage("§aLoaded " + Materials.Resources.values().length + " resource items!");

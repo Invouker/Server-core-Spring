@@ -1,10 +1,9 @@
 package sk.westland.world.items.tools;
 
-import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.block.data.Ageable;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.entity.Player;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.World;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -76,6 +75,21 @@ public class BetterPickaxe extends CustomItem implements Listener, Craftable {
 
     @Override
     protected void onPlayerBlockBreak(BlockBreakEvent event) {
+        Location location = event.getBlock().getLocation();
+        World world = location.getWorld();
 
+        if(world == null)
+            return;
+
+        switch(event.getBlock().getType()) {
+            case IRON_ORE: {
+                world.dropItemNaturally(location, Materials.Resources.COPPER_DUST.getItem());
+                break;
+            }
+
+            case REDSTONE_ORE: {
+                break;
+            }
+        }
     }
 }

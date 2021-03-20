@@ -9,7 +9,6 @@ import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import sk.westland.core.utils.ChatInfo;
 import sk.westland.core.blocks.BlockLevel;
 import sk.westland.core.blocks.BlockType;
 import sk.westland.core.blocks.CustomBlock;

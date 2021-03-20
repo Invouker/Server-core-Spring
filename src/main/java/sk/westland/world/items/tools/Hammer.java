@@ -1,7 +1,6 @@
 package sk.westland.world.items.tools;
 
 import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLib;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.ListenerPriority;
@@ -9,8 +8,6 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.EnumWrappers;
-import net.minecraft.server.v1_16_R3.EnumDirection;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -75,6 +72,9 @@ public class Hammer extends CustomItem implements Listener, Craftable {
                 PacketType.Play.Client.BLOCK_DIG) {
             @Override
             public void onPacketReceiving(PacketEvent packetEvent) {
+
+
+
                 if (packetEvent.getPacketType() == PacketType.Play.Client.BLOCK_DIG) {
                     PacketContainer packetContainer = packetEvent.getPacket();
 

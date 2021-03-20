@@ -17,7 +17,7 @@ public abstract class CustomBlock implements Listener {
 
     protected String owner;
     protected UUID ownerUUID;
-    protected Location location;
+    protected Location blockLocation;
     protected BlockLevel blockLevel;
     protected BlockType blockType;
     protected BlockData blockData;
@@ -38,7 +38,7 @@ public abstract class CustomBlock implements Listener {
     protected CustomBlock(String owner, UUID ownerUUID, Location location, BlockLevel blockLevel, CustomItem customItem, BlockData blockData, BlockService blockService) {
         this.owner = owner;
         this.ownerUUID = ownerUUID;
-        this.location = location;
+        this.blockLocation = location;
         this.blockLevel = blockLevel;
         this.blockData = blockData;
         this.blockType = blockData.getBlockType();
@@ -70,7 +70,7 @@ public abstract class CustomBlock implements Listener {
     public abstract void onRedstoneActivate(BlockRedstoneEvent event);
 
     public void blockUpdate() {
-        if(!location.getChunk().isLoaded())
+        if(!blockLocation.getChunk().isLoaded())
             return;
 
         onBlockTimeUpdate();
@@ -78,6 +78,10 @@ public abstract class CustomBlock implements Listener {
             setLastUpdated(System.currentTimeMillis());
             if(canBeActive) onBlockUpdate();
         }
+    }
+
+    public void blockUpgradeByKit(PlayerInteractEvent event, BlockService blockService) {
+
     }
 
     public BlockType getBlockType() {
@@ -105,11 +109,11 @@ public abstract class CustomBlock implements Listener {
     }
 
     public Location getLocation() {
-        return location;
+        return blockLocation;
     }
 
     public void setLocation(Location location) {
-        this.location = location;
+        this.blockLocation = location;
     }
 
     public BlockLevel getBlockLevel() {
@@ -165,7 +169,7 @@ public abstract class CustomBlock implements Listener {
         return "CustomBlock{" +
                 "owner='" + owner + '\'' +
                 ", ownerUUID=" + ownerUUID.toString() +
-                ", location=" + location.toString() +
+                ", location=" + blockLocation.toString() +
                 ", blockLevel=" + blockLevel.toString() +
                 ", blockType=" + blockType.toString() +
                 ", blockData=" + blockData.toString() +

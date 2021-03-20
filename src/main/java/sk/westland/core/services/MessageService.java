@@ -1,8 +1,5 @@
 package sk.westland.core.services;
 
-import dev.alangomes.springspigot.context.Context;
-import dev.alangomes.springspigot.security.HasPermission;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,19 +7,18 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import picocli.CommandLine;
+import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.enums.JoinMessages;
 import sk.westland.core.enums.QuitMessages;
 import sk.westland.core.event.player.WLPlayerJoinEvent;
 import sk.westland.core.event.player.WLPlayerQuitEvent;
-import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.utils.ChatInfo;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class MessageService implements Listener{
@@ -57,6 +53,15 @@ public class MessageService implements Listener{
     @EventHandler(ignoreCancelled = true)
     public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
+
+        String regexPat = "\\p{IsHan}";
+        final Pattern CHINESE_REGEX = Pattern.compile(regexPat);
+        Matcher matcher = CHINESE_REGEX.matcher(event.getMessage());
+
+        if(matcher.find()) {
+            ChatInfo.WARNING.send(player, "Používanie špeciálnych znakov nie je povolené!");
+            event.setCancelled(true);
+        }
 
         if(!player.isOp())
             return;

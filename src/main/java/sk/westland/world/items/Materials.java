@@ -6,6 +6,7 @@ import sk.westland.core.items.Craftable;
 import sk.westland.core.items.CustomItem;
 import sk.westland.core.items.CustomResourceItem;
 import sk.westland.world.items.blocks.BlockBreakerItem;
+import sk.westland.world.items.blocks.BlockMobGrinderItem;
 import sk.westland.world.items.blocks.BlockPlacerItem;
 import sk.westland.world.items.blocks.WorthChestItem;
 import sk.westland.world.items.resources.CopperDust;
@@ -26,6 +27,8 @@ public class Materials {
         BLOCK_PLACER(new BlockPlacerItem(), null),
         BLOCK_BREAKER(new BlockBreakerItem(), null),
         WORTH_CHEST(new WorthChestItem(), null),
+        MOB_GRINDER(new BlockMobGrinderItem(), null),
+
         SADDLE_ITEM(null, new SaddleItem());
 
         private Craftable craftable;

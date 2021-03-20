@@ -1,7 +1,6 @@
 package sk.westland.core.services;
 
 
-
 import net.minecraft.server.v1_16_R3.IRecipe;
 import net.minecraft.server.v1_16_R3.MinecraftKey;
 import net.minecraft.server.v1_16_R3.Recipes;
@@ -15,14 +14,17 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.inventory.*;
+import org.bukkit.inventory.FurnaceRecipe;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.RecipeChoice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sk.westland.core.WestLand;
+import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.event.player.WLPlayerJoinEvent;
 import sk.westland.core.items.CraftingRecipe;
-import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.world.items.Materials;
 
 import java.util.ArrayList;

@@ -135,6 +135,21 @@ public abstract class MultiBlock implements IMultiBlock {
         return false;
     }
 
+    private List<Block> getMultiBlockConstruct(Block block) {
+        List<Block> constructBlocks = new ArrayList<>();
+        if(blockFaceEnumSet == null)
+            blockFaceEnumSet = EnumSet.of(BlockFace.DOWN);
+
+        for (BlockFace blockFace : blockFaceEnumSet) {
+            for (int i = 0; i < blockMaterial.length; i++) {
+                Block checkedBlock = block.getRelative(blockFace, blockMaterial.length-i-1);
+                constructBlocks.add(checkedBlock);
+            }
+        }
+
+        return constructBlocks;
+    }
+
     private Dispenser getDispenserConstruction(Block block) {
 
         if(blockFaceEnumSet == null)
@@ -151,7 +166,7 @@ public abstract class MultiBlock implements IMultiBlock {
         return null;
     }
 
-    public abstract void onMultiBlockActivation(Player player, Dispenser dispenser, IMBRecipe imbRecipe, PlayerInteractEvent event);
+    public abstract void onMultiBlockActivation(Player player, List<Block> blocks, IMBRecipe imbRecipe, PlayerInteractEvent event);
 
     @EventHandler
     private void onPlayerInteract(PlayerInteractEvent event) {
@@ -186,7 +201,7 @@ public abstract class MultiBlock implements IMultiBlock {
         Dispenser dispenser = getDispenserConstruction(block);
         IMBRecipe imbRecipe = getRecipe(Arrays.asList(dispenser.getInventory().getContents()));
         takeItems(imbRecipe, dispenser.getInventory());
-        onMultiBlockActivation(event.getPlayer(), dispenser, imbRecipe, event);
+        onMultiBlockActivation(event.getPlayer(), getMultiBlockConstruct(block), imbRecipe, event);
     }
 
     protected void takeItems(IMBRecipe imbRecipe, Inventory inventory) {

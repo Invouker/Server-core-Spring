@@ -30,9 +30,6 @@ public class Application {
     public BlockService blockService() { return new BlockService(); }
 
     @Bean
-    public InteractionService interactionService() { return new InteractionService(); }
-
-    @Bean
     public MoneyService moneyService() { return new MoneyService(); }
 
     @Bean

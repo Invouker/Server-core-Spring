@@ -1,8 +1,5 @@
 package sk.westland.world.blocks.type;
-;
-import com.Zrips.CMI.CMI;
-import com.Zrips.CMI.Modules.Worth.WorthItem;
-import com.comphenix.protocol.reflect.cloning.BukkitCloner;
+
 import net.brcdev.shopgui.ShopGuiPlusApi;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -24,6 +21,8 @@ import sk.westland.core.services.BlockService;
 import sk.westland.world.items.Materials;
 
 import java.util.UUID;
+
+;
 
 public class WorthChest extends CustomBlock {
 

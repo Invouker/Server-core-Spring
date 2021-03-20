@@ -1,10 +1,14 @@
 package sk.westland.core.database.player;
 
+import sk.westland.core.enums.EPlayerOptions;
 import sk.westland.core.utils.converter.ListConverter;
 import sk.westland.core.utils.converter.StringConverter;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Table(name = "wl_player_data")
 @Entity
@@ -112,4 +116,5 @@ public class PlayerData {
     public void setAlreadyJobRewarded(Map<String, List<Integer>> alreadyJobRewarded) {
         this.alreadyJobRewarded = alreadyJobRewarded;
     }
+
 }

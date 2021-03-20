@@ -1,4 +1,4 @@
-package sk.westland.world.commands;
+package sk.westland.world.commands.player;
 
 import dev.alangomes.springspigot.context.Context;
 import dev.alangomes.springspigot.security.HasPermission;
@@ -7,15 +7,15 @@ import org.bukkit.entity.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine;
-import sk.westland.core.database.player.UserData;
-import sk.westland.core.database.player.UserDataRepository;
-import sk.westland.core.enums.MoneyType;
 import sk.westland.core.database.player.PlayerData;
 import sk.westland.core.database.player.PlayerDataRepository;
-import sk.westland.core.services.MoneyService;
-import sk.westland.core.utils.ChatInfo;
+import sk.westland.core.database.player.UserData;
+import sk.westland.core.database.player.UserDataRepository;
 import sk.westland.core.entity.player.WLPlayer;
+import sk.westland.core.enums.MoneyType;
+import sk.westland.core.services.MoneyService;
 import sk.westland.core.services.PlayerService;
+import sk.westland.core.utils.ChatInfo;
 import sk.westland.world.commands.Converter.PlayerArgConverter;
 import sk.westland.world.commands.suggestion.MoneySuggestion;
 import sk.westland.world.commands.suggestion.PlayerSuggestion;
@@ -32,7 +32,11 @@ public class PMoneyCommands implements Runnable {
 
     @Override
     public void run() {
-        ChatInfo.COMMAND_HELPER.sendCommandHelperS(context.getSender(), "pmoney","get <moneyType> <player>", "set <moneyType> <amount> <player>", "give <moneyType> <amount> <player>");
+        ChatInfo.COMMAND_HELPER.sendCommandHelperS(context.getSender(), "pmoney",
+                "get <moneyType> <player>",
+                "set <moneyType> <amount> <player>",
+                "give <moneyType> <amount> <player>",
+                "remove <moneyType> <amount> (player)");
     }
 
     @Component
@@ -76,7 +80,7 @@ public class PMoneyCommands implements Runnable {
                 return;
             }
 
-            ChatInfo.SUCCESS.send(context.getPlayer(), "Hráč " + targetPlayer.getName() + " má aktuálne " +  moneyService.get(targetPlayer, moneyType) + " shardov!");
+           ChatInfo.SUCCESS.send(context.getPlayer(), "Hráč " + targetPlayer.getName() + " má aktuálne " +  moneyService.get(targetPlayer, moneyType) + " shardov!");
         }
     }
 
@@ -125,6 +129,7 @@ public class PMoneyCommands implements Runnable {
             }
 
             moneyService.set(targetPlayer, moneyType, amount);
+            ChatInfo.SUCCESS.send(context.getPlayer(), "Nastavil si hráčovy " + targetPlayer.getName() + " " + moneyService.get(targetPlayer, moneyType) + " " + moneyType.getName());
             ChatInfo.SUCCESS.send(targetPlayer, "Aktuálne máš " + targetPlayer.getShards() + " shardov!");
         }
     }
@@ -158,7 +163,7 @@ public class PMoneyCommands implements Runnable {
             if(targetPlayerArg == context.getPlayer()) {
                 Player player = context.getPlayer();
                 if(player == null) {
-                    ChatInfo.ERROR.send(context.getSender(), "Príkaz iba pre  hráčov");
+                    ChatInfo.ERROR.send(context.getSender(), "Príkaz iba pre hráčov");
                     return;
                 }
                 targetPlayer = playerService.getWLPlayer(player);
@@ -174,7 +179,8 @@ public class PMoneyCommands implements Runnable {
             }
 
             moneyService.give(targetPlayer, moneyType, -amount);
-            ChatInfo.SUCCESS.send(targetPlayer, "Aktuálne máš " + targetPlayer.getShards() + " shardov!");
+            ChatInfo.SUCCESS.send(context.getPlayer(), "Odobral si hráčovy " + targetPlayer.getName() + " " + moneyService.get(targetPlayer, moneyType) + " " + moneyType.getName());
+            ChatInfo.SUCCESS.send(targetPlayer, "Aktuálne máš " + moneyService.get(targetPlayer, moneyType) + " shardov!");
         }
     }
 
@@ -239,6 +245,7 @@ public class PMoneyCommands implements Runnable {
                 ChatInfo.SUCCESS.send(targetPlayer, "Aktuálne máš " + moneyService.get(targetPlayer, moneyType) + " " + moneyType.name() + "!");
             else ChatInfo.ERROR.send(context.getSender(), "Error ");
 
+            ChatInfo.SUCCESS.send(context.getPlayer(), "Dal si hráčovy " + targetPlayer.getName() + " " + moneyService.get(targetPlayer, moneyType) + " " + moneyType.getName());
             playerService.save(targetPlayer);
         }
 

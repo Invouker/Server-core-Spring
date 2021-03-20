@@ -1,7 +1,7 @@
 package sk.westland.core.utils;
 
-import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -10,10 +10,10 @@ import sk.westland.core.entity.player.WLPlayer;
 
 public enum ChatInfo {
 
-        GENERAL_INFO("§6§l[*] §e", ComponentBuilder.text("[*] ").bold(true).color(ChatColor.DARK_BLUE).build(), ChatColor.GRAY),
-        UNAVAILABLE("§8§l> §7", ComponentBuilder.text("> ").bold(true).color(ChatColor.DARK_GRAY).build(), ChatColor.GRAY),
-        SUCCESS("§2§l[#] §a", ComponentBuilder.text("[#] ").bold(true).color(ChatColor.DARK_GREEN).build(), ChatColor.GREEN),
-        WARNING("§c§l[!] §e", ComponentBuilder.text("[!] ").bold(true).color(ChatColor.RED).build(), ChatColor.YELLOW),
+        GENERAL_INFO("§6§l[*] §f", ComponentBuilder.text("[*] ").bold(true).color(ChatColor.DARK_BLUE).build(), ChatColor.GRAY),
+        UNAVAILABLE("§8§l> §f", ComponentBuilder.text("> ").bold(true).color(ChatColor.DARK_GRAY).build(), ChatColor.GRAY),
+        SUCCESS("§b§l[!] §f", ComponentBuilder.text("[#] ").bold(true).color(ChatColor.DARK_GREEN).build(), ChatColor.GREEN),
+        WARNING("§c§l[!] §c", ComponentBuilder.text("[!] ").bold(true).color(ChatColor.RED).build(), ChatColor.YELLOW),
         ERROR("§4§l[!!] §c", ComponentBuilder.text("[!!] ").bold(true).color(ChatColor.DARK_RED).build(), ChatColor.RED),
         COMMAND_HELPER(ChatColor.of("#005ce6") +"§l~~ ", ComponentBuilder.text("§l ").bold(true).color(ChatColor.of("#FF04AA")).build(), ChatColor.of("#FF04AA"));
 

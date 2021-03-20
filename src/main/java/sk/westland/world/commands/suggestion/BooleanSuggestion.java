@@ -1,17 +1,17 @@
 package sk.westland.world.commands.suggestion;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
-import sk.westland.world.items.Materials;
 
 import java.util.Iterator;
 import java.util.stream.Stream;
 
 @Component
-public class ItemResourceSuggestion implements Iterable<String> {
+public class BooleanSuggestion implements Iterable<String> {
 
+    @NotNull
     @Override
     public Iterator<String> iterator() {
-        return Stream.of(Materials.Resources.values()).map(Enum::name).iterator();
+        return Stream.of("true", "false").iterator();
     }
-
 }

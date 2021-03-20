@@ -6,7 +6,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import sk.westland.core.items.ItemBuilder;
-import sk.westland.core.utils.ChatInfo;
 
 import java.util.Locale;
 

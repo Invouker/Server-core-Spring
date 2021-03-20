@@ -9,21 +9,9 @@ import java.util.stream.Stream;
 @Component
 public class ItemSuggestion implements Iterable<String> {
 
-    private static String[] commands;
-
-    public ItemSuggestion() {
-        int itemLength = Materials.Items.values().length;
-        commands = new String[itemLength];
-
-        for(int i = 0; i < itemLength; i ++) {
-            Materials.Items item = Materials.Items.values()[i];
-            commands[i] = item.name().toLowerCase();
-        }
-    }
-
     @Override
     public Iterator<String> iterator() {
-        return Stream.of(commands).iterator();
+        return Stream.of(Materials.Items.values()).map(Enum::name).iterator();
     }
 
 }

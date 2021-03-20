@@ -20,12 +20,13 @@ import org.springframework.stereotype.Service;
 import sk.westland.core.blocks.BlockLevel;
 import sk.westland.core.blocks.BlockType;
 import sk.westland.core.blocks.CustomBlock;
-import sk.westland.world.blocks.type.BlockBreaker;
-import sk.westland.world.blocks.type.BlockPlacer;
 import sk.westland.core.database.data.BlockData;
 import sk.westland.core.database.data.BlockDataRepository;
 import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.utils.RunnableDelay;
+import sk.westland.world.blocks.type.BlockBreaker;
+import sk.westland.world.blocks.type.BlockPlacer;
+import sk.westland.world.blocks.type.MobGrinder;
 import sk.westland.world.blocks.type.WorthChest;
 
 import java.util.*;
@@ -64,6 +65,27 @@ public class BlockService implements Listener {
 
             CustomBlock block = null;
             LOADED_BLOCKS++;
+
+/*
+            BlockType blockType = blockData.getBlockType();
+            try {
+                System.out.println("blockType.getClazz().getName(): " + blockType.getClazz().getName());
+                Class<?> clazz = Class.forName(blockType.getClazz().getName());
+                Class[] classParameters = new Class[blockType.getClazz().getTypeParameters().length];
+                for (int i = 0; i < blockType.getClazz().getTypeParameters().length; i++) {
+                    classParameters[i] = blockType.getClazz().getTypeParameters()[i].getClass();
+                    System.out.println("classParameters: " + classParameters[i].getName());
+                }
+                System.out.println("Params: " + classParameters);
+                System.out.println("clazz: " + clazz.getName());
+                Constructor constructor = clazz.getConstructor(classParameters);
+                Object[] objects = new Object[] {blockData.getOwnerName(), blockData.getOwnerUUID(), blockData.getBlockLocation(), blockData.getBlockLevel(), blockData, this};
+                CustomBlock customBlock = (CustomBlock) constructor.newInstance(objects);
+                blockHashMap.put(blockData.getBlockLocation(), customBlock);
+            } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            */
             switch(blockData.getBlockType()) {
                 case BLOCK_PLACER: {
                     //(String owner, UUID ownerUUID, Location location, BlockLevel blockLevel, BlockData blockData, BlockService blockService)
@@ -76,6 +98,10 @@ public class BlockService implements Listener {
                 }
                 case WORTH_CHEST: {
                     block = new WorthChest(blockData.getOwnerName(), blockData.getOwnerUUID(), blockData.getBlockLocation(), blockData.getBlockLevel(), blockData, this);
+                    break;
+                }
+                case MOB_GRINDER: {
+                    block = new MobGrinder(blockData.getOwnerName(), blockData.getOwnerUUID(), blockData.getBlockLocation(), blockData.getBlockLevel(), blockData, this);
                     break;
                 }
             }
@@ -163,8 +189,11 @@ public class BlockService implements Listener {
         if(!validBlockType(block.getType()))
             return;
 
-        if(blockHashMap.containsKey(location))
-            blockHashMap.get(location).onBlockInteract(event, this);
+        if(blockHashMap.containsKey(location)) {
+            CustomBlock customBlock = blockHashMap.get(location);
+            customBlock.onBlockInteract(event, this);
+            customBlock.blockUpgradeByKit(event, this);
+        }
     }
 
     public boolean validBlockType(Material material) {
@@ -223,14 +252,16 @@ public class BlockService implements Listener {
 
         Block block = event.getBlock();
         CustomBlock customBlock = this.blockUnregister(block.getLocation());
-        if(customBlock != null)
+        if(customBlock != null) {
             block.setType(Material.AIR);
 
-        Location location = customBlock.getLocation();
-        if(location.getChunk().isLoaded() && event.getPlayer().getGameMode() == GameMode.SURVIVAL)
-            location.getWorld().dropItem(location, customBlock.getCustomItem().getItem());
+            Location location = customBlock.getLocation();
+            if (location.getChunk().isLoaded() && event.getPlayer().getGameMode() == GameMode.SURVIVAL)
+                location.getWorld().dropItem(location, customBlock.getCustomItem().getItem());
 
-        event.setCancelled(true);
+            event.setCancelled(true);
+        }
+
     }
 
     private boolean isBlockTypeMaterial(Material material) {

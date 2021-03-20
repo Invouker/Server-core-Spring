@@ -1,6 +1,9 @@
 package sk.westland.core.database.player;
 
+import sk.westland.core.enums.EPlayerOptions;
+
 import javax.persistence.*;
+import java.util.EnumSet;
 
 @Table(name = "wl_player_options")
 @Entity
@@ -12,9 +15,10 @@ public class PlayerOptions {
 
     private long playerId;
 
+
     private boolean showJoinMessage = true;
     private boolean showQuitMessage = false;
-
+    private boolean chatReactionSound = true;
     private boolean showDeathMessage = true;
 
     public PlayerOptions() {
@@ -22,6 +26,18 @@ public class PlayerOptions {
 
     public PlayerOptions(long playerId) {
         this.playerId = playerId;
+    }
+
+    public long getPlayerId() {
+        return playerId;
+    }
+
+    public boolean isChatReactionSound() {
+        return chatReactionSound;
+    }
+
+    public void setChatReactionSound(boolean chatReactionSound) {
+        this.chatReactionSound = chatReactionSound;
     }
 
     public long getId() {

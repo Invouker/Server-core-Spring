@@ -2,13 +2,20 @@ package sk.westland.world.commands;
 
 import dev.alangomes.springspigot.context.Context;
 import dev.alangomes.springspigot.security.HasPermission;
+import org.bukkit.*;
+import org.bukkit.entity.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine;
+import sk.westland.core.WestLand;
 import sk.westland.core.database.player.PlayerData;
 import sk.westland.core.enums.JobList;
-import sk.westland.core.services.*;
+import sk.westland.core.services.HorseService;
+import sk.westland.core.services.MessageService;
+import sk.westland.core.services.MoneyService;
+import sk.westland.core.services.PlayerService;
 import sk.westland.core.utils.ChatInfo;
+import sk.westland.core.utils.Utils;
 import sk.westland.world.commands.suggestion.JobsSuggestion;
 import sk.westland.world.inventories.ChangeJoinMessageItemMenu;
 import sk.westland.world.inventories.ChangeQuitMessageItemMenu;
@@ -166,6 +173,66 @@ public class TestCommand implements Runnable {
               Materials.
                       Items.BLOCK_PLACER.getItem()
             );
+        }
+    }
+
+    @Component
+    @CommandLine.Command(name = "8")
+    @HasPermission("commands.test8")
+    static
+    class Test8 implements Runnable {
+
+        @Autowired
+        private Context context;
+
+        @Autowired
+        private PlayerService playerService;
+
+        public void createHelix(Location location, Color color) {
+
+            System.out.println("X: " + location.getX());
+            System.out.println("Y: " + location.getY());
+            System.out.println("Z: " + location.getZ());
+
+            double radius = 0.5;
+            for(double y = -0.5; y < 1.5; y+=0.005) {
+                //radius -= 0.0000003;
+                double x = radius * Math.cos(y);
+                double z = radius * Math.sin(y);
+
+                double finalX = location.getX() + x;
+                double finalY = location.getY() + y;
+                double finalZ = location.getZ() + z;
+
+
+
+                Particle.DustOptions dust = new Particle.DustOptions(color, 1);
+                location.getWorld().spawnParticle(Particle.REDSTONE, finalX, finalY, finalZ, 0, 0,0,0, dust);
+                    //player.spawnParticle(Particle.REDSTONE, loc.getX() + x, loc.getY() + finalY, loc.getZ() + z, 10);
+
+                //PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles(ParticleParam.a.BARRIER,true, (float) (loc.getX() + x), (float) (loc.getY() + y), (float) (loc.getZ() + z), 0, 0, 0, 0, 1);
+                //for(Player online : Bukkit.getOnlinePlayers()) {
+                //  ((CraftPlayer)online).getHandle().playerConnection.sendPacket(packet);
+                //}
+            }
+        }
+        @Override
+        public void run() {
+            Player player = context.getPlayer();
+            Bukkit.getScheduler().runTaskAsynchronously(WestLand.getInstance(), () -> {
+                Location location = player.getLocation();
+                double x = location.getBlockX();
+                double y = location.getBlockY();
+                double z = location.getBlockZ();
+                World world = location.getWorld();
+
+                createHelix(new Location(world, x-.5, y, z+1), Color.fromRGB(255 , 0 , 0 )); // R
+                createHelix(new Location(world, x+.5, y, z+1), Color.fromRGB(0 , 0 , 255 )); // B
+                createHelix(new Location(world, x-.5, y, z), Color.fromRGB(255 , 255 , 255 )); // W
+                createHelix(new Location(world, x+.5, y, z), Color.fromRGB(0 , 255 , 0 )); // G
+            });
+
+            Utils.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH);
         }
     }
 }
