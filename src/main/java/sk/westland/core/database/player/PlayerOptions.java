@@ -1,9 +1,6 @@
 package sk.westland.core.database.player;
 
-import sk.westland.core.enums.EPlayerOptions;
-
 import javax.persistence.*;
-import java.util.EnumSet;
 
 @Table(name = "wl_player_options")
 @Entity

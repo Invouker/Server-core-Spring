@@ -1,9 +1,7 @@
 package sk.westland.core.enums;
 
-import org.jetbrains.annotations.NotNull;
 import sk.westland.core.database.player.PlayerOptions;
 import sk.westland.core.entity.player.WLPlayer;
-import sk.westland.core.utils.ChatInfo;
 
 public enum EPlayerOptions {
 

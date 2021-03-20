@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import sk.westland.core.enums.EPlayerOptions;
 
-import java.util.*;
+import java.util.Iterator;
 import java.util.stream.Stream;
 
 @Component

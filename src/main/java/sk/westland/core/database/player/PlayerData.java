@@ -1,11 +1,9 @@
 package sk.westland.core.database.player;
 
-import sk.westland.core.enums.EPlayerOptions;
 import sk.westland.core.utils.converter.ListConverter;
 import sk.westland.core.utils.converter.StringConverter;
 
 import javax.persistence.*;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
