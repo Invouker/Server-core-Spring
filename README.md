@@ -1,2 +1,2 @@
-# WildWest
-Wildwest repository and source of his plugin.
+# WestLand
+WestLand repository and source of his plugin.

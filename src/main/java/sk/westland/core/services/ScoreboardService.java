@@ -39,8 +39,8 @@ public class ScoreboardService implements Listener {
 
         SidebarString line1 = new SidebarString("§r       ⺏⻔⺎");
         SidebarString line2 = new SidebarString("");
-        SidebarString line3 = new SidebarString("");
-        SidebarString line4 = new SidebarString(ChatColor.of("#838282") + "    %{server-time}");
+        SidebarString line3 = new SidebarString(ChatColor.of("#838282") + "    %{server-time}");
+        SidebarString line4 = new SidebarString("§r ");
         SidebarString line5 = new SidebarString("d");
         SidebarString line6 = new SidebarString("");
         SidebarString line7 = new SidebarString("ef");
