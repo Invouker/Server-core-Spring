@@ -2,28 +2,34 @@
 package sk.westland.core.inventory;
 
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.StringUtils;
 import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.tuple.Triple;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import sk.westland.core.enums.MoneyType;
 import sk.westland.core.items.ItemBuilder;
 import sk.westland.core.items.Nbt;
+import sk.westland.core.services.MoneyService;
 import sk.westland.core.utils.ChatInfo;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public abstract class ItemShopMenu extends ItemMenu {
 
-    public ItemShopMenu(Type type, String title) {
+    private MoneyService moneyService;
+
+    public ItemShopMenu(Type type, String title, MoneyService moneyService) {
         super(type, title);
 
         items = new ItemStack[type.size];
+        this.moneyService = moneyService;
     }
 
     public void updateInventory() {
@@ -34,34 +40,37 @@ public abstract class ItemShopMenu extends ItemMenu {
             inventory.setItem(i++, is);
     }
 
+    @Override
     protected void onClick(Player player, int slot, ItemStack item, ItemStack cursor, InventoryClickEvent event) {
         if(item == null || item.getType() == Material.AIR)
             return;
 
-        Triple<ItemStack, Material, Integer> shopItem = this.itemMap.getOrDefault(item, null);
+        Triple<ItemStack, MoneyType, Integer> shopItem = this.itemMap.getOrDefault(item, null);
 
         if(shopItem == null)
             return;
 
         ItemStack shopItemStack = shopItem.getLeft();
-        Material moneyType = shopItem.getMiddle();
+        MoneyType moneyType = shopItem.getMiddle();
         int itemPrice = shopItem.getRight();
 
         if(shopItemStack == null)
             return;
 
-        if(canPay(player, moneyType, itemPrice)) {
+        if(moneyService.canPay(player, moneyType, itemPrice)) {
             // Pay for the item
-            pay(player, moneyType, itemPrice);
+            moneyService.pay(player, moneyType, itemPrice);
 
             // Git items to player
             for(ItemStack isDrop : player.getInventory().addItem(shopItemStack.clone()).values())
                 player.getWorld().dropItemNaturally(player.getLocation(), isDrop); //THINK drop items which cannot be placed to player's inventory
 
+
+
             // Send info message
             ChatInfo.SUCCESS.send(
                     player,
-                    "Úspešne si kúpil " + item + ", za " + itemPrice
+                    "Úspešne si kúpil " + generateItemName(item) + ", za " + itemPrice + " " + moneyType.getName()
                     /*ComponentBuilder.translate(
                             "shop.buy.ok",
                             ComponentBuilder.item(item).build(),
@@ -69,12 +78,20 @@ public abstract class ItemShopMenu extends ItemMenu {
                             PriceHelper.getMoneyComponent(moneyType)
                     ).build()*/
             );
-        }
-        else
+        } else
             ChatInfo.WARNING.send(player, "Nemáš dostatok penazí!");
     }
 
-    public static boolean canPay(Player player, Material material, int amount)
+    private String generateItemName(ItemStack itemStack) {
+        if(itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName())
+            return itemStack.getItemMeta().getDisplayName();
+
+        String name = itemStack.getType().name().replace("_", " ").toLowerCase(Locale.ROOT);
+        return StringUtils.capitalize(name);
+    }
+
+    /*
+    public static boolean canPay(Player player, MoneyType moneyType, int amount)
     {
         PlayerInventory inventory = player.getInventory();
         for(ItemStack is : inventory)
@@ -113,16 +130,16 @@ public abstract class ItemShopMenu extends ItemMenu {
             amount -= is.getAmount();
         }
     }
-
+*/
     // Key = Display item
     // Value:
     // - Item to give
     // - Type of money
     // - Amount of money
-    private Map<ItemStack, Triple<ItemStack, Material, Integer>> itemMap = new HashMap<>();
+    private Map<ItemStack, Triple<ItemStack, MoneyType, Integer>> itemMap = new HashMap<>();
     private ItemStack[] items;
 
-    protected void setItem(int index, @NotNull ItemStack isDisplay, @Nullable ItemStack isGive, @NotNull Material moneyType, int price) {
+    protected void setItem(int index, @NotNull ItemStack isDisplay, @Nullable ItemStack isGive, @NotNull MoneyType moneyType, int price) {
         int size = getSize();
         if(index < 0 || index >= size)
             return;
@@ -135,7 +152,7 @@ public abstract class ItemShopMenu extends ItemMenu {
         this.items[index] = isDisplay;
     }
 
-    protected int addItem(@NotNull ItemStack isDisplay, @Nullable ItemStack isGive, @NotNull Material moneyType, int price) {
+    protected int addItem(@NotNull ItemStack isDisplay, @Nullable ItemStack isGive, @NotNull MoneyType moneyType, int price) {
         int index;
         int size = getSize();
         for(index = 0; index < size; index++)
@@ -153,16 +170,16 @@ public abstract class ItemShopMenu extends ItemMenu {
         return index;
     }
 
-    protected int addItem(@NotNull ItemStack is, @NotNull Material moneyType, int price) {
+    protected int addItem(@NotNull ItemStack is, @NotNull MoneyType moneyType, int price) {
         ItemStack isDisplay = new ItemBuilder(is.clone())
-                .addLore("Cena: " + price)
+                .addLore("", "§eCena§f " + price + " " + moneyType.getMultipleName())
                 .build();
         return addItem(isDisplay, is, moneyType, price);
     }
 
-    protected void setItem(int index, @NotNull ItemStack is, @NotNull Material moneyType, int price) {
+    protected void setItem(int index, @NotNull ItemStack is, @NotNull MoneyType moneyType, int price) {
         ItemStack isDisplay = new ItemBuilder(is)
-                .addLore("Cena: " + price)
+                .addLore("", "§eCena§f " + price + " " + moneyType.getMultipleName() )
                 .build();
         setItem(index, isDisplay, is, moneyType, price);
     }

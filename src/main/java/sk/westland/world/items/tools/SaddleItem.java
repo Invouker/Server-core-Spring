@@ -32,73 +32,6 @@ public class SaddleItem extends CustomItem implements Listener {
     @Autowired
     private HorseService horseService;
 
-    public enum Colors {
-        WHITE(0, "Biely"),
-        CREAMY(1, "Krémový"),
-        CHESTNUT(2, "Gaštanový"),
-        BROWN(3, "Hnedý"),
-        BLACK(4, "Čierny"),
-        GRAY(5, "Sivý"),
-        DARKBROWN(6, "Tmavo hnedý");
-
-        private int id;
-        private String name;
-
-        Colors(int id, String name) {
-            this.id = id;
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public static Colors findById(int id) {
-            for(Colors horses : Colors.values()) {
-                if(horses.getId() == id)
-                    return horses;
-            }
-            return null;
-        }
-    }
-
-    public enum Style {
-        NONE(0, "Nič"),
-        WHITE(1, "Biely"),
-        WHITE_FIELD(2, "Biele fľaky"),
-        WHITE_DOTS(3, "Biele bodky"),
-        BLACK_DOTS(4, "Čierne bodky")
-        ;
-
-        private int id;
-        private String name;
-
-        Style(int id, String name) {
-            this.id = id;
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public static Style findById(int id) {
-            for(Style style : Style.values()) {
-                if(style.getId() == id)
-                    return style;
-            }
-            return null;
-        }
-    }
-
     @Override
     public ItemStack getItem() {
         int color = Random.nextInt(HorseColor.values().length-1);
@@ -109,6 +42,8 @@ public class SaddleItem extends CustomItem implements Listener {
                 .addLore("§f" + StringUtils.capitalise(Colors.findById(color).getName().replace("_", " ") + "") + " kôň")
                 .addLore("§7Štýl: §f" + StringUtils.capitalise(Style.findById(style).getName().toLowerCase()))
                 .setModelId(getModelID())
+                .addLore("§7Type: §f1")
+                .setNbt_Int(HorseStats.TYPE.getStatName(), HorseType.HORSE.getId())
 
                 // Jump
                 // 0.5 - tier 1
@@ -218,4 +153,94 @@ public class SaddleItem extends CustomItem implements Listener {
 
     @Override
     protected void onPlayerBlockPlace(BlockPlaceEvent event) {}
+
+    public enum HorseType {
+        HORSE(1, "Obyčajný"),
+        ZOMBIE(2, "Zombie"),
+        SKELETON(3, "Skeleton")
+        ;
+
+        private int id;
+        private String typeName;
+
+        HorseType(int id, String typeName) {
+            this.id = id;
+            this.typeName = typeName;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public String getTypeName() {
+            return typeName;
+        }
+    }
+
+    public enum Colors {
+        WHITE(0, "Biely"),
+        CREAMY(1, "Krémový"),
+        CHESTNUT(2, "Gaštanový"),
+        BROWN(3, "Hnedý"),
+        BLACK(4, "Čierny"),
+        GRAY(5, "Sivý"),
+        DARKBROWN(6, "Tmavo hnedý");
+
+        private int id;
+        private String name;
+
+        Colors(int id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public static Colors findById(int id) {
+            for(Colors horses : Colors.values()) {
+                if(horses.getId() == id)
+                    return horses;
+            }
+            return null;
+        }
+    }
+
+    public enum Style {
+        NONE(0, "Nič"),
+        WHITE(1, "Biely"),
+        WHITE_FIELD(2, "Biele fľaky"),
+        WHITE_DOTS(3, "Biele bodky"),
+        BLACK_DOTS(4, "Čierne bodky")
+        ;
+
+        private int id;
+        private String name;
+
+        Style(int id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public static Style findById(int id) {
+            for(Style style : Style.values()) {
+                if(style.getId() == id)
+                    return style;
+            }
+            return null;
+        }
+    }
 }

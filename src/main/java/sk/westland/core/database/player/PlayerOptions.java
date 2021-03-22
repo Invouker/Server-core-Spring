@@ -17,6 +17,8 @@ public class PlayerOptions {
     private boolean showQuitMessage = false;
     private boolean chatReactionSound = true;
     private boolean showDeathMessage = true;
+    private boolean showScoreboard = true;
+    private boolean teleportEffect = true;
 
     public PlayerOptions() {
     }
@@ -67,5 +69,21 @@ public class PlayerOptions {
 
     public void setShowDeathMessage(boolean showDeathMessage) {
         this.showDeathMessage = showDeathMessage;
+    }
+
+    public boolean isShowScoreboard() {
+        return showScoreboard;
+    }
+
+    public void setShowScoreboard(boolean showScoreboard) {
+        this.showScoreboard = showScoreboard;
+    }
+
+    public boolean isTeleportEffect() {
+        return teleportEffect;
+    }
+
+    public void setTeleportEffect(boolean teleportEffect) {
+        this.teleportEffect = teleportEffect;
     }
 }

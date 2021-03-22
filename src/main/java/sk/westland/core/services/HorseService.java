@@ -63,25 +63,25 @@ public class HorseService implements Listener {
             case COLOR:
                 return new ItemBuilder(itemStack)
                         .setNbt_Int(horseStats.getStatName(), value)
-                        .setLoreLine(0, "§f" + StringUtils.capitalise(SaddleItem.Colors.findById(value).getName().replace("_", " ") + "") + " kôň")
+                        .setLoreLine(1, "§f" + StringUtils.capitalise(SaddleItem.Colors.findById(value).getName().replace("_", " ") + "") + " kôň")
                         .build();
             case STYLE:
                 return new ItemBuilder(itemStack)
                         .setNbt_Int(HorseStats.STYLE.getStatName(), value)
-                        .setLoreLine(1, "§7Štýl: §f" + StringUtils.capitalise(SaddleItem.Style.findById(value).getName().toLowerCase()))
+                        .setLoreLine(2, "§7Štýl: §f" + StringUtils.capitalise(SaddleItem.Style.findById(value).getName().toLowerCase()))
                         .build();
             case JUMP:
                 return new ItemBuilder(itemStack)
                         .setNbt_Int(horseStats.getStatName(), value)
-                        .setLoreLine(3, "§7Jump Tier: §f" + value).build();
+                        .setLoreLine(4, "§7Jump Tier: §f" + value).build();
             case SPEED:
                 return new ItemBuilder(itemStack)
                     .setNbt_Int(horseStats.getStatName(), value)
-                    .setLoreLine(4, "§7Speed Tier: §f" + value).build();
+                    .setLoreLine(5, "§7Speed Tier: §f" + value).build();
             case HEALTH:
                 return new ItemBuilder(itemStack)
                         .setNbt_Int(horseStats.getStatName(), value)
-                        .setLoreLine(5, "§7Health Tier: §f" + value).build();
+                        .setLoreLine(6, "§7Health Tier: §f" + value).build();
             case ARMOR:
             case ARMOR_COLOR:
                 return new ItemBuilder(itemStack)

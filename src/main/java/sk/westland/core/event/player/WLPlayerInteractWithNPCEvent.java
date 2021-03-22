@@ -11,6 +11,4 @@ public class WLPlayerInteractWithNPCEvent extends NPCEvent {
         super(player, npc);
     }
 
-
-
 }

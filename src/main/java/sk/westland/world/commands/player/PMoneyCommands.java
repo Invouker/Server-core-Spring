@@ -44,7 +44,7 @@ public class PMoneyCommands implements Runnable {
     @HasPermission("commands.pmoney.get")
     public static class GetMoney implements Runnable {
 
-        @CommandLine.Parameters(index = "0", defaultValue = "@s", converter = PlayerArgConverter.class)
+        @CommandLine.Parameters(index = "1", defaultValue = "@s", converter = PlayerArgConverter.class)
         private Player targetPlayerArg;
 
         @Autowired

@@ -14,6 +14,8 @@ public enum HorseStats {
     COLOR("color"),
     STYLE("style"),
 
+    TYPE("type"),
+
     ARMOR("armour"),
     ARMOR_COLOR("leather_armour_col")
     ;

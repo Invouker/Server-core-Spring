@@ -38,4 +38,10 @@ public class Application {
     @Bean
     public DiscordService discordService() { return new DiscordService(); }
 
+    //@Bean
+    //public APIServices apiServices() { return new APIServices(); }
+
+    @Bean
+    public ScoreboardService scoreboardService() { return new ScoreboardService(); }
+
 }

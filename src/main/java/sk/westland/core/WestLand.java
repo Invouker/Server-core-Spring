@@ -16,6 +16,7 @@ import sk.westland.core.services.BlockService;
 import sk.westland.core.services.PlayerService;
 import sk.westland.core.utils.PlaceHolder;
 import sk.westland.core.utils.ResFlag;
+import sk.westland.core.utils.RunnableHelper;
 import sk.westland.world.items.Materials;
 
 import java.io.IOException;
@@ -116,6 +117,7 @@ public class WestLand extends JavaPlugin {
     public void onDisable() {
         super.onDisable();
 
+        RunnableHelper.setServerStopping();
         placeHolder.unregister();
 
         if(Bukkit.getOnlinePlayers().size() > 0)

@@ -38,12 +38,11 @@ public class MoneyService {
         return this.get(playerService.getWLPlayer(player), moneyType);
     }
 
-    public boolean hasPay(Player player, MoneyType moneyType, double amount) {
-        return this.hasPay(playerService.getWLPlayer(player), moneyType, amount);
+    public boolean canPay(Player player, MoneyType moneyType, double amount) {
+        return this.canPay(playerService.getWLPlayer(player), moneyType, amount);
     }
 
-
-    public boolean hasPay(WLPlayer wlPlayer, MoneyType moneyType, double amount) {
+    public boolean canPay(WLPlayer wlPlayer, MoneyType moneyType, double amount) {
         switch (moneyType) {
             case Gems:
                 return wlPlayer.getGems() >= amount;
@@ -68,7 +67,7 @@ public class MoneyService {
     }
 
     public boolean pay(WLPlayer wlPlayer, MoneyType moneyType, double amount) {
-        if(this.hasPay(wlPlayer, moneyType, amount)) {
+        if(this.canPay(wlPlayer, moneyType, amount)) {
             switch (moneyType) {
                 case Gems: {
                     wlPlayer.setGems(wlPlayer.getGems() - amount);
@@ -88,7 +87,7 @@ public class MoneyService {
     }
 
     public boolean set(WLPlayer wlPlayer, MoneyType moneyType, double amount) {
-        if(this.hasPay(wlPlayer, moneyType, amount)) {
+        if(this.canPay(wlPlayer, moneyType, amount)) {
             switch (moneyType) {
                 case Gems: {
                     wlPlayer.setGems(amount);
@@ -130,7 +129,7 @@ public class MoneyService {
     }
 
     public boolean remove(WLPlayer wlPlayer, MoneyType moneyType, double amount) {
-        if(this.hasPay(wlPlayer, moneyType, amount)) {
+        if(this.canPay(wlPlayer, moneyType, amount)) {
             switch (moneyType) {
                 case Gems: {
                     wlPlayer.giveGems(-amount);

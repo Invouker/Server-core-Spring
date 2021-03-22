@@ -33,46 +33,11 @@
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
       <excludeFolder url="file://$MODULE_DIR$/.server/logs" />
       <excludeFolder url="file://$MODULE_DIR$/.server/plugins" />
+      <excludeFolder url="file://$MODULE_DIR$/.server" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: dev.alangomes:spigot-spring-boot-starter:0.20.3" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com:skinsrestorer:13.7.5-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.sainttx.holograms:holograms:2.10.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.sainttx.holograms:holograms-api:2.10.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.sainttx.holograms:holograms-v1_8_R1:2.10.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.sainttx.holograms:holograms-v1_8_R2:2.10.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.sainttx.holograms:holograms-v1_8_R3:2.10.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.sainttx.holograms:holograms-v1_9_R1:2.10.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.sainttx.holograms:holograms-v1_9_R2:2.10.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.sainttx.holograms:holograms-v1_10_R1:2.10.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.sainttx.holograms:holograms-v1_11_R1:2.10.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.sainttx.holograms:holograms-v1_12_R1:2.10.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.sainttx.holograms:holograms-v1_13_R1:2.10.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.sainttx.holograms:holograms-v1_13_R2:2.10.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.sainttx.holograms:holograms-v1_14_R1:2.10.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.sainttx.holograms:holograms-v1_15_R1:2.10.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: net.citizensnpcs:citizens:2.0.26-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: net.citizensnpcs:citizens-main:2.0.26-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: net.citizensnpcs:citizensapi:2.0.26-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: net.citizensnpcs:citizens-v1_8_R3:2.0.26-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: net.citizensnpcs:citizens-v1_11_R1:2.0.26-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: net.citizensnpcs:citizens-v1_12_R1:2.0.26-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: net.citizensnpcs:citizens-v1_13_R2:2.0.26-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: net.citizensnpcs:citizens-v1_14_R1:2.0.26-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: net.citizensnpcs:citizens-v1_15_R1:2.0.26-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: com.comphenix.protocol:ProtocolLib:4.5.0" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.13" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-core:2.1" level="project" />
-    <orderEntry type="library" name="Maven: com.maxmind.geoip2:geoip2:2.12.0" level="project" />
-    <orderEntry type="library" name="Maven: com.maxmind.db:maxmind-db:1.2.2" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient:4.5.10" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore:4.4.12" level="project" />
-    <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.13" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.10.0" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.10.0" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.10.0" level="project" />
     <orderEntry type="library" name="CMIAPI7.6.2.0" level="project" />
     <orderEntry type="library" name="Maven: org.spigotmc:spigot-api:1.16.4-R0.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.6" level="project" />
@@ -98,7 +63,6 @@
     <orderEntry type="library" scope="TEST" name="Maven: net.minidev:json-smart:2.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: net.minidev:accessors-smart:1.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.ow2.asm:asm:5.0.4" level="project" />
-    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.29" level="project" />
     <orderEntry type="library" name="Maven: jakarta.xml.bind:jakarta.xml.bind-api:2.3.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.jupiter:junit-jupiter:5.5.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.jupiter:junit-jupiter-api:5.5.2" level="project" />
@@ -187,7 +151,6 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.github.MilkBowl:VaultAPI:1.7" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.bukkit:bukkit:1.13.1-R0.1-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.googlecode.json-simple:json-simple:1.1.1" level="project" />
-    <orderEntry type="library" name="Maven: xyz.upperlevel.spigot.book:spigot-book-api:1.3" level="project" />
     <orderEntry type="library" name="Maven: me.clip:placeholderapi:2.10.9" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: net.citizensnpcs:citizensapi:2.0.27-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: ch.ethz.globis.phtree:phtree:2.3.0" level="project" />
@@ -197,8 +160,16 @@
     <orderEntry type="library" name="Maven: com.gmail.chickenpowerrr.ranksync:ranksync:1.4.0" level="project" />
     <orderEntry type="library" name="Maven: org.reflections:reflections:0.9.12" level="project" />
     <orderEntry type="library" name="Maven: com.github.Zrips:Jobs:4.16.3" level="project" />
+    <orderEntry type="library" name="Maven: de.themoep.resourcepacksplugin:ForceResourcepacksPlugin:1.0" level="project" />
     <orderEntry type="library" name="Maven: com.zrips.CMI:cmiapi:7.6.2.1" level="project" />
     <orderEntry type="library" name="Maven: com.github.brcdev-minecraft:shopgui-api:2.1.1" level="project" />
     <orderEntry type="library" name="Maven: com.bekvon.bukkit.residence:residence:4.9.2.4" level="project" />
+    <orderEntry type="library" name="Maven: io.puharesource.mc:TitleManager:2.3.1" level="project" />
+    <orderEntry type="library" name="Maven: xyz.upperlevel.spigot.book:spigot-book-api:1.3" level="project" />
+    <orderEntry type="library" name="Maven: fr.minuskube:netherboard-bukkit:1.2.1" level="project" />
+    <orderEntry type="library" name="Maven: fr.minuskube:netherboard-core:1.2.1" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.29" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: org.slf4j:slf4j-simple:1.7.29" level="project" />
+    <orderEntry type="library" name="Maven: com.coloredcarrot.api.sidebar:SidebarAPI:3.0" level="project" />
   </component>
 </module>

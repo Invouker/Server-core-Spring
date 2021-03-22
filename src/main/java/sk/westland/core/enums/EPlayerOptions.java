@@ -8,7 +8,9 @@ public enum EPlayerOptions {
     SHOW_JOIN_MESSAGE,
     SHOW_QUIT_MESSAGE,
     CHAT_REACTION_SOUND,
-    SHOW_DEATH_MESSAGE
+    SHOW_DEATH_MESSAGE,
+    SHOW_SCOREBOARD,
+    TELEPORT_EFFECT
     ;
 
     public boolean getPlayerOptions(WLPlayer wlPlayer) {
@@ -22,6 +24,10 @@ public enum EPlayerOptions {
                 return playerOptions.isChatReactionSound();
             case SHOW_DEATH_MESSAGE:
                 return playerOptions.isShowDeathMessage();
+            case SHOW_SCOREBOARD:
+                return playerOptions.isShowScoreboard();
+            case TELEPORT_EFFECT:
+                return playerOptions.isTeleportEffect();
         }
         return false;
     }
@@ -43,6 +49,14 @@ public enum EPlayerOptions {
             }
             case SHOW_DEATH_MESSAGE: {
                 playerOptions.setShowDeathMessage(option);
+                break;
+            }
+            case SHOW_SCOREBOARD: {
+                playerOptions.setShowScoreboard(option);
+                break;
+            }
+            case TELEPORT_EFFECT: {
+                playerOptions.setTeleportEffect(option);
                 break;
             }
         }

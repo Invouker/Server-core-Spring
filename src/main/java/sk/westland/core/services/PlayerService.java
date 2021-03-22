@@ -13,6 +13,7 @@ import sk.westland.core.WestLand;
 import sk.westland.core.database.player.*;
 import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.event.player.WLPlayerQuitEvent;
+import sk.westland.core.utils.RunnableHelper;
 
 import java.util.*;
 
@@ -43,11 +44,13 @@ public class PlayerService implements Listener {
         loadUser(player);
         //WLPlayer wlPlayer = loadUser(player);
         //Bukkit.getPluginManager().callEvent(new WLPlayerJoinEvent(wlPlayer));
+
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     private void onPlayerDisconnect(PlayerQuitEvent event) {
         Player player = event.getPlayer();
+
 
         save(player);
         Bukkit.getPluginManager().callEvent(new WLPlayerQuitEvent(getWLPlayer(player)));
@@ -130,9 +133,10 @@ public class PlayerService implements Listener {
         PlayerOptions playerOptions = wlPlayer.getPlayerOptions();
         PlayerData playerData = wlPlayer.getPlayerData();
 
-        wlPlayer.setUserData(userDataRepository.save(userData));
-        wlPlayer.setPlayerData(playerDataRepository.save(playerData));
-        wlPlayer.setPlayerOptions(playerOptionsRepository.save(playerOptions));
+        RunnableHelper.save(userDataRepository, userData, wlPlayer::setUserData);
+        RunnableHelper.save(playerDataRepository, playerData, wlPlayer::setPlayerData);
+        RunnableHelper.save(playerOptionsRepository, playerOptions, wlPlayer::setPlayerOptions);
+
     }
 
 

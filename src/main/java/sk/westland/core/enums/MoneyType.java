@@ -2,17 +2,23 @@ package sk.westland.core.enums;
 
 public enum MoneyType {
 
-    Shard("Shardy"),
-    Gems("Gemy"),
-    Money("Doláre");
+    Shard("Shard", "Shardov"),
+    Gems("Gem", "Gemov"),
+    Money("Dolár", "Dolárov");
 
     private String name;
+    private String multipleName;
 
-    MoneyType(String name) {
+    MoneyType(String name, String multipleName) {
         this.name = name;
+        this.multipleName = multipleName;
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getMultipleName() {
+        return multipleName;
     }
 }
