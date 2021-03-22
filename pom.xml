@@ -47,6 +47,11 @@
         </repository>
 
         <repository>
+            <id>westland</id>
+            <url>https://westland.sk/repository/</url>
+        </repository>
+
+        <repository>
             <id>citizens</id>
             <url>https://repo.citizensnpcs.co/</url>
         </repository>
@@ -231,12 +236,6 @@
         </dependency>
 
         <dependency>
-            <groupId>io.puharesource.mc</groupId>
-            <artifactId>TitleManager</artifactId>
-            <version>2.3.1</version>
-        </dependency>
-
-        <dependency>
             <groupId>xyz.upperlevel.spigot.book</groupId>
             <artifactId>spigot-book-api</artifactId>
             <version>1.3</version>
@@ -253,13 +252,6 @@
                     <version>1.0</version>
                     <scope>provided</scope>
                 </dependency>-->
-
-        <!-- https://mvnrepository.com/artifact/fr.minuskube/netherboard-bukkit -->
-        <dependency>
-            <groupId>fr.minuskube</groupId>
-            <artifactId>netherboard-bukkit</artifactId>
-            <version>1.2.1</version>
-        </dependency>
 
         <dependency>
             <groupId>com.coloredcarrot.api.sidebar</groupId>
@@ -315,6 +307,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>wagon-maven-plugin</artifactId>
+                <version>2.0.2</version>
                 <executions>
                     <execution>
                         <id>upload-assembly</id>
