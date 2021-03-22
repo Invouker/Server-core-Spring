@@ -61,8 +61,8 @@ public class OptionCommands implements Runnable {
     private void displayScoreboard(Player player, boolean show) {
         Bukkit.dispatchCommand(player, "tm scoreboard toggle");
 
-        if(show != apiServices.getTitleManagerAPI().hasScoreboard(player)) {
+      /*  if(show != apiServices.getTitleManagerAPI().hasScoreboard(player)) {
             Bukkit.dispatchCommand(player, "tm scoreboard toggle");
-        }
+        }*/
     }
 }

@@ -4,8 +4,6 @@ import com.Zrips.CMI.Modules.tp.Teleportations;
 import com.Zrips.CMI.events.CMIAsyncPlayerTeleportEvent;
 import de.themoep.resourcepacksplugin.bukkit.events.ResourcePackStatusEvent;
 import de.themoep.resourcepacksplugin.core.ResourcePackStatus;
-import fr.minuskube.netherboard.Netherboard;
-import fr.minuskube.netherboard.bukkit.BPlayerBoard;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -130,7 +128,7 @@ public class BasicEvents implements Listener {
 
     //@EventHandler
     private void onPlayerJoin(PlayerJoinEvent event) {
-        apiServices.getTitleManagerAPI().removeScoreboard(event.getPlayer());
+
         //Bukkit.dispatchCommand(event.getPlayer(), "tm scoreboard toggle");
 
         //Bukkit.getScheduler().runTaskLater(WestLand.getInstance(), () -> { }, 20*5L);
@@ -146,10 +144,10 @@ public class BasicEvents implements Listener {
 
     private void displayScoreboard(Player player, boolean show) {
         Bukkit.dispatchCommand(player, "tm scoreboard toggle");
-
+/*
         if(show != apiServices.getTitleManagerAPI().hasScoreboard(player)) {
             Bukkit.dispatchCommand(player, "tm scoreboard toggle");
-        }
+        }*/
     }
 
     @EventHandler(ignoreCancelled = true)
