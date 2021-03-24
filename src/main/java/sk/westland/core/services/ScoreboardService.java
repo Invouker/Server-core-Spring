@@ -31,11 +31,7 @@ public class ScoreboardService implements Listener {
         System.out.println("Hráč " + event.getWlPlayer().getName() + " sa pripojil do hry!");
     }
 
-    @EventHandler
-    private void onWLPlayerJoin(PlayerJoinEvent event) {
-        System.out.println("Joining");
-
-
+    public void loadScoreboard(Player player) {
         SidebarString line1 = new SidebarString("§r       ⺏⻔⺎");
         SidebarString line2 = new SidebarString("");
         SidebarString line3 = new SidebarString(ChatColor.of("#838282") + "    %{server-time}");
@@ -52,7 +48,15 @@ public class ScoreboardService implements Listener {
         SidebarString line14 = new SidebarString("k");
 
         Sidebar mySidebar = new Sidebar("", WestLand.getInstance(), 60, line1, line2, line3,line4,line5,line6,line7,line8,line9,line10,line11,line12,line13,line14);
-        mySidebar.showTo(event.getPlayer());
+        mySidebar.showTo(player);
+    }
+
+    @EventHandler
+    private void onWLPlayerJoin(PlayerJoinEvent event) {
+        System.out.println("Joining");
+
+
+
     }
     /*@EventHandler
     private void onWLPlayerJoin(PlayerJoinEvent event) {
