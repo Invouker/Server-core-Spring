@@ -10,7 +10,10 @@ import picocli.CommandLine;
 import sk.westland.core.WestLand;
 import sk.westland.core.database.player.PlayerData;
 import sk.westland.core.enums.JobList;
-import sk.westland.core.services.*;
+import sk.westland.core.services.HorseService;
+import sk.westland.core.services.MessageService;
+import sk.westland.core.services.MoneyService;
+import sk.westland.core.services.PlayerService;
 import sk.westland.core.utils.ChatInfo;
 import sk.westland.core.utils.Utils;
 import sk.westland.world.commands.suggestion.JobsSuggestion;
@@ -244,12 +247,9 @@ public class TestCommand implements Runnable {
         @Autowired
         private PlayerService playerService;
 
-        @Autowired
-        private ScoreboardService scoreboardService;
-
         @Override
-        public void run() {scoreboardService.loadScoreboard(
-                context.getPlayer());
+        public void run() {
+
         }
     }
 }

@@ -254,9 +254,9 @@
                 </dependency>-->
 
         <dependency>
-            <groupId>com.coloredcarrot.api.sidebar</groupId>
-            <artifactId>SidebarAPI</artifactId>
-            <version>3.0</version>
+            <groupId>rien.bijl.Scoreboard.r</groupId>
+            <artifactId>Scoreboard-revision</artifactId>
+            <version>1.1</version>
         </dependency>
     </dependencies>
 

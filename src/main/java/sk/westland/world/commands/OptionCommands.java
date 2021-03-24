@@ -3,11 +3,10 @@ package sk.westland.world.commands;
 import dev.alangomes.springspigot.context.Context;
 import dev.alangomes.springspigot.security.HasPermission;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine;
+import rien.bijl.Scoreboard.r.Board.BoardPlayer;
 import sk.westland.core.enums.EPlayerOptions;
 import sk.westland.core.services.APIServices;
 import sk.westland.core.services.PlayerService;
@@ -41,14 +40,7 @@ public class OptionCommands implements Runnable {
     public void run() {
         switch(playerOptions) {
             case SHOW_SCOREBOARD: {
-                displayScoreboard(context.getPlayer(), option);
-                /*if (option) {
-
-                    //apiServices.getTitleManagerAPI().giveScoreboard(context.getPlayer());
-                    ChatInfo.SUCCESS.sendAll(apiServices.getTitleManagerAPI().hasScoreboard(context.getPlayer())+ ": ScoreboardStatus");
-                } else
-                    apiServices.getTitleManagerAPI().removeScoreboard(context.getPlayer());
-                */
+                BoardPlayer.getBoardPlayer(context.getPlayer()).setEnabled(option);
                 break;
             }
         }
@@ -56,13 +48,5 @@ public class OptionCommands implements Runnable {
         if(showMessage) ChatInfo.SUCCESS.send(context.getPlayer(),
                 "Úspešne si si nastavil §6" + StringUtils.capitalize(playerOptions.name().toLowerCase()) + "§f na §6" + option);
         playerOptions.setPlayerOptions(playerService.getWLPlayer(context.getPlayer()), option);
-    }
-
-    private void displayScoreboard(Player player, boolean show) {
-        Bukkit.dispatchCommand(player, "tm scoreboard toggle");
-
-      /*  if(show != apiServices.getTitleManagerAPI().hasScoreboard(player)) {
-            Bukkit.dispatchCommand(player, "tm scoreboard toggle");
-        }*/
     }
 }

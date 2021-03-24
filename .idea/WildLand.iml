@@ -166,6 +166,6 @@
     <orderEntry type="library" name="Maven: com.github.brcdev-minecraft:shopgui-api:2.1.1" level="project" />
     <orderEntry type="library" name="Maven: com.bekvon.bukkit.residence:residence:4.9.2.4" level="project" />
     <orderEntry type="library" name="Maven: xyz.upperlevel.spigot.book:spigot-book-api:1.3" level="project" />
-    <orderEntry type="library" name="Maven: com.coloredcarrot.api.sidebar:SidebarAPI:3.0" level="project" />
+    <orderEntry type="library" name="Maven: rien.bijl.Scoreboard.r:Scoreboard-revision:1.1" level="project" />
   </component>
 </module>

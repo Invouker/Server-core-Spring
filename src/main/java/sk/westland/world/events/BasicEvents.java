@@ -2,11 +2,10 @@ package sk.westland.world.events;
 
 import com.Zrips.CMI.Modules.tp.Teleportations;
 import com.Zrips.CMI.events.CMIAsyncPlayerTeleportEvent;
-import de.themoep.resourcepacksplugin.bukkit.events.ResourcePackStatusEvent;
-import de.themoep.resourcepacksplugin.core.ResourcePackStatus;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -19,19 +18,18 @@ import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import sk.westland.core.WestLand;
+import rien.bijl.Scoreboard.r.Board.BoardPlayer;
 import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.enums.EPlayerOptions;
 import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.event.player.WLPlayerInteractWithNPCEvent;
-import sk.westland.core.services.APIServices;
 import sk.westland.core.services.DiscordService;
 import sk.westland.core.services.PlayerService;
-import sk.westland.core.utils.ChatInfo;
-import sk.westland.core.utils.RunnableHelper;
+import sk.westland.core.utils.Utils;
 import sk.westland.world.commands.player.NightVisionCommand;
 import sk.westland.world.items.Materials;
 
@@ -121,33 +119,18 @@ public class BasicEvents implements Listener {
         NightVisionCommand.getPlayers().remove(player);
     }
 
-
-    //@Autowired
-    private APIServices apiServices;
-
-
-    //@EventHandler
+    @EventHandler
     private void onPlayerJoin(PlayerJoinEvent event) {
-
-        //Bukkit.dispatchCommand(event.getPlayer(), "tm scoreboard toggle");
-
-        //Bukkit.getScheduler().runTaskLater(WestLand.getInstance(), () -> { }, 20*5L);
+        BoardPlayer.getBoardPlayer(event.getPlayer()).setEnabled(false);
     }
 
-    //@EventHandler
+    @EventHandler
     private void onResourcePackEventLo(PlayerResourcePackStatusEvent event) {
         Player player = event.getPlayer();
         WLPlayer wlPlayer = playerService.getWLPlayer(player);
-        if(event.getStatus() == PlayerResourcePackStatusEvent.Status.SUCCESSFULLY_LOADED)
-            displayScoreboard(player, EPlayerOptions.SHOW_SCOREBOARD.getPlayerOptions(wlPlayer));
-    }
-
-    private void displayScoreboard(Player player, boolean show) {
-        Bukkit.dispatchCommand(player, "tm scoreboard toggle");
-/*
-        if(show != apiServices.getTitleManagerAPI().hasScoreboard(player)) {
-            Bukkit.dispatchCommand(player, "tm scoreboard toggle");
-        }*/
+        if(event.getStatus() == PlayerResourcePackStatusEvent.Status.SUCCESSFULLY_LOADED) {
+            BoardPlayer.getBoardPlayer(event.getPlayer()).setEnabled(EPlayerOptions.SHOW_SCOREBOARD.getPlayerOptions(wlPlayer));
+        }
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -158,7 +141,9 @@ public class BasicEvents implements Listener {
                         Teleportations.TeleportType.Back, Teleportations.TeleportType.Spawn);
 
         if(teleportTypes.contains(event.getType())) {
-
+            Player player = event.getPlayer();
+            Utils.playSound(event.getTo(), Sound.ENTITY_ENDERMAN_TELEPORT);
+            player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20*3, 20, false, false, false));
         }
     }
 }
