@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.springframework.beans.factory.annotation.Autowired;
 import sk.westland.core.services.BlockService;
@@ -199,6 +200,13 @@ public abstract class MultiBlock implements IMultiBlock {
         Utils.playArmAnimation(event.getPlayer());
 
         Dispenser dispenser = getDispenserConstruction(block);
+
+        if(dispenser == null)
+            return;
+
+        if(!(((Block)dispenser).getState() instanceof InventoryHolder))
+            return;
+
         IMBRecipe imbRecipe = getRecipe(Arrays.asList(dispenser.getInventory().getContents()));
         takeItems(imbRecipe, dispenser.getInventory());
         onMultiBlockActivation(event.getPlayer(), getMultiBlockConstruct(block), imbRecipe, event);

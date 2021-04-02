@@ -81,20 +81,39 @@
             <url>http://repo.puha.io/repo/</url>
         </repository>
 
+        <repository>
+            <id>bintray-repo</id>
+            <url>https://dl.bintray.com/ichbinjoe/public/</url>
+        </repository>
     </repositories>
 
     <dependencies>
-        <!--This adds the Spigot API artifact to the build -->
+
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.16.4-R0.1-SNAPSHOT</version>
+            <groupId>org.yatopiamc</groupId>
+            <artifactId>yatopia-api</artifactId>
+            <version>1.16.5-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
             <version>1.16.4-R0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>fr.xephi</groupId>
+            <artifactId>authme</artifactId>
+            <version>5.6.0-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.vexsoftware</groupId>
+            <artifactId>nuvotifier-universal</artifactId>
+            <version>2.6.0</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -198,12 +217,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
-            <version>0.9.12</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.github.Zrips</groupId>
             <artifactId>Jobs</artifactId>
             <version>4.16.3</version> <!-- Change the LATEST to the current version of jobs -->
@@ -253,11 +266,7 @@
                     <scope>provided</scope>
                 </dependency>-->
 
-        <dependency>
-            <groupId>rien.bijl.Scoreboard.r</groupId>
-            <artifactId>Scoreboard-revision</artifactId>
-            <version>1.1</version>
-        </dependency>
+
     </dependencies>
 
     <pluginRepositories>
@@ -332,7 +341,9 @@
                 <artifactId>wagon-ftp</artifactId>
                 <version>3.2.0</version>
             </extension>
+
         </extensions>
+
     </build>
 
     <distributionManagement>
