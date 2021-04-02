@@ -1,6 +1,6 @@
 name: WestLand
 main: sk.westland.core.WestLand
-depend: [Vault, RankSync, AuthMe, Citizens, PlaceholderAPI, CMI, Residence, ShopGUIPlus, ForceResourcepacks]
+depend: [Vault, RankSync, AuthMe, Citizens, PlaceholderAPI, CMI, Residence, ShopGUIPlus, ForceResourcepacks, Votifier, Residence]
 load: POSTWORLD
 
 author: XpresS
