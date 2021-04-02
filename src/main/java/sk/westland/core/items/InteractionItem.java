@@ -12,7 +12,6 @@ import java.util.function.Consumer;
 
 public class InteractionItem implements Listener {
 
-
     private int customModelID;
     private ItemStack itemStack;
 

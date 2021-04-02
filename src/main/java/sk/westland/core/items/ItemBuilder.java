@@ -11,8 +11,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import sk.westland.core.WestLand;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -471,11 +474,11 @@ public class ItemBuilder {
         if (im == null)
             return this;
 
-        final List<String> lore = new ArrayList<>(im.getLore());
+        List<String> lore = new ArrayList<>(im.getLore());
         if (index < 0 || index > lore.size()) {
             return this;
         }
-        lore.remove(index - 1);
+        lore.remove(index);
         im.setLore(lore);
         this.is.setItemMeta(im);
         return this;
@@ -686,6 +689,15 @@ public class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder setCustomItem(CustomItem item) {
+        final NamespacedKey NBT_PER_KEY = new NamespacedKey(WestLand.getInstance(), "ITEM_ID_NAME");
+        ItemMeta itemMeta = is.getItemMeta();
+        PersistentDataContainer data = itemMeta.getPersistentDataContainer();
+        data.set(NBT_PER_KEY, PersistentDataType.STRING, item.itemID());
+        is.setItemMeta(itemMeta);
+        return this;
+    }
+
     public ItemBuilder applyDurability(short damage) {
         ItemMeta im = is.getItemMeta();
 
@@ -721,6 +733,7 @@ public class ItemBuilder {
     {
         return Nbt.getNbt_Int(is, "CustomModelData", 0);
     }
+
 
     /**
      * Build Item from ItemBuilder to ItemStack

@@ -41,4 +41,10 @@ public class Application {
     @Bean
     public APIServices apiServices() { return new APIServices(); }
 
+    @Bean
+    public ServerDataService serverDataService() { return new ServerDataService(); }
+
+    @Bean
+    public ScoreboardService scoreboardService() { return new ScoreboardService(); }
+
 }

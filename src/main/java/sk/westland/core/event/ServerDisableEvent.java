@@ -6,13 +6,14 @@ import org.jetbrains.annotations.NotNull;
 import sk.westland.core.WestLand;
 
 
-public class PluginDisableEvent extends Event {
+public class ServerDisableEvent extends Event {
 
     private static final HandlerList HANDLERS_LIST = new HandlerList();
     private WestLand westLand;
 
-    public PluginDisableEvent(WestLand westLand) {
+    public ServerDisableEvent(WestLand westLand) {
         this.westLand = westLand;
+        System.out.println("Disabling plugin: " + westLand.getName());
     }
 
     public WestLand getWestLand() {

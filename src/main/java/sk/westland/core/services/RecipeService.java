@@ -43,7 +43,7 @@ public class RecipeService implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     private void onPluginInit(PluginEnableEvent event) {
-       Bukkit.getScheduler().runTaskLater(event.getWestLand(), ()->{
+       Bukkit.getScheduler().runTaskLater(WestLand.getInstance(), ()->{
            if (!(craftingRecipes == null && craftingRecipes.isEmpty()))
                craftingRecipes.forEach((name, craftingRecipe) -> craftingRecipe.register());
 

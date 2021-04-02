@@ -14,6 +14,9 @@ public enum EPlayerOptions {
     ;
 
     public boolean getPlayerOptions(WLPlayer wlPlayer) {
+        if(wlPlayer == null)
+            return false;
+
         PlayerOptions playerOptions = wlPlayer.getPlayerOptions();
         switch(this) {
             case SHOW_JOIN_MESSAGE:
@@ -33,6 +36,9 @@ public enum EPlayerOptions {
     }
 
     public void setPlayerOptions(WLPlayer wlPlayer, boolean option) {
+        if(wlPlayer == null)
+            return;
+
         PlayerOptions playerOptions = wlPlayer.getPlayerOptions();
         switch(this) {
             case SHOW_JOIN_MESSAGE: {

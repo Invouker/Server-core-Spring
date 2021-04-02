@@ -37,9 +37,10 @@ public class BlockBreakerItem extends CustomItem implements Craftable, Listener 
 
     @Override
     public ItemStack getItem() {
-        return new ItemBuilder(BlockType.BLOCK_BREAKER.getMaterial())
+        return customItemStack = new ItemBuilder(BlockType.BLOCK_BREAKER.getMaterial())
                 .setName("§fBlock breaker")
                 .setModelId(getModelID())
+                .setCustomItem(this)
                 .setNbt_Int(WestLand.CUSTOM_BLOCK_NBT, BlockType.BLOCK_BREAKER.getId())
                 .setLore("", "§7Automatický ničí bloky", "").build();
     }
@@ -50,8 +51,13 @@ public class BlockBreakerItem extends CustomItem implements Craftable, Listener 
     }
 
     @Override
+    public String itemID() {
+        return "blockBreakerItem";
+    }
+
+    @Override
     protected void onPluginEnable(PluginEnableEvent event) {
-        getCraftingRecipe(event.getWestLand()).register();
+        getCraftingRecipe(WestLand.getInstance()).register();
     }
 
     @Override

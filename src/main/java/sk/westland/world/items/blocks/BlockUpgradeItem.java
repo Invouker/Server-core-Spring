@@ -33,9 +33,10 @@ public class BlockUpgradeItem extends CustomItem implements Craftable, Listener 
 
     @Override
     public ItemStack getItem() {
-        return new ItemBuilder(Material.DISPENSER)
+        return customItemStack = new ItemBuilder(Material.DISPENSER)
                 .setName("§fBlock placer")
                 .setModelId(getModelID())
+                .setCustomItem(this)
                 .setNbt_Int(WestLand.CUSTOM_BLOCK_NBT, BlockType.BLOCK_PLACER.getId())
                 .setLore("", "§7Automatický pokladá bloky", "§7ktoré sa do neho dajú!", "").build();
     }
@@ -46,8 +47,13 @@ public class BlockUpgradeItem extends CustomItem implements Craftable, Listener 
     }
 
     @Override
+    public String itemID() {
+        return "blockUpgradeItem";
+    }
+
+    @Override
     protected void onPluginEnable(PluginEnableEvent event) {
-        getCraftingRecipe(event.getWestLand()).register();
+        getCraftingRecipe(WestLand.getInstance()).register();
     }
 
     @Override

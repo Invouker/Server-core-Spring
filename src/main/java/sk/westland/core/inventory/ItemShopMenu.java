@@ -24,12 +24,14 @@ import java.util.Map;
 public abstract class ItemShopMenu extends ItemMenu {
 
     private MoneyService moneyService;
+    private Player player;
 
-    public ItemShopMenu(Type type, String title, MoneyService moneyService) {
+    public ItemShopMenu(Type type, String title, MoneyService moneyService, Player player) {
         super(type, title);
 
         items = new ItemStack[type.size];
         this.moneyService = moneyService;
+        this.player = player;
     }
 
     public void updateInventory() {
@@ -70,13 +72,7 @@ public abstract class ItemShopMenu extends ItemMenu {
             // Send info message
             ChatInfo.SUCCESS.send(
                     player,
-                    "Úspešne si kúpil " + generateItemName(item) + ", za " + itemPrice + " " + moneyType.getName()
-                    /*ComponentBuilder.translate(
-                            "shop.buy.ok",
-                            ComponentBuilder.item(item).build(),
-                            ComponentBuilder.text(itemPrice + "").build(),
-                            PriceHelper.getMoneyComponent(moneyType)
-                    ).build()*/
+                    "Úspešne si kúpil " + generateItemName(item) + "§f, za §6" + itemPrice + " " + moneyType.getMultipleName().toLowerCase(Locale.ROOT)
             );
         } else
             ChatInfo.WARNING.send(player, "Nemáš dostatok penazí!");
@@ -90,47 +86,6 @@ public abstract class ItemShopMenu extends ItemMenu {
         return StringUtils.capitalize(name);
     }
 
-    /*
-    public static boolean canPay(Player player, MoneyType moneyType, int amount)
-    {
-        PlayerInventory inventory = player.getInventory();
-        for(ItemStack is : inventory)
-        {
-            if(is == null || is.getType() != material)
-                continue;
-            amount -= is.getAmount();
-
-            if(amount <= 0)
-                return true;
-        }
-
-        return amount <= 0;
-    }
-
-    public static void pay(Player player, Material material, int amount)
-    {
-        PlayerInventory inventory = player.getInventory();
-        for(int i = 0; i < inventory.getSize() && amount > 0; i++)
-        {
-            ItemStack is = inventory.getItem(i);
-            if(is == null || is.getType() != material)
-                continue;
-
-            if(amount > is.getAmount())
-            {
-                inventory.setItem(i, null);
-            }
-            else
-            {
-                ItemStack is_clone = is.clone();
-                is_clone.setAmount(is.getAmount() - amount);
-                inventory.setItem(i, is_clone);
-            }
-
-            amount -= is.getAmount();
-        }
-    }
-*/
     // Key = Display item
     // Value:
     // - Item to give
@@ -152,7 +107,7 @@ public abstract class ItemShopMenu extends ItemMenu {
         this.items[index] = isDisplay;
     }
 
-    protected int addItem(@NotNull ItemStack isDisplay, @Nullable ItemStack isGive, @NotNull MoneyType moneyType, int price) {
+    private int addItem(@NotNull ItemStack isDisplay, @Nullable ItemStack isGive, @NotNull MoneyType moneyType, int price) {
         int index;
         int size = getSize();
         for(index = 0; index < size; index++)
@@ -170,9 +125,26 @@ public abstract class ItemShopMenu extends ItemMenu {
         return index;
     }
 
+    protected int addDisplayItem(@NotNull ItemStack itemStack, ItemStack itemStackDisplay, MoneyType moneyType, int price) {
+        ItemStack isDisplay = new ItemBuilder(itemStackDisplay)
+                .addLore(
+                        "§fCena:§a " + price + " " + moneyType.getMultipleName(),
+                        "§7Aktuálne máš " + moneyService.get(player, moneyType) + " " + moneyType.getMultipleName().toLowerCase(Locale.ROOT),
+                        "",
+                        "§aKlikni pre zakúpenie!"
+                )
+                .build();
+        return addItem(isDisplay, itemStack, moneyType, price);
+    }
+
     protected int addItem(@NotNull ItemStack is, @NotNull MoneyType moneyType, int price) {
         ItemStack isDisplay = new ItemBuilder(is.clone())
-                .addLore("", "§eCena§f " + price + " " + moneyType.getMultipleName())
+                .addLore(
+                        "§fCena§a " + price + " " + moneyType.getMultipleName(),
+                        "§7Aktuálne máš " + moneyService.get(player, moneyType) + " " + moneyType.getMultipleName(),
+                        "",
+                        "§aKlikni pre zakúpenie!"
+                )
                 .build();
         return addItem(isDisplay, is, moneyType, price);
     }

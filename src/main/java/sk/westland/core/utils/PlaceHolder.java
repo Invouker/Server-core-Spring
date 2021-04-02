@@ -3,9 +3,9 @@ package sk.westland.core.utils;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import rien.bijl.Scoreboard.r.Board.BoardPlayer;
 import sk.westland.core.enums.EPlayerOptions;
 import sk.westland.core.services.PlayerService;
+import sk.westland.core.services.ScoreboardService;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -15,10 +15,12 @@ public class PlaceHolder extends PlaceholderExpansion {
 
     private Plugin plugin;
     private PlayerService playerService;
+    private ScoreboardService scoreboardService;
 
-    public PlaceHolder(Plugin plugin, PlayerService playerService) {
+    public PlaceHolder(Plugin plugin, PlayerService playerService, ScoreboardService scoreboardService) {
         this.plugin = plugin;
         this.playerService = playerService;
+        this.scoreboardService = scoreboardService;
     }
 
 
@@ -80,11 +82,13 @@ public class PlaceHolder extends PlaceholderExpansion {
             return "";
         }
 
-        // %westland_scoreboard%
-        if(identifier.equalsIgnoreCase("scoreboard")) {
-            return String.valueOf(BoardPlayer.getBoardPlayer(player).isEnabled());
-        }
+        if(playerService.getWLPlayer(player) == null)
+            return "";
 
+        // %westland_gems%
+        if(identifier.equalsIgnoreCase("scoreboard")) {
+            return String.valueOf(scoreboardService.playerHasScoreboard(player));
+        }
         // %westland_gems%
         if(identifier.equalsIgnoreCase("gems")) {
             return String.valueOf(playerService.getWLPlayer(player).getGems());

@@ -1,8 +1,8 @@
 package sk.westland.core.services;
 
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Entity;
@@ -19,8 +19,10 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import sk.westland.core.WestLand;
 import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.event.player.WLPlayerDamageEvent;
 import sk.westland.core.items.InteractionItem;
@@ -30,6 +32,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ItemInteractionService implements Listener {
+
+    private static final NamespacedKey NBT_PER_KEY = new NamespacedKey(WestLand.getInstance(), "ITEM_ID_NAME");
 
     private Map<String, InteractionItem> itemInteractions = new HashMap<>();
 
@@ -49,10 +53,12 @@ public class ItemInteractionService implements Listener {
         if(!itemStack.hasItemMeta())
             return;
 
-        if(!itemStack.getItemMeta().hasDisplayName())
+        if(!itemStack.getItemMeta().getPersistentDataContainer().has(NBT_PER_KEY, PersistentDataType.STRING)) {
             return;
+        }
 
-        String localizedName = ChatColor.stripColor(itemStack.getItemMeta().getDisplayName());
+        String localizedName = itemStack.getItemMeta().getPersistentDataContainer().get(NBT_PER_KEY, PersistentDataType.STRING);
+
         if(!itemInteractions.containsKey(localizedName))
             return;
 
@@ -72,10 +78,10 @@ public class ItemInteractionService implements Listener {
         if(!itemStack.hasItemMeta())
             return;
 
-        if(!itemStack.getItemMeta().hasDisplayName())
+        if(!itemStack.getItemMeta().getPersistentDataContainer().has(NBT_PER_KEY, PersistentDataType.STRING))
             return;
 
-        String localizedName = ChatColor.stripColor(itemStack.getItemMeta().getDisplayName());
+        String localizedName = itemStack.getItemMeta().getPersistentDataContainer().get(NBT_PER_KEY, PersistentDataType.STRING);
         if(!itemInteractions.containsKey(localizedName))
             return;
 
@@ -99,13 +105,12 @@ public class ItemInteractionService implements Listener {
         if(!itemStack.hasItemMeta())
             return;
 
-        if(!itemStack.getItemMeta().hasDisplayName())
+        if(!itemStack.getItemMeta().getPersistentDataContainer().has(NBT_PER_KEY, PersistentDataType.STRING))
             return;
 
-        String localizedName = ChatColor.stripColor(itemStack.getItemMeta().getDisplayName());
+        String localizedName = itemStack.getItemMeta().getPersistentDataContainer().get(NBT_PER_KEY, PersistentDataType.STRING);
         if(!itemInteractions.containsKey(localizedName))
             return;
-
 
         WLPlayer damager = playerService.getWLPlayer(player);
         Entity entity = event.getEntity();
@@ -135,10 +140,10 @@ public class ItemInteractionService implements Listener {
         if(!itemStack.hasItemMeta())
             return;
 
-        if(!itemStack.getItemMeta().hasDisplayName())
+        if(!itemStack.getItemMeta().getPersistentDataContainer().has(NBT_PER_KEY, PersistentDataType.STRING))
             return;
 
-        String localizedName = ChatColor.stripColor(itemStack.getItemMeta().getDisplayName());
+        String localizedName = itemStack.getItemMeta().getPersistentDataContainer().get(NBT_PER_KEY, PersistentDataType.STRING);
         if(!itemInteractions.containsKey(localizedName))
             return;
 
@@ -156,10 +161,10 @@ public class ItemInteractionService implements Listener {
         if(!itemStack.hasItemMeta())
             return;
 
-        if(!itemStack.getItemMeta().hasDisplayName())
+        if(!itemStack.getItemMeta().getPersistentDataContainer().has(NBT_PER_KEY, PersistentDataType.STRING))
             return;
 
-        String localizedName = ChatColor.stripColor(itemStack.getItemMeta().getDisplayName());
+        String localizedName = itemStack.getItemMeta().getPersistentDataContainer().get(NBT_PER_KEY, PersistentDataType.STRING);
         if(!itemInteractions.containsKey(localizedName))
             return;
 
@@ -186,6 +191,10 @@ public class ItemInteractionService implements Listener {
             item.getConsumerBlockBreakEvent().accept((BlockBreakEvent) event);
     }
 
+    public boolean containItem(String localizedName) {
+        return itemInteractions.containsKey(localizedName);
+    }
+
     public void registerItem(String localizedName, InteractionItem item) {
         itemInteractions.putIfAbsent(localizedName, item);
     }
@@ -205,11 +214,7 @@ public class ItemInteractionService implements Listener {
     }
 
     public void consumeItem(@NotNull ItemStack itemStack, int amount) {
-        if(itemStack.getAmount() > 0) {
-            itemStack.setAmount(itemStack.getAmount()-amount);
-        }else {
-            itemStack = null;
-        }
+        itemStack.setAmount(itemStack.getAmount()-amount);
     }
 
     public void playSound(Player player, Sound sound) {

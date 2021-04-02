@@ -24,6 +24,7 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
+import sk.westland.core.WestLand;
 import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.event.player.WLPlayerDamageEvent;
 import sk.westland.core.items.*;
@@ -50,10 +51,11 @@ public class Hammer extends CustomItem implements Listener, Craftable {
 
     @Override
     public ItemStack getItem() {
-        return new ItemBuilder(Material.DIAMOND_PICKAXE)
+        return customItemStack = new ItemBuilder(Material.DIAMOND_PICKAXE)
                 .setName("§bDiamond Hammer")
                 .setModelId(getModelID())
                 .setNbt_Int("radius", 3)
+                .setCustomItem(this)
                 .setLore("", "§7Ničí blocky v radiusu 3x3", "").build();
     }
 
@@ -63,11 +65,16 @@ public class Hammer extends CustomItem implements Listener, Craftable {
     }
 
     @Override
+    public String itemID() {
+        return "hammer";
+    }
+
+    @Override
     protected void onPluginEnable(PluginEnableEvent event) {
-        getCraftingRecipe(event.getWestLand()).register();
+        getCraftingRecipe(WestLand.getInstance()).register();
 
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-        protocolManager.addPacketListener(new PacketAdapter(event.getWestLand(),
+        protocolManager.addPacketListener(new PacketAdapter(WestLand.getInstance(),
                 ListenerPriority.NORMAL,
                 PacketType.Play.Client.BLOCK_DIG) {
             @Override
@@ -129,7 +136,7 @@ public class Hammer extends CustomItem implements Listener, Craftable {
                         @Nullable
                         @Override
                         public Plugin getOwningPlugin() {
-                            return event.getWestLand();
+                            return WestLand.getInstance();
                         }
 
                         @Override

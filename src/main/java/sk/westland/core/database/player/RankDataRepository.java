@@ -4,6 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PlayerOptionsRepository extends JpaRepository<PlayerOptions, Long>, PlayerID<PlayerOptions> {
-
+public interface RankDataRepository extends JpaRepository<RankData, Long>, PlayerID<RankData> {
 }

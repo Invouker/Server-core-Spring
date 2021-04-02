@@ -17,6 +17,7 @@ import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.ItemStack;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sk.westland.core.WestLand;
 import sk.westland.core.blocks.BlockLevel;
 import sk.westland.core.blocks.BlockType;
 import sk.westland.core.blocks.CustomBlock;
@@ -48,8 +49,8 @@ public class BlockService implements Listener {
     private void onPluginEnable(PluginEnableEvent event) {
         List<BlockData> blockDataList = blockDataRepository.findAll();
 
-        Bukkit.getScheduler().runTaskTimer(event.getWestLand(), this::blockUpdate, RunnableDelay.DELAY(), 10l); // Must be before check size of blockDataList
-        Bukkit.getScheduler().runTaskTimerAsynchronously(event.getWestLand(), this::saveBlocksData, RunnableDelay.DELAY(), 20*30l);
+        Bukkit.getScheduler().runTaskTimer(WestLand.getInstance(), this::blockUpdate, RunnableDelay.DELAY(), 10l); // Must be before check size of blockDataList
+        Bukkit.getScheduler().runTaskTimerAsynchronously(WestLand.getInstance(), this::saveBlocksData, RunnableDelay.DELAY(), 20*30l);
 
         if(blockDataList.isEmpty())
             return;
@@ -114,6 +115,9 @@ public class BlockService implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     private void onBlockUnload(PluginDisableEvent event) {
+        if(!event.getPlugin().getName().equalsIgnoreCase("westland"))
+            return;
+
         saveBlocksData();
         blockHashMap.forEach((loc, block) -> block.onBlockUnload());
     }

@@ -22,6 +22,7 @@ import sk.westland.world.inventories.ChangeQuitMessageItemMenu;
 import sk.westland.world.inventories.JobsInventory;
 import sk.westland.world.inventories.entities.HorseUpgradeInventory;
 import sk.westland.world.items.Materials;
+import sk.westland.world.minigame.PartyGame;
 
 import java.util.List;
 
@@ -169,10 +170,9 @@ public class TestCommand implements Runnable {
 
         @Override
         public void run() {
-            context.getPlayer().getInventory().addItem(
-              Materials.
-                      Items.BLOCK_PLACER.getItem()
-            );
+            Location location = context.getPlayer().getLocation();
+            new PartyGame(location);
+            ChatInfo.ERROR.send(context.getPlayer(), "Spawnol si zombika, pičo");
         }
     }
 

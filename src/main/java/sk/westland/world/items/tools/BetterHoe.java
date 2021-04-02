@@ -13,6 +13,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.springframework.stereotype.Component;
+import sk.westland.core.WestLand;
 import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.event.player.WLPlayerDamageEvent;
 import sk.westland.core.items.*;
@@ -35,8 +36,9 @@ public class BetterHoe extends CustomItem implements Listener, Craftable {
 
     @Override
     public ItemStack getItem() {
-        return new ItemBuilder(Material.NETHERITE_HOE)
+        return customItemStack = new ItemBuilder(Material.NETHERITE_HOE)
                 .setName("§bBetter Hoe")
+                .setCustomItem(this)
                 .setModelId(getModelID())
                 .setNbt_Int("radius", 3)
                 .setLore("", "§7Zbiera úrodu v radiusu 3x3", "").build();
@@ -48,8 +50,13 @@ public class BetterHoe extends CustomItem implements Listener, Craftable {
     }
 
     @Override
+    public String itemID() {
+        return "betterHoe";
+    }
+
+    @Override
     protected void onPluginEnable(PluginEnableEvent event) {
-        getCraftingRecipe(event.getWestLand()).register();
+        getCraftingRecipe(WestLand.getInstance()).register();
     }
 
     @Override

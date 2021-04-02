@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 import sk.westland.core.WestLand;
 import sk.westland.core.database.player.*;
 import sk.westland.core.entity.player.WLPlayer;
+import sk.westland.core.event.ServerDisableEvent;
 import sk.westland.core.event.player.WLPlayerQuitEvent;
+import sk.westland.core.utils.RunnableDelay;
 import sk.westland.core.utils.RunnableHelper;
 
 import java.util.*;
@@ -34,26 +36,32 @@ public class PlayerService implements Listener {
 
     public PlayerService() {
         Bukkit.getScheduler()
-                .runTaskTimerAsynchronously(WestLand.getInstance(), this::saveAllUsers, 20* 5L,20*60L); // Every 1 minutes will save the userRepository
+                .runTaskTimerAsynchronously(WestLand.getInstance(), this::saveAllUsers, 20* 5L,20*60*5L); // Every 1 minutes will save the userRepository
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     private void onPlayerConnect(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        loadUser(player);
+        RunnableHelper.runTaskLaterAsynchronously(() -> loadUser(player), RunnableDelay.DELAY() + 10L);
         //WLPlayer wlPlayer = loadUser(player);
         //Bukkit.getPluginManager().callEvent(new WLPlayerJoinEvent(wlPlayer));
+    }
 
+    @EventHandler
+    private void onServerDisable(ServerDisableEvent event) {
+        if(Bukkit.getOnlinePlayers().size() > 0)
+            saveAllUsers();
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     private void onPlayerDisconnect(PlayerQuitEvent event) {
         Player player = event.getPlayer();
 
+        if(!wlPlayerHashMap.containsKey(player))
+            return;
 
         save(player);
-        Bukkit.getPluginManager().callEvent(new WLPlayerQuitEvent(getWLPlayer(player)));
         unloadPlayer(player);
 
         //saveAndUnloadUser(player);
@@ -61,6 +69,8 @@ public class PlayerService implements Listener {
 
     public void unloadPlayer(Player player) {
         if(isLoaded(player)) {
+            Bukkit.getPluginManager().callEvent(new WLPlayerQuitEvent(getWLPlayer(player)));
+
             wlPlayerHashMap.remove(player);
             Bukkit.getLogger().info("§cUnloading player from database " + player.getName() + " [" + player.getUniqueId() +"]");
         }

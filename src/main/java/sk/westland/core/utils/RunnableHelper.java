@@ -10,18 +10,7 @@ import java.util.function.Consumer;
 
 public class RunnableHelper {
 
-    private static boolean isStopping;
-
-    public static void setServerStopping() {
-        isStopping = true;
-    }
-
     public static void runTask(Runnable runnable) {
-        if(isStopping) {
-            runnable.run();
-            return;
-        }
-
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -31,11 +20,6 @@ public class RunnableHelper {
     }
 
     public static void runTaskAsynchronously(Runnable runnable) {
-        if(isStopping) {
-            runnable.run();
-            return;
-        }
-
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -45,11 +29,6 @@ public class RunnableHelper {
     }
 
     public static void runTaskLater(Runnable runnable, long delay) {
-        if(isStopping) {
-            runnable.run();
-            return;
-        }
-
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -59,15 +38,10 @@ public class RunnableHelper {
     }
 
     public static void runTaskLater(Runnable runnable) {
-        runTaskLater(runnable, 1);
+        runTaskLater(runnable, RunnableDelay.DELAY());
     }
 
     public static void runTaskLaterAsynchronously(Runnable runnable, long delay) {
-        if(isStopping) {
-            runnable.run();
-            return;
-        }
-
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -81,11 +55,6 @@ public class RunnableHelper {
     }
 
     public static void runTaskTimer(Runnable runnable, long delay, long period) {
-        if(isStopping) {
-            runnable.run();
-            return;
-        }
-
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -99,11 +68,6 @@ public class RunnableHelper {
     }
 
     public static void runTaskTimerAsynchronously(Runnable runnable, long delay, long period) {
-        if(isStopping) {
-            runnable.run();
-            return;
-        }
-
         new BukkitRunnable() {
             @Override
             public void run() {

@@ -1,12 +1,10 @@
 package sk.westland.world.items.tools;
 
-import net.minecraft.server.v1_16_R3.HorseColor;
-import net.minecraft.server.v1_16_R3.HorseStyle;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.Horse;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -27,59 +25,39 @@ import sk.westland.core.services.HorseService;
 import java.util.EnumSet;
 
 @Component
-public class SaddleItem extends CustomItem implements Listener {
+public class SaddleItem extends CustomItem implements Listener  {
 
     @Autowired
     private HorseService horseService;
 
     @Override
     public ItemStack getItem() {
-        int color = Random.nextInt(HorseColor.values().length-1);
-        int style = Random.nextInt(HorseStyle.values().length-1);
-        return new ItemBuilder(Material.SADDLE)
-                .setName("§bKôň")
 
-                .addLore("§f" + StringUtils.capitalise(Colors.findById(color).getName().replace("_", " ") + "") + " kôň")
-                .addLore("§7Štýl: §f" + StringUtils.capitalise(Style.findById(style).getName().toLowerCase()))
-                .setModelId(getModelID())
-                .addLore("§7Type: §f1")
-                .setNbt_Int(HorseStats.TYPE.getStatName(), HorseType.HORSE.getId())
+        return customItemStack = new ItemBuilder(Material.SADDLE)
+                .setName(ChatColor.of("#99ddff") + StringUtils.capitalise(HorseService.Colors.BLACK.getName().replace("_", " ") + "") + " kôň")
+                .addLore("§7Štýle: §f" + StringUtils.capitalise(HorseService.Style.NONE.getName().toLowerCase()))
+                //.addLore("§7Typ: §f" + HorseService.HorseType.HORSE.getTypeName())
+                .setNbt_Int(HorseStats.TYPE.getStatName(), HorseService.HorseType.HORSE.getId())
 
-                // Jump
-                // 0.5 - tier 1
-                // 0.6 - tier 2
-                // 0.7 - tier 3
-                // 0.8 - tier 4
-                // 0.9 - tier 5
                 .addLore("", "§7Jump Tier: §f1")
                 .setNbt_Int(HorseStats.JUMP.getStatName(), 1)
 
-                // Speed
-                // 0.1 - tier 1
-                // 0.2 - tier 2
-                // 0.3 - tier 3
-                // 0.4 - tier 4
-                // 0.5 - tier 5
                 .addLore("§7Speed Tier: §f1")
                 .setNbt_Int(HorseStats.SPEED.getStatName(), 1)
 
-                // Health
-                // 10 - tier 1
-                // 20 - tier 2
-                // 30 - tier 3
-                // 40 - tier 4
-                // 50 - tier 5
                 .addLore("§7Health Tier: §f1")
                 .setNbt_Int(HorseStats.HEALTH.getStatName(), 1)
 
-                .setNbt_Int(HorseStats.COLOR.getStatName(), color)
-                .setNbt_Int(HorseStats.STYLE.getStatName(), Random.nextInt(3))
+                .setNbt_Int(HorseStats.COLOR.getStatName(), HorseService.Colors.BLACK.getId())
+                .setNbt_Int(HorseStats.STYLE.getStatName(), HorseService.Style.NONE.getId())
                 .setNbt_Int(HorseStats.ARMOR.getStatName(), -1)
                 .setNbt_Int(HorseStats.ARMOR_COLOR.getStatName(), -1)
 
                 .setNbt_Bool(HorseStats.SADDLE.getStatName(), true)
                 .setNbt_Bool(HorseStats.SPAWNED.getStatName(), false)
                 .addLore("", "§aKlikni pre spawnutie!")
+                .setCustomItem(this)
+                .setModelId(getModelID())
                 .build();
     }
 
@@ -89,8 +67,12 @@ public class SaddleItem extends CustomItem implements Listener {
     }
 
     @Override
-    protected void onPluginEnable(PluginEnableEvent event) {
+    public String itemID() {
+        return "saddle";
+    }
 
+    @Override
+    protected void onPluginEnable(PluginEnableEvent event) {
     }
 
     @Override
@@ -108,7 +90,18 @@ public class SaddleItem extends CustomItem implements Listener {
             horseService.removePlayer(player);
 
         Location location = event.getPlayer().getLocation();
-        location.getWorld().spawn(location, Horse.class, (horse) -> {
+
+        int type = Nbt.getNbt_Int(itemStack, HorseStats.TYPE.getStatName(), -1);
+        System.out.println("Type: " + type);
+        Class<? extends AbstractHorse> clazz = Horse.class;
+        if(type == 2) { // Zombie
+            clazz = ZombieHorse.class;
+        }
+        if(type == 3) { // Skeleton
+            clazz = SkeletonHorse.class;
+        }
+
+        location.getWorld().spawn(location, clazz, (horse) -> {
             if(!horseService.addPlayer(player, horse))
                 horseService.removePlayer(player);
 
@@ -120,13 +113,22 @@ public class SaddleItem extends CustomItem implements Listener {
             horse.setAI(true);
 
             horse.getInventory().setSaddle(new ItemStack(Material.SADDLE));
-            EnumSet<HorseStats> horseStats = EnumSet.of(
-                    HorseStats.JUMP, HorseStats.SPEED, HorseStats.HEALTH,
-                    HorseStats.COLOR, HorseStats.STYLE, HorseStats.ARMOR,
-                    HorseStats.ARMOR_COLOR);
+            if(horse instanceof Horse) {
+                EnumSet<HorseStats> horseStats = EnumSet.of(
+                        HorseStats.JUMP, HorseStats.SPEED, HorseStats.HEALTH,
+                        HorseStats.COLOR, HorseStats.STYLE, HorseStats.ARMOR,
+                        HorseStats.ARMOR_COLOR);
 
-            for(HorseStats horseStat : horseStats)
-                horseService.applyStat(horse, itemStack, horseStat);
+                for (HorseStats horseStat : horseStats)
+                    horseService.applyStat(horse, itemStack, horseStat);
+            }
+            if(horse instanceof SkeletonHorse || horse instanceof ZombieHorse) {
+                EnumSet<HorseStats> horseStats = EnumSet.of(
+                        HorseStats.JUMP, HorseStats.SPEED, HorseStats.HEALTH);
+
+                for (HorseStats horseStat : horseStats)
+                    horseService.applyStat(horse, itemStack, horseStat);
+            }
 
             ItemBuilder itemBuilder = new ItemBuilder(itemStack);
             itemBuilder.setNbt_Bool(HorseStats.SPAWNED.getStatName(), true);
@@ -143,7 +145,7 @@ public class SaddleItem extends CustomItem implements Listener {
         if(!(event.getRightClicked() instanceof Horse))
             return;
         Player player = event.getPlayer();
-        Horse horse  = horseService.getPlayerHorse(player);
+        AbstractHorse horse  = horseService.getPlayerHorse(player);
         if(horse == null)
             return;
 
@@ -154,93 +156,4 @@ public class SaddleItem extends CustomItem implements Listener {
     @Override
     protected void onPlayerBlockPlace(BlockPlaceEvent event) {}
 
-    public enum HorseType {
-        HORSE(1, "Obyčajný"),
-        ZOMBIE(2, "Zombie"),
-        SKELETON(3, "Skeleton")
-        ;
-
-        private int id;
-        private String typeName;
-
-        HorseType(int id, String typeName) {
-            this.id = id;
-            this.typeName = typeName;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public String getTypeName() {
-            return typeName;
-        }
-    }
-
-    public enum Colors {
-        WHITE(0, "Biely"),
-        CREAMY(1, "Krémový"),
-        CHESTNUT(2, "Gaštanový"),
-        BROWN(3, "Hnedý"),
-        BLACK(4, "Čierny"),
-        GRAY(5, "Sivý"),
-        DARKBROWN(6, "Tmavo hnedý");
-
-        private int id;
-        private String name;
-
-        Colors(int id, String name) {
-            this.id = id;
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public static Colors findById(int id) {
-            for(Colors horses : Colors.values()) {
-                if(horses.getId() == id)
-                    return horses;
-            }
-            return null;
-        }
-    }
-
-    public enum Style {
-        NONE(0, "Nič"),
-        WHITE(1, "Biely"),
-        WHITE_FIELD(2, "Biele fľaky"),
-        WHITE_DOTS(3, "Biele bodky"),
-        BLACK_DOTS(4, "Čierne bodky")
-        ;
-
-        private int id;
-        private String name;
-
-        Style(int id, String name) {
-            this.id = id;
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public static Style findById(int id) {
-            for(Style style : Style.values()) {
-                if(style.getId() == id)
-                    return style;
-            }
-            return null;
-        }
-    }
 }

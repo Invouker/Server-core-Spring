@@ -71,14 +71,19 @@ public class MessageService implements Listener{
 
         String message = event.getMessage();
         if(message.startsWith("!") || isPlayerInAdminChat(player)) {
-            String adminChat = message.substring(1);
+            String adminChat = "";
+
+            if(message.startsWith("!"))
+                adminChat = message.substring(1);
+
             event.setCancelled(true);
 
+            String finalAdminChat = adminChat;
             Bukkit.getOnlinePlayers()
                     .stream()
                     .filter((target) -> target.hasPermission("adminchat"))
                     .forEach((target) -> {
-                target.sendMessage("§c[§lADMINCHAT§c] §f" + event.getPlayer().getName() + ": §7" + adminChat.replace('&', '§'));
+                target.sendMessage("§c[§lADMINCHAT§c] §f" + event.getPlayer().getName() + ": §7" + finalAdminChat.replace('&', '§'));
             });
         }
     }

@@ -37,9 +37,10 @@ public class WorthChestItem extends CustomItem implements Craftable, Listener {
 
     @Override
     public ItemStack getItem() {
-        return new ItemBuilder(BlockType.WORTH_CHEST.getMaterial())
+        return customItemStack = new ItemBuilder(BlockType.WORTH_CHEST.getMaterial())
                 .setName("§8Worth chest")
                 .setModelId(getModelID())
+                .setCustomItem(this)
                 .setNbt_Int(WestLand.CUSTOM_BLOCK_NBT, BlockType.WORTH_CHEST.getId())
                 .setLore("", "§7Automatický predáva blocky", "a itemy ktoré do nej vložité.", "").build();
     }
@@ -50,8 +51,13 @@ public class WorthChestItem extends CustomItem implements Craftable, Listener {
     }
 
     @Override
+    public String itemID() {
+        return "worthChestItem";
+    }
+
+    @Override
     protected void onPluginEnable(PluginEnableEvent event) {
-        getCraftingRecipe(event.getWestLand()).register();
+        getCraftingRecipe(WestLand.getInstance()).register();
     }
 
     @Override

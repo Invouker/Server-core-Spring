@@ -1,21 +1,19 @@
 package sk.westland.world.commands;
 
 import dev.alangomes.springspigot.context.Context;
-import dev.alangomes.springspigot.security.HasPermission;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine;
-import rien.bijl.Scoreboard.r.Board.BoardPlayer;
 import sk.westland.core.enums.EPlayerOptions;
 import sk.westland.core.services.APIServices;
 import sk.westland.core.services.PlayerService;
+import sk.westland.core.services.ScoreboardService;
 import sk.westland.core.utils.ChatInfo;
 import sk.westland.world.commands.suggestion.PlayerOptionsSuggestion;
 
 @Component
 @CommandLine.Command(name = "option")
-@HasPermission("commands.option")
 public class OptionCommands implements Runnable {
 
     @Autowired
@@ -23,6 +21,9 @@ public class OptionCommands implements Runnable {
 
     @Autowired
     private Context context;
+
+    @Autowired
+    private ScoreboardService scoreboardService;
 
     //@Autowired
     private APIServices apiServices;
@@ -40,8 +41,8 @@ public class OptionCommands implements Runnable {
     public void run() {
         switch(playerOptions) {
             case SHOW_SCOREBOARD: {
-                BoardPlayer.getBoardPlayer(context.getPlayer()).setEnabled(option);
-                break;
+                scoreboardService.showScoreboardForPlayer(context.getPlayer(), option);
+              break;
             }
         }
 

@@ -96,7 +96,7 @@ public class PMoneyCommands implements Runnable {
         private MoneyType moneyType;
 
         @CommandLine.Parameters(index = "1")
-        private double amount;
+        private int amount;
 
         @Autowired
         private Context context;
@@ -128,9 +128,10 @@ public class PMoneyCommands implements Runnable {
                 return;
             }
 
-            moneyService.set(targetPlayer, moneyType, amount);
-            ChatInfo.SUCCESS.send(context.getPlayer(), "Nastavil si hráčovy " + targetPlayer.getName() + " " + moneyService.get(targetPlayer, moneyType) + " " + moneyType.getName());
-            ChatInfo.SUCCESS.send(targetPlayer, "Aktuálne máš " + targetPlayer.getShards() + " shardov!");
+            if(moneyService.set(targetPlayer, moneyType, amount)) {
+                ChatInfo.SUCCESS.send(context.getPlayer(), "Nastavil si hráčovy " + targetPlayer.getName() + " " + moneyService.get(targetPlayer, moneyType) + " " + moneyType.getName());
+                ChatInfo.SUCCESS.send(targetPlayer, "Aktuálne máš " + targetPlayer.getShards() + " shardov!");
+            }
         }
     }
 

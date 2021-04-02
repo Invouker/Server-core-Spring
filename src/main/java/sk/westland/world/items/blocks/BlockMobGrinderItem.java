@@ -37,9 +37,10 @@ public class BlockMobGrinderItem extends CustomItem implements Craftable, Listen
 
     @Override
     public ItemStack getItem() {
-        return new ItemBuilder(BlockType.MOB_GRINDER.getMaterial())
+        return customItemStack = new ItemBuilder(BlockType.MOB_GRINDER.getMaterial())
                 .setName("§fMob Grinder")
                 .setModelId(getModelID())
+                .setCustomItem(this)
                 .setNbt_Int(WestLand.CUSTOM_BLOCK_NBT, BlockType.MOB_GRINDER.getId())
                 .setLore("", "§7Automatický ničí bloky", "").build();
     }
@@ -50,8 +51,13 @@ public class BlockMobGrinderItem extends CustomItem implements Craftable, Listen
     }
 
     @Override
+    public String itemID() {
+        return "blockMobGrinderItem";
+    }
+
+    @Override
     protected void onPluginEnable(PluginEnableEvent event) {
-        getCraftingRecipe(event.getWestLand()).register();
+        getCraftingRecipe(WestLand.getInstance()).register();
     }
 
     @Override

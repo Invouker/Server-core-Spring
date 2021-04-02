@@ -10,15 +10,17 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
-import sk.westland.core.event.PluginDisableEvent;
 import sk.westland.core.event.PluginEnableEvent;
+import sk.westland.core.event.ServerDisableEvent;
 import sk.westland.core.services.BlockService;
 import sk.westland.core.services.PlayerService;
+import sk.westland.core.services.ScoreboardService;
 import sk.westland.core.utils.PlaceHolder;
 import sk.westland.core.utils.ResFlag;
-import sk.westland.core.utils.RunnableHelper;
 import sk.westland.world.items.Materials;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Properties;
@@ -37,9 +39,14 @@ public class WestLand extends JavaPlugin {
     @Autowired
     private PlayerService playerService;
 
+    @Autowired
+    private ScoreboardService scoreboardService;
 
     @Autowired
     private BlockService blockService;
+
+    @PersistenceContext
+    private EntityManager em;
 
     @Override
     public void onEnable() {
@@ -86,16 +93,13 @@ public class WestLand extends JavaPlugin {
         Bukkit.getPluginManager().callEvent(new PluginEnableEvent(this));
 
         try {
-            // Disable for NOW
-            placeHolder = new PlaceHolder(this, playerService);
+            placeHolder = new PlaceHolder(this, playerService, scoreboardService);
             placeHolder.register();
         }  catch (Exception ex) {
             System.out.println("While hooking into PlaceholderAPI: " + ex.getLocalizedMessage());
         }
         if(Bukkit.getOnlinePlayers().size() > 0) {
-            Bukkit.getOnlinePlayers().forEach((player ->  {
-                playerService.loadUser(player);
-            }));
+            Bukkit.getOnlinePlayers().forEach((player -> playerService.loadUser(player)));
         }
 
         for (ResFlag resFlag : ResFlag.values()) {
@@ -116,16 +120,11 @@ public class WestLand extends JavaPlugin {
     @Override
     public void onDisable() {
         super.onDisable();
+        Bukkit.getPluginManager().callEvent(new ServerDisableEvent(westLand));
 
-        RunnableHelper.setServerStopping();
         placeHolder.unregister();
 
-        if(Bukkit.getOnlinePlayers().size() > 0)
-        Bukkit.getOnlinePlayers().forEach((player ->  {
-            playerService.save(player);
-        }));
-
-        Bukkit.getPluginManager().callEvent(new PluginDisableEvent(this));
+        em.close();
 
         Thread.currentThread().setContextClassLoader(defaultClassLoader);
 

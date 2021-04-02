@@ -1,8 +1,10 @@
 package sk.westland.core.services;
 
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
@@ -27,8 +29,8 @@ import sk.westland.core.enums.HorseStats;
 import sk.westland.core.enums.HorseTier;
 import sk.westland.core.items.ItemBuilder;
 import sk.westland.core.items.Nbt;
+import sk.westland.core.utils.ChatInfo;
 import sk.westland.world.items.Materials;
-import sk.westland.world.items.tools.SaddleItem;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,18 +39,50 @@ import java.util.Map;
 public class HorseService implements Listener {
 
     public static final double HORSE_MAX_HEALTH = 50d;
-    private Map<Player, Horse> activateHorse = new HashMap<>();
+    private final Map<Player, AbstractHorse> activateHorse = new HashMap<>();
 
-    public ItemStack buildHorse(Player player, int jump, int speed, int health, int color, int style, int armor, int armor_color) {
-        ItemStack item = buildHorse(jump, speed, health, color, style, armor, armor_color);
+    public ItemStack buildHorse(Player player,int type, int jump, int speed, int health, int color, int style, int armor, int armor_color) {
+        ItemStack item = buildHorse(type, jump, speed, health, color, style, armor, armor_color);
         player.getInventory().addItem(item);
         return item;
     }
 
-    public ItemStack buildHorse(int jump, int speed, int health, int color, int style, int armor, int armor_color) {
+    public ItemStack buildHorse(Colors horseColor, Style horseStyle) {
+        ItemStack saddle = Materials.Items.SADDLE_ITEM.getItem().clone();
+
+        saddle = applyStats(saddle, HorseStats.COLOR, horseColor.getId());
+        saddle = applyStats(saddle, HorseStats.STYLE, horseStyle.getId());
+        saddle = applyStats(saddle, HorseStats.TYPE, HorseType.HORSE.getId());
+
+        saddle = Nbt.setNbt_Int(saddle, HorseStats.JUMP.getStatName(), 1);
+        saddle = Nbt.setNbt_Int(saddle, HorseStats.SPEED.getStatName(), 1);
+        saddle = Nbt.setNbt_Int(saddle, HorseStats.HEALTH.getStatName(), 1);
+        saddle = Nbt.setNbt_Int(saddle, HorseStats.ARMOR.getStatName(), -1);
+        saddle = Nbt.setNbt_Int(saddle, HorseStats.ARMOR_COLOR.getStatName(), -1);
+        return saddle;
+    }
+
+    public ItemStack buildHorse(HorseType horseType) {
+        ItemStack saddle = Materials.Items.SADDLE_ITEM.getItem().clone();
+
+        saddle = applyStats(saddle, HorseStats.TYPE, horseType.getId());
+        ChatInfo.SUCCESS.sendAll("Type: " + horseType.getId() + ", "  + horseType.getTypeName());
+        saddle = Nbt.setNbt_Int(saddle, HorseStats.JUMP.getStatName(), 1);
+        saddle = Nbt.setNbt_Int(saddle, HorseStats.SPEED.getStatName(), 1);
+        saddle = Nbt.setNbt_Int(saddle, HorseStats.HEALTH.getStatName(), 1);
+        saddle = Nbt.setNbt_Int(saddle, HorseStats.ARMOR.getStatName(), -1);
+        saddle = Nbt.setNbt_Int(saddle, HorseStats.ARMOR_COLOR.getStatName(), -1);
+        StringBuilder itemName = new StringBuilder("§e");
+        if(horseType == HorseType.SKELETON) itemName.append("Skeleton horse");
+        if(horseType == HorseType.ZOMBIE) itemName.append("Zombie horse");
+        return new ItemBuilder(saddle).setName(itemName.toString()).removeLoreLine(0).setLoreLine(0, "§r").build();
+    }
+
+    public ItemStack buildHorse(int type, int jump, int speed, int health, int color, int style, int armor, int armor_color) {
         ItemStack saddle = Materials.Items.SADDLE_ITEM.getItem();
 
         saddle = Nbt.setNbt_Int(saddle, HorseStats.JUMP.getStatName(), jump);
+        saddle = Nbt.setNbt_Int(saddle, HorseStats.TYPE.getStatName(), type);
         saddle = Nbt.setNbt_Int(saddle, HorseStats.SPEED.getStatName(), speed);
         saddle = Nbt.setNbt_Int(saddle, HorseStats.HEALTH.getStatName(), health);
         saddle = Nbt.setNbt_Int(saddle, HorseStats.COLOR.getStatName(), color);
@@ -59,41 +93,61 @@ public class HorseService implements Listener {
     }
 
     public ItemStack applyStats(ItemStack itemStack, HorseStats horseStats, int value) {
+        ItemBuilder itemBuilder = new ItemBuilder(itemStack);
+
+        int type = Nbt.getNbt_Int(itemStack, HorseStats.TYPE.getStatName(), -2);
+
+        if(value == -1)
+            return itemBuilder.build();
+
+        if(type == -2)
+            throw new NullPointerException("NBT Horse type is null!");
+
+
+        int posUpgrade = 0;
+        if(type != HorseType.HORSE.getId())
+            posUpgrade = 1;
+
         switch (horseStats) {
-            case COLOR:
-                return new ItemBuilder(itemStack)
+            case TYPE:
+                return itemBuilder
                         .setNbt_Int(horseStats.getStatName(), value)
-                        .setLoreLine(1, "§f" + StringUtils.capitalise(SaddleItem.Colors.findById(value).getName().replace("_", " ") + "") + " kôň")
                         .build();
+            case COLOR: {
+                return itemBuilder
+                        .setNbt_Int(horseStats.getStatName(), value)
+                        .setName(ChatColor.of("#99ddff") + StringUtils.capitalise(Colors.findById(value).getName().replace("_", " ") + "") + " kôň")
+                        .build();
+            }
             case STYLE:
-                return new ItemBuilder(itemStack)
+                return itemBuilder
                         .setNbt_Int(HorseStats.STYLE.getStatName(), value)
-                        .setLoreLine(2, "§7Štýl: §f" + StringUtils.capitalise(SaddleItem.Style.findById(value).getName().toLowerCase()))
+                        .setLoreLine(0, "§7Štýl: §f" + StringUtils.capitalise(Style.findById(value).getName().toLowerCase()))
                         .build();
             case JUMP:
-                return new ItemBuilder(itemStack)
+                return itemBuilder
                         .setNbt_Int(horseStats.getStatName(), value)
-                        .setLoreLine(4, "§7Jump Tier: §f" + value).build();
+                        .setLoreLine(2-posUpgrade, "§7Jump Tier: §f" + value).build();
             case SPEED:
-                return new ItemBuilder(itemStack)
+                return itemBuilder
                     .setNbt_Int(horseStats.getStatName(), value)
-                    .setLoreLine(5, "§7Speed Tier: §f" + value).build();
+                    .setLoreLine(3-posUpgrade, "§7Speed Tier: §f" + value).build();
             case HEALTH:
-                return new ItemBuilder(itemStack)
+                return itemBuilder
                         .setNbt_Int(horseStats.getStatName(), value)
-                        .setLoreLine(6, "§7Health Tier: §f" + value).build();
+                        .setLoreLine(4-posUpgrade, "§7Health Tier: §f" + value).build();
             case ARMOR:
             case ARMOR_COLOR:
-                return new ItemBuilder(itemStack)
+                return itemBuilder
                         .setNbt_Int(horseStats.getStatName(), value)
                         .build();
 
         }
 
-        return null;
+        return itemBuilder.build();
     }
     
-    public boolean addPlayer(Player player, Horse horse) {
+    public boolean addPlayer(Player player, AbstractHorse horse) {
         if(activateHorse.containsKey(player))
            return false;
 
@@ -105,7 +159,7 @@ public class HorseService implements Listener {
         if(!activateHorse.containsKey(player))
             return;
 
-        Horse horse = getPlayerHorse(player);
+        AbstractHorse horse = getPlayerHorse(player);
         horse.remove();
 
         ItemStack saddle = findSaddleInInventory(player);
@@ -126,14 +180,14 @@ public class HorseService implements Listener {
         return null;
     }
 
-    public Horse getPlayerHorse(Player player) {
+    public AbstractHorse getPlayerHorse(Player player) {
         if(!activateHorse.containsKey(player))
             return null;
 
         return activateHorse.get(player);
     }
 
-    public void applyStat(Horse horse, ItemStack itemStack, HorseStats horseStat) {
+    public void applyStat(AbstractHorse horse, ItemStack itemStack, HorseStats horseStat) {
         String statName = horseStat.getStatName();
         int id = Nbt.getNbt_Int(itemStack, statName, 1);
         HorseTier horseTier = HorseTier.findById(id);
@@ -151,11 +205,11 @@ public class HorseService implements Listener {
                 break;
             }
             case COLOR: {
-                horse.setColor(Horse.Color.values()[id]);
+                ((Horse)horse).setColor(Horse.Color.values()[id]);
                 break;
             }
             case STYLE: {
-                horse.setStyle(Horse.Style.values()[id]);
+                ((Horse)horse).setStyle(Horse.Style.values()[id]);
                 break;
             }
             case ARMOR: {
@@ -167,12 +221,12 @@ public class HorseService implements Listener {
                     return;
 
                 Material material = horseArmour.getMaterial();
-                horse.getInventory().setArmor(new ItemStack(material));
+                ((Horse)horse).getInventory().setArmor(new ItemStack(material));
                 break;
             }
 
             case ARMOR_COLOR: { // 0 - 2
-                ItemStack armor = horse.getInventory().getArmor();
+                ItemStack armor = ((Horse)horse).getInventory().getArmor();
                 if (armor == null || armor.getType() != Material.LEATHER_HORSE_ARMOR)
                     return;
 
@@ -194,7 +248,7 @@ public class HorseService implements Listener {
         }
     }
 
-    private void setHorseHealth(Horse horse, double health) {
+    private void setHorseHealth(AbstractHorse horse, double health) {
         if(health > HORSE_MAX_HEALTH)
             return;
 
@@ -203,12 +257,15 @@ public class HorseService implements Listener {
 
     @EventHandler
     private void onPluginDisable(PluginDisableEvent event) {
+        if(!event.getPlugin().getName().equalsIgnoreCase("westland"))
+            return;
+
         activateHorse.forEach(((player, horse) -> horse.remove()));
     }
 
     private void removeHorseOnRestart(PluginDisableEvent event) {
         if(activateHorse != null)
-            for(Map.Entry<Player, Horse> playerHorseEntry : activateHorse.entrySet()) {
+            for(Map.Entry<Player, ? extends AbstractHorse> playerHorseEntry : activateHorse.entrySet()) {
                 playerHorseEntry.getValue().remove();
             }
     }
@@ -294,6 +351,104 @@ public class HorseService implements Listener {
     }
 
 
+    public enum HorseType {
+        HORSE(1, "Obyčajný"),
+        ZOMBIE(2, "Zombie"),
+        SKELETON(3, "Skeleton")
+        ;
+
+        private int id;
+        private String typeName;
+
+        HorseType(int id, String typeName) {
+            this.id = id;
+            this.typeName = typeName;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public String getTypeName() {
+            return typeName;
+        }
+
+        public static HorseType findById(int id) {
+            for(HorseType horseType : HorseType.values()) {
+                if(horseType.getId() == id)
+                    return horseType;
+            }
+            return null;
+        }
+    }
+
+    public enum Colors {
+        WHITE(0, "Biely"),
+        CREAMY(1, "Krémový"),
+        CHESTNUT(2, "Gaštanový"),
+        BROWN(3, "Hnedý"),
+        BLACK(4, "Čierny"),
+        GRAY(5, "Sivý"),
+        DARKBROWN(6, "Tmavo hnedý");
+
+        private int id;
+        private String name;
+
+        Colors(int id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public static Colors findById(int id) {
+            for(Colors horses : Colors.values()) {
+                if(horses.getId() == id)
+                    return horses;
+            }
+            return null;
+        }
+    }
+
+    public enum Style {
+        NONE(0, "Žiadny"),
+        WHITE(1, "Biely"),
+        WHITE_FIELD(2, "Biele fľaky"),
+        WHITE_DOTS(3, "Biele bodky"),
+        BLACK_DOTS(4, "Čierne bodky")
+        ;
+
+        private int id;
+        private String name;
+
+        Style(int id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public static Style findById(int id) {
+            for(Style style : Style.values()) {
+                if(style.getId() == id)
+                    return style;
+            }
+            return null;
+        }
+    }
+
     /*
     * Player Open Chest // DONE
     * Player Quit // DONE
@@ -309,29 +464,4 @@ public class HorseService implements Listener {
     * armor / saddle
     * */
 
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

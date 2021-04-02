@@ -275,6 +275,10 @@ public abstract class CustomInventory implements InventoryHolder, Listener {
         return new ArrayList<>(viewingPlayers);
     }
 
+    public void open(@NotNull WLPlayer wlPlayer) {
+        open(wlPlayer.getPlayer());
+    }
+
     public void open(@NotNull Player player)
     {
         if(viewingPlayers.contains(player)) {
@@ -397,6 +401,9 @@ public abstract class CustomInventory implements InventoryHolder, Listener {
 
     @EventHandler
     private void onPluginDisable(PluginDisableEvent event) {
+        if(!event.getPlugin().getName().equalsIgnoreCase("westland"))
+            return;
+
         closeAll();
     }
 

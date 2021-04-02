@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import sk.westland.core.WestLand;
 import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.items.*;
 
@@ -35,5 +36,5 @@ public class IronRod extends CustomResourceItem implements Craftable {
     }
 
     @Override
-    protected void onPluginEnable(PluginEnableEvent event) { recipeService.registerRecipe(getCraftingRecipe(event.getWestLand())); }
+    protected void onPluginEnable(PluginEnableEvent event) { recipeService.registerRecipe(getCraftingRecipe(WestLand.getInstance())); }
 }

@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.springframework.stereotype.Component;
+import sk.westland.core.WestLand;
 import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.event.player.WLPlayerDamageEvent;
 import sk.westland.core.items.*;
@@ -34,9 +35,10 @@ public class Crowbar extends CustomItem implements Craftable, Listener {
 
     @Override
     public ItemStack getItem() {
-        return new ItemBuilder(Material.STICK)
+        return customItemStack = new ItemBuilder(Material.STICK)
                 .setModelId(getModelID())
                 .setName("Crowbar")
+                .setCustomItem(this)
                 .addEnchant(Enchantment.DAMAGE_ALL, 3)
                 .build();
     }
@@ -47,8 +49,14 @@ public class Crowbar extends CustomItem implements Craftable, Listener {
     }
 
     @Override
+    public String itemID() {
+        return "crowbar";
+    }
+
+
+    @Override
     protected void onPluginEnable(PluginEnableEvent event) {
-        recipeService.registerRecipe(getCraftingRecipe(event.getWestLand()));
+        recipeService.registerRecipe(getCraftingRecipe(WestLand.getInstance()));
     }
 
     @Override

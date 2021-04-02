@@ -1,5 +1,6 @@
 package sk.westland.world.inventories.entities;
 
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -16,6 +17,7 @@ import sk.westland.core.items.ItemBuilder;
 import sk.westland.core.items.Nbt;
 import sk.westland.core.services.HorseService;
 import sk.westland.core.utils.ChatInfo;
+import sk.westland.core.utils.RunnableHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +79,8 @@ public class HorseUpgradeInventory extends NCCustomInventory {
                 break;
             }
             case 13: {
-                update(player, HorseStats.ARMOR);
+                ChatInfo.ERROR.send(player, "Tento item je momentálne nedostupný!");
+                //update(player, HorseStats.ARMOR);
                 break;
             }
             case 14: {
@@ -90,6 +93,13 @@ public class HorseUpgradeInventory extends NCCustomInventory {
                     return;
                 }
                 saddle = getInventory().getItem(SADDLE_ITEM);
+
+                int horseType = Nbt.getNbt_Int(saddle, HorseStats.TYPE.getStatName(), 1);
+                if(horseType != HorseService.HorseType.HORSE.getId()) {
+                    ChatInfo.ERROR.send(player, "Nemôžeš aplikovať tento upgrade na tento typ koňa!");
+                    return;
+                }
+
                 HorseColorInventory horseColorInventory = new HorseColorInventory(horseService, saddle);
                 horseColorInventory.open(player);
                 closeClick = false;
@@ -104,6 +114,13 @@ public class HorseUpgradeInventory extends NCCustomInventory {
                     return;
                 }
                 saddle = getInventory().getItem(SADDLE_ITEM);
+
+                int horseType = Nbt.getNbt_Int(saddle, HorseStats.TYPE.getStatName(), 1);
+                if(horseType != HorseService.HorseType.HORSE.getId()) {
+                    ChatInfo.ERROR.send(player, "Nemôžeš aplikovať tento upgrade na tento typ koňa!");
+                    return;
+                }
+
                 HorseStyleInventory horseStyleInventory = new HorseStyleInventory(horseService, saddle);
                 horseStyleInventory.open(player);
                 closeClick = false;
@@ -114,8 +131,12 @@ public class HorseUpgradeInventory extends NCCustomInventory {
 
     private void update(Player player, HorseStats horseStats){
         saddle = getInventory().getItem(SADDLE_ITEM);
-        int tier = Nbt.getNbt_Int(saddle, horseStats.getStatName(), 1);
-        System.out.println("Tier: " + tier);
+        if(saddle == null) {
+            ChatInfo.WARNING.send(player, "Musíš dať sedlo ktoré chceš upgradnuť!");
+            return;
+        }
+
+        int tier = Nbt.getNbt_Int(saddle, horseStats.getStatName(), -1);
 
         if(horseStats == HorseStats.ARMOR) {
             if(tier >= HorseArmour.getMaxTier()) {
@@ -144,18 +165,20 @@ public class HorseUpgradeInventory extends NCCustomInventory {
         if(saddle == null)
             return;
 
-        if(closeClick)
-            player.getInventory().addItem(saddle);
+        RunnableHelper.runTaskLater(() -> {
+            if(closeClick)
+                player.getInventory().addItem(saddle);
+        },5L);
 
     }
 
     private enum HorseUpgradeItem {
-        HEALTH("Health Upgrade", Material.REDSTONE, new String[]{"", "Možno navýšiť", "zdravie koňa", "Max tier: 6", "", "§eCena upgradu §f20$"}),
-        ARMOR("Armor Upgrade", Material.IRON_HORSE_ARMOR, new String[]{"", "Možno navýšiť", "brnenie koňa", "Max tier: 6", "", "§eCena upgradu §f25$"}),
-        JUMP("Jump Upgrade", Material.IRON_BOOTS, new String[]{"", "Možno navýšiť", "dosah výskoku koňa", "Max tier: 6", "", "§eCena upgradu §f60$"}),
-        COLOUR("Color Select", Material.BLACK_DYE, new String[]{"", "Možno si vybrať", "farbu koňa", "", "§eCena upgradu §f23$"}),
-        SPEED("Speed Upgrade", Material.SUGAR, new String[]{"", "Možno navýšiť", "rýchlosť koňa", "Max tier: 6", "", "§eCena upgradu §f50$"}),
-        STYLE("Style Select", Material.BLAZE_POWDER, new String[]{"", "Možno si vybrať", "štýL koňa", "", "§eCena upgradu §f20$"}),
+        HEALTH(ChatColor.of("#ff704d") + "Health Upgrade", Material.REDSTONE, new String[]{"", "Možnosť vylepšiť", "zdravie koňa", "Max tier: 6", "", "§eCena upgradu §f20$"}),
+        ARMOR("Armor Upgrade", Material.IRON_HORSE_ARMOR, new String[]{"", "Možnosť vylepšiť na", "brnenie koňa", "", "§cMomentálne nedostupné", "§eCena upgradu §f25$"}),
+        JUMP("Jump Upgrade", Material.IRON_BOOTS, new String[]{"", "Možnosť vylepšiť", "skok koňa", "Max tier: 6", "", "§eCena upgradu §f60$"}),
+        COLOUR("Color Select", Material.BLACK_DYE, new String[]{"", "Možnosť si vybrať", "farbu koňa", "", "§eCena upgradu §f23$"}),
+        SPEED("Speed Upgrade", Material.SUGAR, new String[]{"", "Možnosť vylepšiť", "rýchlosť koňa", "Max tier: 6", "", "§eCena upgradu §f50$"}),
+        STYLE("Style Select", Material.BLAZE_POWDER, new String[]{"", "Možnosť si vybrať", "štýl koňa", "", "§eCena upgradu §f20$"}),
         //ARMOR_COLOUR("Armor Colour Select", Material.LEATHER_HORSE_ARMOR, new String[]{"", "Možno vybrať", "farbu armoru", "", "§eCena upgradu §f30$"})
         ;
 
