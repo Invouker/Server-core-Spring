@@ -21,6 +21,9 @@ public class CommandRegister extends ListenerAdapter {
     public CommandRegister() {
         Reflections reflections = new Reflections("sk.westland.world.commands.discord", new MethodAnnotationsScanner());
         Set<Method> methods = reflections.getMethodsAnnotatedWith(Command.class);
+        if(methods == null)
+            return;
+
         registerCommands.addAll(methods);
     }
 
