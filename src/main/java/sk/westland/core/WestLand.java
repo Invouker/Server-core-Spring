@@ -10,11 +10,15 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
+import sk.westland.core.database.player.RankDataRepository;
+import sk.westland.core.database.player.UserDataRepository;
+import sk.westland.core.discord.DiscordHandler;
 import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.event.ServerDisableEvent;
 import sk.westland.core.services.BlockService;
 import sk.westland.core.services.PlayerService;
 import sk.westland.core.services.ScoreboardService;
+import sk.westland.core.services.VaultService;
 import sk.westland.core.utils.PlaceHolder;
 import sk.westland.core.utils.ResFlag;
 import sk.westland.world.items.Materials;
@@ -35,6 +39,7 @@ public class WestLand extends JavaPlugin {
     private ClassLoader defaultClassLoader;
 
     private PlaceHolder placeHolder;
+    private static DiscordHandler discordHandler;
 
     @Autowired
     private PlayerService playerService;
@@ -44,6 +49,15 @@ public class WestLand extends JavaPlugin {
 
     @Autowired
     private BlockService blockService;
+
+    @Autowired
+    private RankDataRepository rankDataRepository;
+
+    @Autowired
+    private UserDataRepository userDataRepository;
+
+    @Autowired
+    private VaultService vaultService;
 
     @PersistenceContext
     private EntityManager em;
@@ -56,6 +70,8 @@ public class WestLand extends JavaPlugin {
 
         Bukkit.getConsoleSender().sendMessage("§a");
         Bukkit.getConsoleSender().sendMessage("§aLoading Spring framework...");
+
+        discordHandler = new DiscordHandler(playerService, rankDataRepository, userDataRepository, vaultService);
 
         saveDefaultConfig();
 
@@ -123,7 +139,7 @@ public class WestLand extends JavaPlugin {
         Bukkit.getPluginManager().callEvent(new ServerDisableEvent(westLand));
 
         placeHolder.unregister();
-
+        discordHandler.shutdown();
         em.close();
 
         Thread.currentThread().setContextClassLoader(defaultClassLoader);
@@ -134,10 +150,6 @@ public class WestLand extends JavaPlugin {
             }catch (Exception ignored) {}
             context = null;
         }
-    }
-
-    public static WestLand getInstance() {
-        return westLand;
     }
 
     private void setupDatabase(Properties properties) {
@@ -152,4 +164,11 @@ public class WestLand extends JavaPlugin {
             properties.setProperty("spring.datasource.password", password);
     }
 
+    public static WestLand getInstance() {
+        return westLand;
+    }
+
+    public static DiscordHandler getDiscordHandler() {
+        return discordHandler;
+    }
 }

@@ -85,10 +85,26 @@
             <id>bintray-repo</id>
             <url>https://dl.bintray.com/ichbinjoe/public/</url>
         </repository>
+
+        <repository>
+            <id>dv8tion</id>
+            <name>m2-dv8tion</name>
+            <url>https://m2.dv8tion.net/releases</url>
+        </repository>
     </repositories>
 
     <dependencies>
-
+        <dependency>
+            <groupId>net.dv8tion</groupId>
+            <artifactId>JDA</artifactId>
+            <version>4.2.1_253</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>club.minnced</groupId>
+                    <artifactId>opus-java</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <dependency>
             <groupId>org.yatopiamc</groupId>
             <artifactId>yatopia-api</artifactId>
@@ -214,6 +230,19 @@
             <groupId>com.gmail.chickenpowerrr.ranksync</groupId>
             <artifactId>ranksync</artifactId>
             <version>1.4.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.luckperms</groupId>
+            <artifactId>api</artifactId>
+            <version>5.3</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.johnnyjayjay</groupId>
+            <artifactId>CommandAPI</artifactId>
+            <version>3.2</version>
         </dependency>
 
         <dependency>

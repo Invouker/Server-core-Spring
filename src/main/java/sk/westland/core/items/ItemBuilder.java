@@ -4,10 +4,14 @@ import net.minecraft.server.v1_16_R3.Item;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.CreatureSpawner;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -226,6 +230,27 @@ public class ItemBuilder {
         im.addEnchant(org.bukkit.enchantments.Enchantment.DAMAGE_ALL, 0, true);
         im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         is.setItemMeta(im);
+        return this;
+    }
+
+    /**
+     * Set type of item spawner
+     */
+    @NotNull
+    public ItemBuilder setSpawnerType(EntityType entityType)
+    {
+        ItemMeta im = is.getItemMeta();
+        if (im == null)
+            return this;
+
+        ItemMeta meta = is.getItemMeta();
+        BlockStateMeta bsm = (BlockStateMeta) meta;
+        BlockState bs = bsm.getBlockState();
+
+        CreatureSpawner cs = (CreatureSpawner)bs;
+        cs.setSpawnedType(entityType);
+        bsm.setBlockState(bs);
+        is.setItemMeta(meta);
         return this;
     }
 

@@ -1,13 +1,8 @@
 package sk.westland.core.services;
 
-import com.gmail.chickenpowerrr.ranksync.api.bot.Bot;
-import com.gmail.chickenpowerrr.ranksync.api.data.Properties;
-import com.gmail.chickenpowerrr.ranksync.discord.bot.BotFactory;
-import com.gmail.chickenpowerrr.ranksync.discord.bot.DiscordBot;
-import com.gmail.chickenpowerrr.ranksync.lib.jda.jda.api.EmbedBuilder;
-import com.gmail.chickenpowerrr.ranksync.lib.jda.jda.api.JDA;
-import com.gmail.chickenpowerrr.ranksync.lib.jda.jda.api.OnlineStatus;
-import com.gmail.chickenpowerrr.ranksync.lib.jda.jda.api.entities.*;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.*;
 import net.minecraft.server.v1_16_R3.MinecraftServer;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
@@ -15,24 +10,24 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.server.PluginDisableEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import sk.westland.core.WestLand;
 import sk.westland.core.database.player.UserDataRepository;
 import sk.westland.core.discord.CommandRegister;
 import sk.westland.core.event.PluginEnableEvent;
+import sk.westland.core.event.ServerDisableEvent;
 import sk.westland.core.utils.RunnableDelay;
+import sk.westland.core.utils.RunnableHelper;
 
 import java.awt.*;
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class DiscordService implements Listener, Runnable {
@@ -42,8 +37,8 @@ public class DiscordService implements Listener, Runnable {
 
     private JDA jda;
     private Guild guild;
+    private Thread thread;
 
-    private GuildChannel statusChannel;
     private GuildChannel infoStatusChannel;
 
     private CommandRegister commandRegister = null;
@@ -53,14 +48,22 @@ public class DiscordService implements Listener, Runnable {
     private final long startTime = System.currentTimeMillis();
     private final DateFormat dateFormat = new SimpleDateFormat("HH:mm");
 
-    @EventHandler(ignoreCancelled = true)
-    @SuppressWarnings("unchecked")
-    private void onPluginEnable(PluginEnableEvent event) throws NoSuchFieldException, IllegalAccessException {
+    @EventHandler
+    private void onPluginEnable(PluginEnableEvent event) {
+        RunnableHelper.runTaskLaterAsynchronously(()-> {
+            jda = WestLand.getDiscordHandler().getJda();
+
+            guild = jda.getGuildById("796403023681290251");
+            infoStatusChannel = guild.getGuildChannelById("809460405935407175");
+            task = Bukkit.getScheduler().runTaskTimerAsynchronously(WestLand.getInstance(), this, RunnableDelay.DELAY(), 20*20L);
+
+        }, 20*20L);
+/*
         new BukkitRunnable() {
             @Override
             public void run() {
                 Field field = null;
-                Optional<Bot> botOptional = null;
+                Optional<Bot> botOptional = Optional.empty();
                 try {
                     field = BotFactory.class.getDeclaredField("botCache");
                     field.setAccessible(true);
@@ -78,8 +81,8 @@ public class DiscordService implements Listener, Runnable {
                     throw new NullPointerException("Discord bot service, bot is null from reflection.");
                 DiscordBot discordBot = (DiscordBot) botOptional.get();
 
-                guild = discordBot.getGuild();
-                jda = discordBot.getGuild().getJDA();
+              //  guild = discordBot.getGuild();
+               // jda = discordBot.getGuild().getJDA();
 
                 //commandRegister = new CommandRegister();
                 //jda.addEventListener(commandRegister);
@@ -87,21 +90,18 @@ public class DiscordService implements Listener, Runnable {
                 jda.getPresence().setPresence(OnlineStatus.ONLINE, Activity.playing("play.westland.sk"));
 
                 //statusChannel = guild.getGuildChannelById("808801609106194462");
-                infoStatusChannel = guild.getGuildChannelById("809460405935407175");
+
 
             }
-        }.runTaskAsynchronously(WestLand.getInstance());
-
-        Bukkit.getScheduler().runTaskTimerAsynchronously(WestLand.getInstance(), this, RunnableDelay.DELAY(), 20*20L);
-    }
+        };//.runTaskAsynchronously(WestLand.getInstance());
+*/
+            }
 
     @EventHandler
-    private void onPluginDisable(PluginDisableEvent event) {
-        if(!event.getPlugin().getName().equalsIgnoreCase("westland"))
-            return;
+    private void onPluginDisable(ServerDisableEvent event) {
 
         serverStatus = ServerStatus.OFFLINE;
-        this.run();
+        //this.run();
 
         if(commandRegister == null)
             return;
@@ -113,7 +113,6 @@ public class DiscordService implements Listener, Runnable {
         //statusChannel.getManager().setName("Server is offline").complete();
         pluginDisable();
 
-        statusChannel = null;
         jda = null;
         guild = null;
 
@@ -124,20 +123,19 @@ public class DiscordService implements Listener, Runnable {
         run();
     }
 
-    @EventHandler
+   @EventHandler
     private void playerQuitEvent(PlayerQuitEvent event) {
         run();
-    }
-
-    private void discordStatus() {
-
     }
 
     @Override
     public void run() {
         if(infoStatusChannel == null) {
-            Bukkit.getLogger().warning("Channel already doesnt exist.");
-            task.cancel();
+            if(task != null) {
+                task.cancel();
+
+                Bukkit.getLogger().warning("Channel already doesnt exist.");
+            }
             return;
         }
 

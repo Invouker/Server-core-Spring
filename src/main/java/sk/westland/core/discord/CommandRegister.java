@@ -1,16 +1,17 @@
 package sk.westland.core.discord;
 
 
-import com.gmail.chickenpowerrr.ranksync.lib.jda.jda.api.Permission;
-import com.gmail.chickenpowerrr.ranksync.lib.jda.jda.api.events.message.MessageReceivedEvent;
-import com.gmail.chickenpowerrr.ranksync.lib.jda.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.reflections.Reflections;
-import org.reflections.scanners.MethodAnnotationsScanner;
+import sk.westland.core.utils.RunnableHelper;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -18,13 +19,16 @@ public class CommandRegister extends ListenerAdapter {
 
     private final List<Method> registerCommands = new ArrayList<>();
 
-    public CommandRegister() {
-        Reflections reflections = new Reflections("sk.westland.world.commands.discord", new MethodAnnotationsScanner());
-        Set<Method> methods = reflections.getMethodsAnnotatedWith(Command.class);
-        if(methods == null)
-            return;
+    public void CommandRegisters() {
+        RunnableHelper.runTaskLater(()-> {
+            registerCommands.addAll(scanForMethods());
+        }, 10L);
+    }
 
-        registerCommands.addAll(methods);
+    private List<Method> scanForMethods() {
+        Reflections reflections = new Reflections("sk.westland.world.commands.discord");
+        Set<Method> methods = reflections.getMethodsAnnotatedWith(Command.class);
+        return new ArrayList<>(methods);
     }
 
     @Override
@@ -93,10 +97,26 @@ public class CommandRegister extends ListenerAdapter {
                     event.getChannel().sendMessage(stringBuilder.toString()).queue();
                     return;
                 }
+                if(finalArgs == null){
+                    finalArgs = new String[0];
+                }
 
+                if(finalArg == null) {
+                    finalArg = "";
+                }
+                System.out.println(event.getAuthor().getName() + "," +
+                        commandName.toString() + "," +
+                        Arrays.toString(finalArgs) + "," +
+                        finalArg.toString());
                 method.setAccessible(true);
                 try {
-                    method.invoke(method.getDeclaringClass().getConstructors()[0].newInstance(), event.getAuthor(), commandName, finalArgs, finalArg, event);
+                    method.invoke(
+                            method.getDeclaringClass().getConstructors()[0].newInstance(),
+                            event.getAuthor(),
+                            commandName,
+                            finalArgs,
+                            finalArg,
+                            event);
                 } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
                     e.printStackTrace();
                 }

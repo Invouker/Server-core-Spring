@@ -251,7 +251,7 @@ public class PMoneyCommands implements Runnable {
         }
 
         private boolean runOffline(String targetPlayer, MoneyType moneyType, int amount) {
-            Optional<UserData> userDataOptional = userDataRepository.findByUserName(targetPlayer);
+            Optional<UserData> userDataOptional =userDataRepository.findByUserName(targetPlayer);
             if(!userDataOptional.isPresent()) {
                 ChatInfo.ERROR.sendAdmin("Hráč " + targetPlayer + " nebol najdený v DB a tak mu neboli pripočítané " + moneyType.name() + "!");
                 return false;

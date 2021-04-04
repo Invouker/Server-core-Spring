@@ -28,22 +28,9 @@ public class ChatMinigame implements Listener, Runnable {
     @Autowired
     private PlayerService playerService;
 
-    char[] alphabet = "abcdefghijklmnopqrstuvwxyz123456789".toCharArray();
     private static String guessWhat = null;
     private static boolean isRunning = false;
     private BukkitTask task;
-
-    private String getStringOfRandomChars(int length) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < length; i++) {
-            stringBuilder.append(
-                    Utils.BaseMath.getRandomBoolean() ?
-                            alphabet[Utils.BaseMath.getRandomInt(alphabet.length-1)] :
-                            Character.toUpperCase(alphabet[Utils.BaseMath.getRandomInt(alphabet.length-1)])
-            );
-        }
-        return stringBuilder.toString();
-    }
 
     public ChatMinigame() {
         Bukkit.getScheduler().runTaskTimer(WestLand.getInstance(), () -> {
@@ -52,7 +39,7 @@ public class ChatMinigame implements Listener, Runnable {
                 return;
 
             isRunning = true;
-            guessWhat = getStringOfRandomChars(Utils.BaseMath.getRandomMinMaxInt(6, 10));
+            guessWhat = Utils.generateRandomChars(Utils.BaseMath.getRandomMinMaxInt(6, 10));
             ChatInfo.GENERAL_INFO.sendAll("Kto ako prvý napíše §6" + guessWhat + "§f vyhrá odmenu!");
 
             Bukkit.getOnlinePlayers().stream()

@@ -9,9 +9,15 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.StringUtils;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import sk.westland.core.items.ItemBuilder;
 
+import java.util.Locale;
 import java.util.Random;
 
 public class Utils {
@@ -70,6 +76,38 @@ public class Utils {
         }
 
         return true;
+    }
+
+    private static final char[] alphabet = "abcdefghijklmnopqrstuvwxyz123456789".toCharArray();
+
+    public static String generateRandomChars(int length) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            stringBuilder.append(
+                    Utils.BaseMath.getRandomBoolean() ?
+                            alphabet[Utils.BaseMath.getRandomInt(alphabet.length-1)] :
+                            Character.toUpperCase(alphabet[Utils.BaseMath.getRandomInt(alphabet.length-1)])
+            );
+        }
+        return stringBuilder.toString();
+    }
+
+    public static void addPlayerSpawner(Player player, EntityType entityType) {
+        addPlayerSpawner(player, entityType, 1);
+    }
+
+    public static void addPlayerSpawner(Player player, EntityType entityType, int amount) {
+        String name = entityType.toString().replace("_", " ").toLowerCase(Locale.ROOT);
+        String capitalizedName = StringUtils.capitalize(name);
+        ItemStack spawner = new ItemBuilder(Material.SPAWNER)
+                .setName("§e" + capitalizedName + " Spawner")
+                .setLore("",
+                        "§aPolož spawner kliknutím na zem!")
+                .setSpawnerType(entityType)
+                .setAmount(amount)
+                .build();
+
+        player.getInventory().addItem(spawner);
     }
 
     public static class BaseMath {

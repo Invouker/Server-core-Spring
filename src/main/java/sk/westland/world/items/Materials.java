@@ -12,6 +12,7 @@ import sk.westland.world.items.blocks.WorthChestItem;
 import sk.westland.world.items.resources.CopperDust;
 import sk.westland.world.items.resources.CopperIngot;
 import sk.westland.world.items.resources.IronRod;
+import sk.westland.world.items.spawners.MagicSpawner1;
 import sk.westland.world.items.tools.*;
 
 public class Materials {
@@ -29,7 +30,8 @@ public class Materials {
         WORTH_CHEST(new WorthChestItem(), null),
         MOB_GRINDER(new BlockMobGrinderItem(), null),
 
-        SADDLE_ITEM(null, new SaddleItem());
+        SADDLE_ITEM(null, new SaddleItem()),
+        MAGIC_SPAWNER1(null, new MagicSpawner1());
 
         private Craftable craftable;
         private CustomItem customItem;

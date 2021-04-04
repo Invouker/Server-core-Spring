@@ -11,9 +11,30 @@ public class RankData {
     private long id;
 
     private long playerId;
-    private String uuid;
+    private String discordUuid;
+    private boolean isSynced = false;
 
     public RankData() {
+    }
+
+    public RankData(long playerId, String discordUuid) {
+        this.playerId = playerId;
+        this.discordUuid = discordUuid;
+        this.isSynced = false;
+    }
+
+    public RankData(long playerId, String discordUuid, boolean isSynced) {
+        this.playerId = playerId;
+        this.discordUuid = discordUuid;
+        this.isSynced = isSynced;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public long getPlayerId() {
@@ -24,11 +45,19 @@ public class RankData {
         this.playerId = playerId;
     }
 
-    public String getUuid() {
-        return uuid;
+    public String getDiscordUuid() {
+        return discordUuid;
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public void setDiscordUuid(String discordUuid) {
+        this.discordUuid = discordUuid;
+    }
+
+    public boolean isSynced() {
+        return isSynced;
+    }
+
+    public void setSynced(boolean synced) {
+        isSynced = synced;
     }
 }

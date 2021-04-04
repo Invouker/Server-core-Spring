@@ -21,6 +21,9 @@ public class Application {
     public VaultService permissionService() { return new VaultService(); }
 
     @Bean
+    public APIServices apiServices() { return new APIServices(); }
+
+    @Bean
     public ItemInteractionService itemInteractionService() { return new ItemInteractionService(); }
 
     @Bean
@@ -37,9 +40,6 @@ public class Application {
 
     @Bean
     public DiscordService discordService() { return new DiscordService(); }
-
-    @Bean
-    public APIServices apiServices() { return new APIServices(); }
 
     @Bean
     public ServerDataService serverDataService() { return new ServerDataService(); }

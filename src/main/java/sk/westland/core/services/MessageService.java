@@ -71,7 +71,7 @@ public class MessageService implements Listener{
 
         String message = event.getMessage();
         if(message.startsWith("!") || isPlayerInAdminChat(player)) {
-            String adminChat = "";
+            String adminChat = message;
 
             if(message.startsWith("!"))
                 adminChat = message.substring(1);

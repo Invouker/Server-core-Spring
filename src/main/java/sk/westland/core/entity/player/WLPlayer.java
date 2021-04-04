@@ -59,6 +59,10 @@ public class WLPlayer  {
 
     /////
 
+    public long getPlayerId() {
+        return userData.getId();
+    }
+
     public UserData getUserData() {
         return userData;
     }

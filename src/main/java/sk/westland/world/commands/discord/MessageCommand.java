@@ -1,8 +1,9 @@
 package sk.westland.world.commands.discord;
 
-import com.gmail.chickenpowerrr.ranksync.lib.jda.jda.api.entities.TextChannel;
-import com.gmail.chickenpowerrr.ranksync.lib.jda.jda.api.entities.User;
-import com.gmail.chickenpowerrr.ranksync.lib.jda.jda.api.events.message.MessageReceivedEvent;
+
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import sk.westland.core.discord.Command;
 import sk.westland.core.discord.ICommand;
 
