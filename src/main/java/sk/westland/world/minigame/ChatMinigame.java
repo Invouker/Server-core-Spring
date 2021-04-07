@@ -43,6 +43,7 @@ public class ChatMinigame implements Listener, Runnable {
             ChatInfo.GENERAL_INFO.sendAll("Kto ako prvý napíše §6" + guessWhat + "§f vyhrá odmenu!");
 
             Bukkit.getOnlinePlayers().stream()
+                    .filter((player) -> playerService.getWLPlayer(player) != null)
                     .filter((player) -> playerService.getWLPlayer(player).getPlayerOptions().isChatReactionSound())
                     .forEach(player -> Utils.playSound(player, Sound.ENTITY_PUFFER_FISH_BLOW_UP));
            // Utils.playSound(Sound.ENTITY_PUFFER_FISH_BLOW_UP);

@@ -1,7 +1,6 @@
 package sk.westland.world.items.blocks;
 
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -10,7 +9,6 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.springframework.stereotype.Component;
 import sk.westland.core.WestLand;
 import sk.westland.core.blocks.BlockLevel;
@@ -24,14 +22,10 @@ import sk.westland.world.blocks.type.MobGrinder;
 public class BlockMobGrinderItem extends CustomItem implements Craftable, Listener {
 
     @Override
-    public NamespacedKey getNamespacedKey(Plugin plugin) {
-        return new NamespacedKey(plugin, "mobGrinder");
-    }
-
-    @Override
-    public CraftingRecipe getCraftingRecipe(Plugin plugin) {
-        return new CraftingRecipe(getNamespacedKey(plugin), RecipeType.Block, getItem())
-                .shape("SSS", "   ", "SSS")
+    public CraftingRecipe getCraftingRecipe() {
+        return new CraftingRecipe(itemID(), RecipeType.Block, getItem())
+                .shape("SSS", "AAA", "SSS")
+                .setIngredient('A', Material.AIR)
                 .setIngredient('S', Material.ICE);
     }
 
@@ -57,7 +51,7 @@ public class BlockMobGrinderItem extends CustomItem implements Craftable, Listen
 
     @Override
     protected void onPluginEnable(PluginEnableEvent event) {
-        getCraftingRecipe(WestLand.getInstance()).register();
+        recipeService.registerRecipe(getCraftingRecipe());
     }
 
     @Override

@@ -25,10 +25,7 @@ import sk.westland.core.database.data.BlockData;
 import sk.westland.core.database.data.BlockDataRepository;
 import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.utils.RunnableDelay;
-import sk.westland.world.blocks.type.BlockBreaker;
-import sk.westland.world.blocks.type.BlockPlacer;
-import sk.westland.world.blocks.type.MobGrinder;
-import sk.westland.world.blocks.type.WorthChest;
+import sk.westland.world.blocks.type.*;
 
 import java.util.*;
 
@@ -103,6 +100,10 @@ public class BlockService implements Listener {
                 }
                 case MOB_GRINDER: {
                     block = new MobGrinder(blockData.getOwnerName(), blockData.getOwnerUUID(), blockData.getBlockLocation(), blockData.getBlockLevel(), blockData, this);
+                    break;
+                }
+                case CHUNK_COLLECTOR: {
+                    block = new ChunkCollector(blockData.getOwnerName(), blockData.getOwnerUUID(), blockData.getBlockLocation(), blockData.getBlockLevel(), blockData, this);
                     break;
                 }
             }

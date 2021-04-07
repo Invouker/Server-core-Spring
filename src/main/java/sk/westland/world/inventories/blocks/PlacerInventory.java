@@ -7,6 +7,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import sk.westland.core.blocks.BlockLevel;
 import sk.westland.core.blocks.CustomBlock;
 import sk.westland.core.inventory.NCCustomInventory;
 import sk.westland.core.services.BlockService;
@@ -20,8 +21,8 @@ public class PlacerInventory extends NCCustomInventory {
 
     private static final int[] BLOCK_POSITION = new int[] { 10,11,12, 19,20,21,  28,29,30 };
 
-    public PlacerInventory(BlockService blockService, CustomBlock customBlock) {
-        super(Type.Chest5, "Block placer");
+    public PlacerInventory(BlockService blockService, CustomBlock customBlock, BlockLevel blockLevel) {
+        super(Type.Chest5, "Block placer " + blockLevel.getRomaCode());
         this.blockService = blockService;
         this.customBlock = customBlock;
     }

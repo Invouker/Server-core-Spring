@@ -3,8 +3,8 @@ package sk.westland.world.commands.discord;
 
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import sk.westland.core.discord.Command;
-import sk.westland.core.discord.ICommand;
+import sk.westland.discord.commands.Command;
+import sk.westland.discord.commands.ICommand;
 
 public class TestCommand implements ICommand {
 

@@ -47,4 +47,7 @@ public class Application {
     @Bean
     public ScoreboardService scoreboardService() { return new ScoreboardService(); }
 
+    @Bean
+    public VoteParty voteParty() { return new VoteParty(); }
+
 }

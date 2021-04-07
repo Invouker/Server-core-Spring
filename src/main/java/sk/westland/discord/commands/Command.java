@@ -1,4 +1,4 @@
-package sk.westland.core.discord;
+package sk.westland.discord.commands;
 
 
 import net.dv8tion.jda.api.Permission;

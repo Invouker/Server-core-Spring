@@ -1,10 +1,7 @@
 package sk.westland.core.blocks;
 
 import org.bukkit.Material;
-import sk.westland.world.blocks.type.BlockBreaker;
-import sk.westland.world.blocks.type.BlockPlacer;
-import sk.westland.world.blocks.type.MobGrinder;
-import sk.westland.world.blocks.type.WorthChest;
+import sk.westland.world.blocks.type.*;
 
 public enum BlockType {
 
@@ -12,6 +9,7 @@ public enum BlockType {
     BLOCK_BREAKER(1, Material.DROPPER, BlockBreaker.class),
     MOB_GRINDER(2, Material.DROPPER, MobGrinder.class),
     WORTH_CHEST(3, Material.CHEST, WorthChest.class),
+    CHUNK_COLLECTOR(3, Material.CHEST, ChunkCollector.class),
     //MINER(3, Material.CHEST),
     //ANIMAL_BREEDER(4, Material.DISPENSER),
             ;

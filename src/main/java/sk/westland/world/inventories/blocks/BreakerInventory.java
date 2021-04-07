@@ -7,6 +7,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import sk.westland.core.blocks.BlockLevel;
 import sk.westland.core.blocks.CustomBlock;
 import sk.westland.core.inventory.NCCustomInventory;
 import sk.westland.core.services.BlockService;
@@ -20,8 +21,8 @@ public class BreakerInventory extends NCCustomInventory {
 
     private static final int[] BLOCK_POSITION = new int[] { 13 }; // BlockBreak.java breakNaturally
 
-    public BreakerInventory(BlockService blockService, CustomBlock customBlock) {
-        super(Type.Chest3, "Block breaker");
+    public BreakerInventory(BlockService blockService, CustomBlock customBlock, BlockLevel blockLevel) {
+        super(Type.Chest3, "Block breaker " + blockLevel.getRomaCode());
         this.blockService = blockService;
         this.customBlock = customBlock;
     }

@@ -6,7 +6,6 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import sk.westland.core.WestLand;
 import sk.westland.core.database.player.PlayerData;
 import sk.westland.core.database.player.PlayerOptions;
 import sk.westland.core.database.player.UserData;
@@ -188,8 +187,8 @@ public class WLPlayer  {
     }
 
     public void uncraftingRecipe(Materials.Items items) {
-        this.getKnownCraftingRecipes().remove(items.getCraftable().getNamespacedKey(WestLand.getInstance()).getKey().toLowerCase());
-        this.getPlayer().undiscoverRecipe(items.getCraftable().getNamespacedKey(WestLand.getInstance()));
+        this.getKnownCraftingRecipes().remove(items.getCraftable().getCraftingRecipe().getNamespacedKey().getKey().toLowerCase());
+        this.getPlayer().undiscoverRecipe(items.getCraftable().getCraftingRecipe().getNamespacedKey());
     }
 
     public void discoverRecipe(String items) {
@@ -197,8 +196,8 @@ public class WLPlayer  {
     }
 
     public void discoverRecipe(Materials.Items items) {
-        this.getKnownCraftingRecipes().add(items.getCraftable().getNamespacedKey(WestLand.getInstance()).getKey().toLowerCase());
-        this.getPlayer().discoverRecipe(items.getCraftable().getNamespacedKey(WestLand.getInstance()));
+        this.getKnownCraftingRecipes().add(items.getCraftable().getCraftingRecipe().getNamespacedKey().getKey().toLowerCase());
+        this.getPlayer().discoverRecipe(items.getCraftable().getCraftingRecipe().getNamespacedKey());
     }
 
     public boolean hasDiscovered(String items) {
@@ -209,7 +208,7 @@ public class WLPlayer  {
         if(!items.isCraftable())
             throw new IllegalArgumentException("Item " + items.getItem().getItemMeta().getDisplayName() + " cannot be as a discovered recipe!");
 
-        return this.getKnownCraftingRecipes().contains(items.getCraftable().getNamespacedKey(WestLand.getInstance()).getKey());
+        return this.getKnownCraftingRecipes().contains(items.getCraftable().getCraftingRecipe().getNamespacedKey().getKey());
     }
 
     public List<String> getKnownCraftingRecipes() {

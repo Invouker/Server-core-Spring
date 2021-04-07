@@ -18,7 +18,7 @@ import sk.westland.core.items.ItemBuilder;
 import sk.westland.core.utils.Utils;
 
 @Component
-public class MagicSpawner1 extends CustomItem implements Listener {
+public class MagicSpawner extends CustomItem implements Listener {
 
     @Override
     public ItemStack getItem() {
@@ -54,9 +54,7 @@ public class MagicSpawner1 extends CustomItem implements Listener {
     }
 
     @Override
-    protected void onPluginEnable(PluginEnableEvent event) {
-
-    }
+    protected void onPluginEnable(PluginEnableEvent event) { }
 
     @Override
     protected void onPlayerInteractWithItem(PlayerInteractEvent event) {

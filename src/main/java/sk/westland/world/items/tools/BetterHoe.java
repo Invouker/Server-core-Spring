@@ -1,6 +1,9 @@
 package sk.westland.world.items.tools;
 
-import org.bukkit.*;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
 import org.bukkit.block.data.BlockData;
@@ -11,9 +14,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.springframework.stereotype.Component;
-import sk.westland.core.WestLand;
 import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.event.player.WLPlayerDamageEvent;
 import sk.westland.core.items.*;
@@ -23,14 +24,11 @@ import sk.westland.core.utils.Utils;
 public class BetterHoe extends CustomItem implements Listener, Craftable {
 
     @Override
-    public NamespacedKey getNamespacedKey(Plugin plugin) {
-        return new NamespacedKey(plugin, "betterHoe");
-    }
+    public CraftingRecipe getCraftingRecipe() {
 
-    @Override
-    public CraftingRecipe getCraftingRecipe(Plugin plugin) {
-        return new CraftingRecipe(getNamespacedKey(plugin), RecipeType.Block, getItem())
-                .shape(" S ", " S ", " S ")
+        return new CraftingRecipe(itemID(), RecipeType.Block, getItem())
+                .shape("ASA", "SAS", "AAS")
+                .setIngredient('A', Material.AIR)
                 .setIngredient('S', Material.COBBLESTONE);
     }
 
@@ -56,7 +54,7 @@ public class BetterHoe extends CustomItem implements Listener, Craftable {
 
     @Override
     protected void onPluginEnable(PluginEnableEvent event) {
-        getCraftingRecipe(WestLand.getInstance()).register();
+        recipeService.registerRecipe(getCraftingRecipe());
     }
 
     @Override
@@ -156,22 +154,14 @@ public class BetterHoe extends CustomItem implements Listener, Craftable {
     }
 
     @Override
-    protected void onPlayerDamageWithItem(WLPlayerDamageEvent event) {
-
-    }
+    protected void onPlayerDamageWithItem(WLPlayerDamageEvent event) { }
 
     @Override
-    protected void onPlayerInteractAtEntityWithItem(PlayerInteractAtEntityEvent event) {
-
-    }
+    protected void onPlayerInteractAtEntityWithItem(PlayerInteractAtEntityEvent event) { }
 
     @Override
-    protected void onPlayerBlockPlace(BlockPlaceEvent event) {
-
-    }
+    protected void onPlayerBlockPlace(BlockPlaceEvent event) { }
 
     @Override
-    protected void onPlayerBlockBreak(BlockBreakEvent event) {
-
-    }
+    protected void onPlayerBlockBreak(BlockBreakEvent event) { }
 }

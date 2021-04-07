@@ -10,7 +10,6 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -19,10 +18,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.MetadataValue;
-import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.springframework.stereotype.Component;
 import sk.westland.core.WestLand;
 import sk.westland.core.event.PluginEnableEvent;
@@ -35,17 +31,13 @@ import java.util.List;
 @Component
 public class Hammer extends CustomItem implements Listener, Craftable {
 
-    private static final String METADATA_KEY = "last_dig_direction";
+    private final String METADATA_KEY = "last_dig_direction";
 
     @Override
-    public NamespacedKey getNamespacedKey(Plugin plugin) {
-        return new NamespacedKey(plugin, "hammer");
-    }
-
-    @Override
-    public CraftingRecipe getCraftingRecipe(Plugin plugin) {
-        return new CraftingRecipe(getNamespacedKey(plugin), RecipeType.Block, getItem())
-                .shape(" S ", "SSS", " S ")
+    public CraftingRecipe getCraftingRecipe() {
+        return new CraftingRecipe(itemID(), RecipeType.Block, getItem())
+                .shape("ASA", "SSS", "AAS")
+                .setIngredient('A', Material.AIR)
                 .setIngredient('S', Material.STONE);
     }
 
@@ -71,7 +63,7 @@ public class Hammer extends CustomItem implements Listener, Craftable {
 
     @Override
     protected void onPluginEnable(PluginEnableEvent event) {
-        getCraftingRecipe(WestLand.getInstance()).register();
+        recipeService.registerRecipe(getCraftingRecipe());
 
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
         protocolManager.addPacketListener(new PacketAdapter(WestLand.getInstance(),
@@ -85,65 +77,7 @@ public class Hammer extends CustomItem implements Listener, Craftable {
                 if (packetEvent.getPacketType() == PacketType.Play.Client.BLOCK_DIG) {
                     PacketContainer packetContainer = packetEvent.getPacket();
 
-                    packetEvent.getPlayer().setMetadata(METADATA_KEY, new MetadataValue() {
-                        @Nullable
-                        @Override
-                        public Object value() {
-                            return packetContainer.getDirections().read(0);
-                        }
-
-                        @Override
-                        public int asInt() {
-                            return 0;
-                        }
-
-                        @Override
-                        public float asFloat() {
-                            return 0;
-                        }
-
-                        @Override
-                        public double asDouble() {
-                            return 0;
-                        }
-
-                        @Override
-                        public long asLong() {
-                            return 0;
-                        }
-
-                        @Override
-                        public short asShort() {
-                            return 0;
-                        }
-
-                        @Override
-                        public byte asByte() {
-                            return 0;
-                        }
-
-                        @Override
-                        public boolean asBoolean() {
-                            return false;
-                        }
-
-                        @NotNull
-                        @Override
-                        public String asString() {
-                            return packetContainer.getDirections().read(0).toString();
-                        }
-
-                        @Nullable
-                        @Override
-                        public Plugin getOwningPlugin() {
-                            return WestLand.getInstance();
-                        }
-
-                        @Override
-                        public void invalidate() {
-
-                        }
-
+                    packetEvent.getPlayer().setMetadata(METADATA_KEY, new FixedMetadataValue(event.getWestLand(), packetContainer.getDirections().read(0)) {
 
                     });
                 }
@@ -154,7 +88,7 @@ public class Hammer extends CustomItem implements Listener, Craftable {
     @Override
     protected void onPlayerBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
-        EnumWrappers.Direction direction = EnumWrappers.Direction.valueOf(player.getMetadata(METADATA_KEY).get(0).asString());
+        EnumWrappers.Direction direction = EnumWrappers.Direction.valueOf((String) player.getMetadata(METADATA_KEY).get(0).value());
 
         if(direction == null)
             return;

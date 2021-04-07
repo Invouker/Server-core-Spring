@@ -13,7 +13,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
@@ -27,10 +26,7 @@ import sk.westland.core.event.player.WLPlayerJoinEvent;
 import sk.westland.core.items.CraftingRecipe;
 import sk.westland.world.items.Materials;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class RecipeService implements Listener {
@@ -38,16 +34,17 @@ public class RecipeService implements Listener {
     @Autowired
     private PlayerService playerService;
 
-    private Map<String, CraftingRecipe> craftingRecipes = new HashMap<>();
-    private List<FurnaceRecipe> furnaceRecipes = new ArrayList<>();
+    private static final Set<CraftingRecipe> craftingRecipes = new HashSet<>();
+    private final List<FurnaceRecipe> furnaceRecipes = new ArrayList<>();
 
     @EventHandler(priority = EventPriority.LOWEST)
     private void onPluginInit(PluginEnableEvent event) {
        Bukkit.getScheduler().runTaskLater(WestLand.getInstance(), ()->{
-           if (!(craftingRecipes == null && craftingRecipes.isEmpty()))
-               craftingRecipes.forEach((name, craftingRecipe) -> craftingRecipe.register());
+           Bukkit.getLogger().info("Registring WestLand recipes!");
+           if (!craftingRecipes.isEmpty())
+               craftingRecipes.forEach(CraftingRecipe::register);
 
-           if (!(furnaceRecipes == null && furnaceRecipes.isEmpty()))
+           if (!furnaceRecipes.isEmpty())
                furnaceRecipes.forEach((furnaceRecipe) ->  {
                    NamespacedKey namespacedKey = furnaceRecipe.getKey();
                    if(Bukkit.getRecipe(namespacedKey) != null) {
@@ -55,14 +52,8 @@ public class RecipeService implements Listener {
                    }
 
                    Bukkit.addRecipe(furnaceRecipe);
-               }
-
-              );
-       }, 40l);
-    }
-
-    public Map<String, CraftingRecipe> getCraftingRecipes() {
-        return craftingRecipes;
+               });
+       }, 20*2L);
     }
 
     public RecipeChoice item(ItemStack itemStack) {
@@ -79,7 +70,7 @@ public class RecipeService implements Listener {
 
     // Register before the server start...
     public void registerRecipe(CraftingRecipe craftingRecipe) {
-        craftingRecipes.putIfAbsent(craftingRecipe.getNamespacedKey().getKey(), craftingRecipe);
+        craftingRecipes.add(craftingRecipe);
     }
 
     private void clearRecipes(Player player) {
@@ -107,7 +98,8 @@ public class RecipeService implements Listener {
                     if (craftingRecipes == null)
                         continue;
 
-                    CraftingRecipe unlockingRecipe = craftingRecipes.get(((Keyed) recipe).getKey().getKey());
+
+                    CraftingRecipe unlockingRecipe = null;//craftingRecipes.get(((Keyed) recipe).getKey().getKey());
                     if (unlockingRecipe == null || unlockingRecipe.getNamespacedKey() == null)
                         continue;
 
@@ -118,12 +110,6 @@ public class RecipeService implements Listener {
         }
     }
 
-    @EventHandler(ignoreCancelled = true)
-    private void onPlayerJoin(PlayerJoinEvent event) {
-        clearRecipes(event.getPlayer());
-    }
-
-
     @EventHandler
     private void onPlayerRoleSelect(WLPlayerJoinEvent event) {
         WLPlayer wlPlayer = event.getWlPlayer();
@@ -133,7 +119,7 @@ public class RecipeService implements Listener {
             return;
 
         wlPlayer.getCraftingRecipes().forEach((nameKey) ->
-                getCraftingRecipes().forEach((name, craftingRecipe) -> {
+                craftingRecipes.forEach((craftingRecipe) -> {
                     if (craftingRecipe.getNamespacedKey().getKey().equals(nameKey))
                         wlPlayer.getPlayer().discoverRecipe(craftingRecipe.getNamespacedKey());
         }));

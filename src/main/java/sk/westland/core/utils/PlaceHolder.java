@@ -4,8 +4,11 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import sk.westland.core.enums.EPlayerOptions;
+import sk.westland.core.enums.EServerData;
 import sk.westland.core.services.PlayerService;
 import sk.westland.core.services.ScoreboardService;
+import sk.westland.core.services.ServerDataService;
+import sk.westland.core.services.VoteParty;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -16,11 +19,13 @@ public class PlaceHolder extends PlaceholderExpansion {
     private Plugin plugin;
     private PlayerService playerService;
     private ScoreboardService scoreboardService;
+    private ServerDataService serverDataService;
 
-    public PlaceHolder(Plugin plugin, PlayerService playerService, ScoreboardService scoreboardService) {
+    public PlaceHolder(Plugin plugin, PlayerService playerService, ScoreboardService scoreboardService, ServerDataService serverDataService) {
         this.plugin = plugin;
         this.playerService = playerService;
         this.scoreboardService = scoreboardService;
+        this.serverDataService = serverDataService;
     }
 
 
@@ -96,6 +101,23 @@ public class PlaceHolder extends PlaceholderExpansion {
         // %westland_shards%
         if(identifier.equalsIgnoreCase("shards")) {
             return String.valueOf(playerService.getWLPlayer(player).getShards());
+        }
+
+        // %westland_votes_total%
+        if(identifier.equalsIgnoreCase("votes_total")) {
+            int totalVotes = serverDataService.getIntData(EServerData.VOTES_TOTAL);
+            return String.valueOf(totalVotes);
+        }
+
+        // %westland_voteparty_votes%
+        if(identifier.equalsIgnoreCase("voteparty_votes")) {
+            int totalVotes = serverDataService.getIntData(EServerData.VOTES_TOTAL);
+            return String.valueOf(totalVotes % VoteParty.VOTEPARTY);
+        }
+
+        // %westland_voteparty_total%
+        if(identifier.equalsIgnoreCase("voteparty_total")) {
+            return String.valueOf(VoteParty.VOTEPARTY);
         }
 
         {

@@ -1,7 +1,6 @@
 package sk.westland.world.items.blocks;
 
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -10,7 +9,6 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.springframework.stereotype.Component;
 import sk.westland.core.WestLand;
 import sk.westland.core.blocks.BlockLevel;
@@ -24,15 +22,11 @@ import sk.westland.world.blocks.type.BlockBreaker;
 public class BlockBreakerItem extends CustomItem implements Craftable, Listener {
 
     @Override
-    public NamespacedKey getNamespacedKey(Plugin plugin) {
-        return new NamespacedKey(plugin, "blockBreaker");
-    }
-
-    @Override
-    public CraftingRecipe getCraftingRecipe(Plugin plugin) {
-        return new CraftingRecipe(getNamespacedKey(plugin), RecipeType.Block, getItem())
-                .shape("SSS", "   ", "SSS")
-                .setIngredient('S', Material.STONE);
+    public CraftingRecipe getCraftingRecipe() {
+        return new CraftingRecipe(itemID(), RecipeType.Block, getItem())
+                .shape("SSS", "AAA", "SSS")
+                .setIngredient('S', Material.STONE)
+                .setIngredient('A', Material.AIR);
     }
 
     @Override
@@ -55,13 +49,9 @@ public class BlockBreakerItem extends CustomItem implements Craftable, Listener 
         return "blockBreakerItem";
     }
 
-    @Override
-    protected void onPluginEnable(PluginEnableEvent event) {
-        getCraftingRecipe(WestLand.getInstance()).register();
-    }
 
     @Override
-    protected void onPlayerBlockPlace(BlockPlaceEvent event) {
+    public void onPlayerBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
         Block block = event.getBlock();
 
@@ -71,14 +61,20 @@ public class BlockBreakerItem extends CustomItem implements Craftable, Listener 
     }
 
     @Override
+    protected void onPluginEnable(PluginEnableEvent event) {
+        recipeService.registerRecipe(getCraftingRecipe());
+    }
+
+    @Override
+    protected void onPlayerBlockBreak(BlockBreakEvent event) { }
+
+    @Override
     protected void onPlayerInteractWithItem(PlayerInteractEvent event) { }
 
     @Override
     protected void onPlayerDamageWithItem(WLPlayerDamageEvent event) { }
 
     @Override
-    protected void onPlayerInteractAtEntityWithItem(PlayerInteractAtEntityEvent event) { }
+    protected void onPlayerInteractAtEntityWithItem(PlayerInteractAtEntityEvent event){}
 
-    @Override
-    protected void onPlayerBlockBreak(BlockBreakEvent event) { }
 }

@@ -82,7 +82,7 @@ public class BlockPlacer extends CustomBlock {
         event.setCancelled(true);
         event.setUseInteractedBlock(Event.Result.DENY);
 
-        PlacerInventory blockPlacerInventory = new PlacerInventory(blockService, this);
+        PlacerInventory blockPlacerInventory = new PlacerInventory(blockService, this, blockLevel);
         blockPlacerInventory.open(event.getPlayer());
     }
 

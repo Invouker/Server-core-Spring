@@ -1,25 +1,21 @@
 package sk.westland.world.items.resources;
 
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
-import sk.westland.core.WestLand;
+import org.springframework.stereotype.Component;
 import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.items.*;
 
-public class IronRod extends CustomResourceItem implements Craftable {
+@Component
+public class IronRod extends CustomResourceItem implements Craftable, Listener {
 
     @Override
-    public NamespacedKey getNamespacedKey(Plugin plugin) {
-        return new NamespacedKey(plugin, "ironRod");
-    }
-
-    @Override
-    public CraftingRecipe getCraftingRecipe(Plugin plugin) {
-        return new CraftingRecipe(getNamespacedKey(plugin), RecipeType.Item, getItem())
-                .shape("A  ", "A  ", "   ")
-                .setIngredient('A', Material.IRON_INGOT);
+    public CraftingRecipe getCraftingRecipe() {
+        return new CraftingRecipe("ironRod", RecipeType.Item, getItem())
+                .shape("IAA", "IAA", "AAA")
+                .setIngredient('A', Material.AIR)
+                .setIngredient('I', Material.IRON_INGOT);
     }
 
     @Override
@@ -36,5 +32,8 @@ public class IronRod extends CustomResourceItem implements Craftable {
     }
 
     @Override
-    protected void onPluginEnable(PluginEnableEvent event) { recipeService.registerRecipe(getCraftingRecipe(WestLand.getInstance())); }
+    protected void onPluginEnable(PluginEnableEvent event) {
+
+        recipeService.registerRecipe(getCraftingRecipe());
+    }
 }

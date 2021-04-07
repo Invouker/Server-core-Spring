@@ -7,33 +7,32 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
+import sk.westland.core.WestLand;
 
 import java.util.Objects;
 
 public class CraftingRecipe {
 
-    private NamespacedKey namespacedKey;
-    private ItemStack result;
-    private RecipeType recipeType;
+    private final NamespacedKey namespacedKey;
+    private final RecipeType recipeType;
 
     private ShapedRecipe shapedRecipe = null;
     private ShapelessRecipe shapelessRecipe = null;
     private CraftingType craftingType;
 
-    public CraftingRecipe(NamespacedKey key, RecipeType recipeType, ItemStack result, CraftingType craftingType) {
+    public CraftingRecipe(String key, RecipeType recipeType, ItemStack result, CraftingType craftingType) {
        this(key, recipeType, result);
        this.craftingType = craftingType;
     }
 
-    public CraftingRecipe(NamespacedKey key, RecipeType recipeType, ItemStack result) {
-        namespacedKey = key;
-
-        this.result = result;
+    public CraftingRecipe(String key, RecipeType recipeType, ItemStack result) {
+        namespacedKey = new NamespacedKey(WestLand.getInstance(), key);
         this.recipeType = recipeType;
 
-        craftingType = CraftingType.ShapedRecipe;
+        if(craftingType == null)
+            craftingType = CraftingType.ShapedRecipe;
+
         switch(craftingType) {
-            default:
             case ShapedRecipe: {
                 shapedRecipe = new ShapedRecipe(this.namespacedKey, result);
                 break;
@@ -62,11 +61,12 @@ public class CraftingRecipe {
     public CraftingRecipe setIngredient(char key, RecipeChoice recipeChoice) {
         switch(Objects.requireNonNull(craftingType)) {
             case ShapedRecipe: {
+                System.out.println("Key: " + key + " recipeChoice: " + recipeChoice.toString());
                 shapedRecipe.setIngredient(key, recipeChoice);
                 break;
             }
             case ShapelessRecipe: {
-                throw new IllegalArgumentException("Only shapeless recipe type can use addIngredient");
+                throw new IllegalArgumentException("Shapeless recipe type can use only addIngredient");
             }
         }
 
@@ -88,7 +88,6 @@ public class CraftingRecipe {
                 break;
             }
             case ShapelessRecipe: {
-                shapelessRecipe.addIngredient(material);
                 throw new IllegalArgumentException("Only shapeless recipe type can use addIngredient");
             }
         }
@@ -107,14 +106,14 @@ public class CraftingRecipe {
 
        switch(craftingType) {
             case ShapedRecipe: {
-                if(Bukkit.getRecipe(shapedRecipe.getKey()) != null)
+                if(shapedRecipe != null && Bukkit.getRecipe(shapedRecipe.getKey()) != null)
                     Bukkit.removeRecipe(shapedRecipe.getKey());
 
                 Bukkit.addRecipe(shapedRecipe);
                 break;
             }
             case ShapelessRecipe: {
-                if(Bukkit.getRecipe(shapelessRecipe.getKey()) != null)
+                if(shapelessRecipe != null && Bukkit.getRecipe(shapelessRecipe.getKey()) != null)
                     Bukkit.removeRecipe(shapelessRecipe.getKey());
 
                 Bukkit.addRecipe(shapelessRecipe);
@@ -125,13 +124,5 @@ public class CraftingRecipe {
 
     public NamespacedKey getNamespacedKey() {
         return namespacedKey;
-    }
-
-    public ShapedRecipe getShapedRecipe() {
-        return shapedRecipe;
-    }
-
-    public ShapelessRecipe getShapelessRecipe() {
-        return this.shapelessRecipe;
     }
 }

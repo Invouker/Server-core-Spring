@@ -2,19 +2,21 @@ package sk.westland.core.blocks;
 
 public enum BlockLevel {
 
-    UNCOMMON(0,10),
-    COMMON(1,9),
-    BASIC(2,8),
-    RARE(3,7),
-    EPIC(4,6),
-    LEGEND(5,5);
+    UNCOMMON(0,10, "I"),
+    COMMON(1,9, "II"),
+    BASIC(2,8, "III"),
+    RARE(3,7, "IV"),
+    EPIC(4,6, "V"),
+    LEGEND(5,5, "VI");
 
     private int id;
     private int cooldown;
+    private String romaCode;
 
-    BlockLevel(int id, int cooldown) {
+    BlockLevel(int id, int cooldown, String romaCode) {
         this.id = id;
         this.cooldown = cooldown;
+        this.romaCode = romaCode;
     }
 
     public int getId() {
@@ -32,5 +34,9 @@ public enum BlockLevel {
                 id = blockLevelChild.getId();
         }
         return false;
+    }
+
+    public String getRomaCode() {
+        return romaCode;
     }
 }

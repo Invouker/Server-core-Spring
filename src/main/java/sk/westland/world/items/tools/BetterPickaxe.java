@@ -2,7 +2,6 @@ package sk.westland.world.items.tools;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -10,9 +9,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.springframework.stereotype.Component;
-import sk.westland.core.WestLand;
 import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.event.player.WLPlayerDamageEvent;
 import sk.westland.core.items.*;
@@ -22,19 +19,15 @@ import sk.westland.world.items.Materials;
 public class BetterPickaxe extends CustomItem implements Listener, Craftable {
 
     @Override
-    public NamespacedKey getNamespacedKey(Plugin plugin) {
-        return new NamespacedKey(plugin, "betterPickaxe");
-    }
-
-    @Override
-    public CraftingRecipe getCraftingRecipe(Plugin plugin) {
-        return new CraftingRecipe(getNamespacedKey(plugin), RecipeType.Item, getItem(), CraftingType.ShapedRecipe)
-                .shape( "ISI",
-                        " R ",
-                        " R ")
-                .setIngredient('S', Material.NETHER_STAR)
-                .setIngredient('I', Material.NETHERITE_INGOT)
-                .setIngredient('R', recipeService.item(Materials.Resources.IRON_ROD.getItem()));
+    public CraftingRecipe getCraftingRecipe() {
+        return new CraftingRecipe(itemID(), RecipeType.Item, getItem(), CraftingType.ShapedRecipe)
+               .shape( "ISI",
+                       "ARA",
+                       "ARA")
+               .setIngredient('S', Material.NETHER_STAR)
+               .setIngredient('A', Material.AIR)
+               .setIngredient('I', Material.NETHERITE_INGOT)
+               .setIngredient('R', recipeService.item(Materials.Resources.IRON_ROD.getItem()));
     }
 
     @Override
@@ -61,7 +54,7 @@ public class BetterPickaxe extends CustomItem implements Listener, Craftable {
 
     @Override
     protected void onPluginEnable(PluginEnableEvent event) {
-        getCraftingRecipe(WestLand.getInstance()).register();
+        recipeService.registerRecipe(getCraftingRecipe());
     }
 
     @Override

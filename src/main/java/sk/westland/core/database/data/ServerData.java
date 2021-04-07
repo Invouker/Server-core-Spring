@@ -15,17 +15,37 @@ public class ServerData {
     @Enumerated(value = EnumType.STRING)
     private EServerData serverData;
 
-    private String stringData;
-    private Double doubleData;
-    private Long longData;
-    private Float floatData;
+    private String stringData = "";
+    private int intData;
+    private double doubleData;
+    private long longData;
+    private float floatData;
 
     public ServerData() {
     }
 
-
-    public ServerData(EServerData serverData) {
+    public ServerData(EServerData serverData, String data) {
         this.serverData = serverData;
+        this.stringData = data;
+    }
+
+    public ServerData(EServerData serverData, long data) {
+        this.serverData = serverData;
+        this.longData = data;
+    }
+
+    public ServerData(EServerData serverData, float data) {
+        this.serverData = serverData;
+        this.floatData = data;
+    }
+
+    public ServerData(EServerData serverData, double data) {
+        this.serverData = serverData;
+        this.doubleData = data;
+    }
+    public ServerData(EServerData serverData, int data) {
+        this.serverData = serverData;
+        this.intData = data;
     }
 
     public long getId() {
@@ -74,5 +94,13 @@ public class ServerData {
 
     public void setFloatData(Float floatData) {
         this.floatData = floatData;
+    }
+
+    public int getIntData() {
+        return intData;
+    }
+
+    public void setIntData(int intData) {
+        this.intData = intData;
     }
 }

@@ -89,7 +89,7 @@ public class BlockBreaker extends CustomBlock {
         event.setCancelled(true);
         event.setUseInteractedBlock(Event.Result.DENY);
 
-        BreakerInventory blockBreakerInventory = new BreakerInventory(blockService, this);
+        BreakerInventory blockBreakerInventory = new BreakerInventory(blockService, this, blockLevel);
         blockBreakerInventory.open(event.getPlayer());
     }
 

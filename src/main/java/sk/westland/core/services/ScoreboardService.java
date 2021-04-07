@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import sk.westland.core.WestLand;
 import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.enums.EPlayerOptions;
+import sk.westland.core.enums.EServerData;
 import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.scoreboard.ScoreDisplay;
 import sk.westland.core.utils.RunnableDelay;
@@ -23,6 +24,9 @@ public class ScoreboardService implements Listener, Runnable {
 
     @Autowired
     private PlayerService playerService;
+
+    @Autowired
+    private ServerDataService serverDataService;
 
     private final HashMap<Player, ScoreDisplay> scoreDisplayHashMap = new HashMap<>();
 
@@ -64,6 +68,8 @@ public class ScoreboardService implements Listener, Runnable {
         if(playerHasScoreboard(player))
             return;
 
+        int totalVotes = serverDataService.getIntData(EServerData.VOTES_TOTAL);
+
         ScoreDisplay scoreDisplay = new ScoreDisplay(player, " ");
         scoreDisplay.setLine("&r       ⺏⻔⺎", 0);
         scoreDisplay.setLine(" ", 1);
@@ -77,7 +83,7 @@ public class ScoreboardService implements Listener, Runnable {
         scoreDisplay.setLine(" ", 9);
         scoreDisplay.setLine(ChatColor.of("#AED6F1") +" Server", 10);
         scoreDisplay.setLine("  &fOnline: " + ChatColor.of("#D6EAF8") + "%server_online%", 11);
-        scoreDisplay.setLine("  &fParty: " + ChatColor.of("#D6EAF8") + "soon", 12);
+        scoreDisplay.setLine("  &fVoteParty: " + ChatColor.of("#D6EAF8") + (totalVotes % VoteParty.VOTEPARTY) + "/" + VoteParty.VOTEPARTY, 12);
         scoreDisplay.setLine(" ", 13);
 
         scoreDisplayHashMap.put(player, scoreDisplay);
@@ -91,6 +97,7 @@ public class ScoreboardService implements Listener, Runnable {
 
     @Override
     public void run() {
+        int totalVotes = serverDataService.getIntData(EServerData.VOTES_TOTAL);
         scoreDisplayHashMap.forEach((player, scoreDisplay) -> {
             scoreDisplay.setLine("&r       ⺏⻔⺎", 0);
             scoreDisplay.setLine(" ", 1);
@@ -104,7 +111,7 @@ public class ScoreboardService implements Listener, Runnable {
             scoreDisplay.setLine(" ", 9);
             scoreDisplay.setLine(ChatColor.of("#AED6F1") +" Server", 10);
             scoreDisplay.setLine("  &fOnline: " + ChatColor.of("#D6EAF8") + "%server_online%", 11);
-            scoreDisplay.setLine("  &fParty: " + ChatColor.of("#D6EAF8") + "soon", 12);
+            scoreDisplay.setLine("  &fVoteParty: " + ChatColor.of("#D6EAF8") + (totalVotes % VoteParty.VOTEPARTY) + "/" + VoteParty.VOTEPARTY, 12);
             scoreDisplay.setLine(" ", 13);
         });
 

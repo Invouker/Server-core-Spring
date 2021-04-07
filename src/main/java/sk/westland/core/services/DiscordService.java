@@ -1,5 +1,6 @@
 package sk.westland.core.services;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
@@ -14,7 +15,7 @@ import org.bukkit.scheduler.BukkitTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import sk.westland.core.WestLand;
 import sk.westland.core.database.player.UserDataRepository;
-import sk.westland.core.discord.CommandRegister;
+import sk.westland.discord.commands.CommandRegister;
 import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.event.ServerDisableEvent;
 import sk.westland.core.utils.RunnableDelay;
@@ -151,7 +152,7 @@ public class DiscordService implements Listener, Runnable {
             Bukkit.getOnlinePlayers().stream().filter((player -> player.hasPermission("admin") || player.isOp())).forEach((player) -> admins.add(player.getName()));
 
             try {
-                MessageEmbed messageEmbed = generateEmbedMessage(serverStatus, tps, onlinePlayers, admins, userDataRepository.count());
+                MessageEmbed messageEmbed = generateEmbedMessage(serverStatus, tps, onlinePlayers, admins, Long.parseLong(PlaceholderAPI.setPlaceholders(null, "%server_unique_joins%")));
                 if (messageList == null || messageList.isEmpty())
                     ((TextChannel) infoStatusChannel).sendMessage(messageEmbed).queue();
                 else

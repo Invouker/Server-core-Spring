@@ -12,13 +12,10 @@ import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
 import sk.westland.core.database.player.RankDataRepository;
 import sk.westland.core.database.player.UserDataRepository;
-import sk.westland.core.discord.DiscordHandler;
+import sk.westland.discord.DiscordHandler;
 import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.event.ServerDisableEvent;
-import sk.westland.core.services.BlockService;
-import sk.westland.core.services.PlayerService;
-import sk.westland.core.services.ScoreboardService;
-import sk.westland.core.services.VaultService;
+import sk.westland.core.services.*;
 import sk.westland.core.utils.PlaceHolder;
 import sk.westland.core.utils.ResFlag;
 import sk.westland.world.items.Materials;
@@ -55,6 +52,9 @@ public class WestLand extends JavaPlugin {
 
     @Autowired
     private UserDataRepository userDataRepository;
+
+    @Autowired
+    private ServerDataService serverDataService;
 
     @Autowired
     private VaultService vaultService;
@@ -109,7 +109,7 @@ public class WestLand extends JavaPlugin {
         Bukkit.getPluginManager().callEvent(new PluginEnableEvent(this));
 
         try {
-            placeHolder = new PlaceHolder(this, playerService, scoreboardService);
+            placeHolder = new PlaceHolder(this, playerService, scoreboardService, serverDataService);
             placeHolder.register();
         }  catch (Exception ex) {
             System.out.println("While hooking into PlaceholderAPI: " + ex.getLocalizedMessage());
@@ -142,13 +142,13 @@ public class WestLand extends JavaPlugin {
         discordHandler.shutdown();
         em.close();
 
-        Thread.currentThread().setContextClassLoader(defaultClassLoader);
-
-        if(context != null) {
-            try {
+        try {
+            if (context != null) {
                 context.close();
-            }catch (Exception ignored) {}
+            }
+        } finally {
             context = null;
+            Thread.currentThread().setContextClassLoader(defaultClassLoader);
         }
     }
 

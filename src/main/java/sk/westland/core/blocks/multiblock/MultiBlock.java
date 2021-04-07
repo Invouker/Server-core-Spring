@@ -9,7 +9,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.springframework.beans.factory.annotation.Autowired;
 import sk.westland.core.services.BlockService;
@@ -151,22 +150,6 @@ public abstract class MultiBlock implements IMultiBlock {
         return constructBlocks;
     }
 
-    private Dispenser getDispenserConstruction(Block block) {
-
-        if(blockFaceEnumSet == null)
-            blockFaceEnumSet = EnumSet.of(BlockFace.DOWN);
-
-        for (BlockFace blockFace : blockFaceEnumSet) {
-            for (int i = 0; i < blockMaterial.length; i++) {
-                Block checkedBlock = block.getRelative(blockFace, blockMaterial.length-i-1);
-                if(checkedBlock.getType() == Material.DISPENSER)
-                  return (Dispenser) checkedBlock.getState();
-            }
-        }
-
-        return null;
-    }
-
     public abstract void onMultiBlockActivation(Player player, List<Block> blocks, IMBRecipe imbRecipe, PlayerInteractEvent event);
 
     @EventHandler
@@ -199,12 +182,17 @@ public abstract class MultiBlock implements IMultiBlock {
 
         Utils.playArmAnimation(event.getPlayer());
 
-        Dispenser dispenser = getDispenserConstruction(block);
+        List<Block> blocks = getMultiBlockConstruct(event.getClickedBlock());
+
+        Dispenser dispenser = null;
+
+        for (Block blockIterate : blocks) {
+            if(blockIterate.getType() == Material.DISPENSER) {
+                dispenser = (Dispenser) blockIterate.getState();
+            }
+        }
 
         if(dispenser == null)
-            return;
-
-        if(!(((Block)dispenser).getState() instanceof InventoryHolder))
             return;
 
         IMBRecipe imbRecipe = getRecipe(Arrays.asList(dispenser.getInventory().getContents()));

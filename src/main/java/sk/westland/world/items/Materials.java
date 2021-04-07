@@ -5,14 +5,11 @@ import org.bukkit.inventory.ItemStack;
 import sk.westland.core.items.Craftable;
 import sk.westland.core.items.CustomItem;
 import sk.westland.core.items.CustomResourceItem;
-import sk.westland.world.items.blocks.BlockBreakerItem;
-import sk.westland.world.items.blocks.BlockMobGrinderItem;
-import sk.westland.world.items.blocks.BlockPlacerItem;
-import sk.westland.world.items.blocks.WorthChestItem;
+import sk.westland.world.items.blocks.*;
 import sk.westland.world.items.resources.CopperDust;
 import sk.westland.world.items.resources.CopperIngot;
 import sk.westland.world.items.resources.IronRod;
-import sk.westland.world.items.spawners.MagicSpawner1;
+import sk.westland.world.items.spawners.MagicSpawner;
 import sk.westland.world.items.tools.*;
 
 public class Materials {
@@ -24,14 +21,16 @@ public class Materials {
         BETTER_HOE(new BetterHoe(), null),
         BETTER_PICKAXE(new BetterPickaxe(), null),
 
-        // Items
+        // Blocks
         BLOCK_PLACER(new BlockPlacerItem(), null),
         BLOCK_BREAKER(new BlockBreakerItem(), null),
         WORTH_CHEST(new WorthChestItem(), null),
         MOB_GRINDER(new BlockMobGrinderItem(), null),
+        CHUNK_COLLECTOR(new BlockChunkCollectorItem(), null),
 
         SADDLE_ITEM(null, new SaddleItem()),
-        MAGIC_SPAWNER1(null, new MagicSpawner1());
+        MAGIC_SPAWNER(null, new MagicSpawner()),
+        SELL_WAND(null, new SellWand());
 
         private Craftable craftable;
         private CustomItem customItem;

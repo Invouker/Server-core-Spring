@@ -1,4 +1,4 @@
-package sk.westland.core.discord.ranksync;
+package sk.westland.discord.ranksync;
 
 import java.util.ArrayList;
 import java.util.List;

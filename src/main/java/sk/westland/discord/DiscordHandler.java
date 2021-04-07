@@ -1,4 +1,4 @@
-package sk.westland.core.discord;
+package sk.westland.discord;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.bukkit.event.Listener;
 import sk.westland.core.database.player.RankDataRepository;
 import sk.westland.core.database.player.UserDataRepository;
-import sk.westland.core.discord.ranksync.PlayerSync;
+import sk.westland.discord.ranksync.PlayerSync;
 import sk.westland.core.services.PlayerService;
 import sk.westland.core.services.VaultService;
 import sk.westland.core.utils.RunnableHelper;

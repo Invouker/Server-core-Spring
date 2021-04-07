@@ -101,8 +101,6 @@ public class Utils {
         String capitalizedName = StringUtils.capitalize(name);
         ItemStack spawner = new ItemBuilder(Material.SPAWNER)
                 .setName("§e" + capitalizedName + " Spawner")
-                .setLore("",
-                        "§aPolož spawner kliknutím na zem!")
                 .setSpawnerType(entityType)
                 .setAmount(amount)
                 .build();

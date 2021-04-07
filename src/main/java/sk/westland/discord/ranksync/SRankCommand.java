@@ -1,4 +1,4 @@
-package sk.westland.core.discord.ranksync;
+package sk.westland.discord.ranksync;
 
 
 import dev.alangomes.springspigot.context.Context;
@@ -11,7 +11,7 @@ import picocli.CommandLine;
 import sk.westland.core.WestLand;
 import sk.westland.core.database.player.RankData;
 import sk.westland.core.database.player.RankDataRepository;
-import sk.westland.core.discord.DiscordHandler;
+import sk.westland.discord.DiscordHandler;
 import sk.westland.core.services.PlayerService;
 import sk.westland.core.utils.ChatInfo;
 import sk.westland.core.utils.RunnableHelper;

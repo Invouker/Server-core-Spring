@@ -46,6 +46,7 @@ public abstract class CustomItem {
     public abstract String itemID();
 
     protected abstract void onPluginEnable(PluginEnableEvent event);
+
     protected abstract void onPlayerInteractWithItem(PlayerInteractEvent event);
     protected abstract void onPlayerDamageWithItem(WLPlayerDamageEvent event);
     protected abstract void onPlayerInteractAtEntityWithItem(PlayerInteractAtEntityEvent event);
@@ -78,6 +79,7 @@ public abstract class CustomItem {
                         this::onPlayerBlockBreak
                 ));
     }
+
 
     @Override
     public String toString() {

@@ -1,4 +1,4 @@
-package sk.westland.core.discord.ranksync;
+package sk.westland.discord.ranksync;
 
 import net.dv8tion.jda.api.entities.User;
 import org.bukkit.entity.Player;

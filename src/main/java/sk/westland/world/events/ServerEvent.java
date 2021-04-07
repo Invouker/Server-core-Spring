@@ -30,7 +30,7 @@ public class ServerEvent implements Listener {
                     @Override
                     public void onPacketSending(PacketEvent event) {
                         WrappedServerPing ping = event.getPacket().getServerPings().read(0);
-                        ping.setPlayersOnline(eventPlugin.getPlugin().getServer().getOnlinePlayers().size() + 10);
+                        ping.setPlayersOnline(eventPlugin.getPlugin().getServer().getOnlinePlayers().size() + 1);
 
                       //  WrappedGameProfile wrappedGameProfile = new WrappedGameProfile(UUID.randomUUID(), "idk ty kokot");
                         //ping.setPlayers(new ArrayList<>(Collections.singletonList(wrappedGameProfile)));

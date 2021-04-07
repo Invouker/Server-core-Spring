@@ -2,7 +2,6 @@ package sk.westland.world.events;
 
 import com.Zrips.CMI.Modules.tp.Teleportations;
 import com.Zrips.CMI.events.CMIAsyncPlayerTeleportEvent;
-import com.vexsoftware.votifier.model.VotifierEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -26,11 +25,9 @@ import org.bukkit.potion.PotionEffectType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import sk.westland.core.entity.player.WLPlayer;
-import sk.westland.core.enums.EServerData;
 import sk.westland.core.event.player.WLPlayerInteractWithNPCEvent;
 import sk.westland.core.services.DiscordService;
 import sk.westland.core.services.PlayerService;
-import sk.westland.core.services.ServerDataService;
 import sk.westland.core.utils.Utils;
 import sk.westland.world.commands.player.NightVisionCommand;
 import sk.westland.world.items.Materials;
@@ -45,9 +42,6 @@ public class BasicEvents implements Listener {
 
     @Autowired
     private DiscordService discordService;
-
-    @Autowired
-    private ServerDataService serverDataService;
 
     @EventHandler(priority = EventPriority.HIGHEST)
     private void onEntityExplode(EntityExplodeEvent event) {
@@ -158,9 +152,4 @@ public class BasicEvents implements Listener {
         }
     }
 
-    @EventHandler
-    private void onVotifier(VotifierEvent event) {
-        EServerData serverData = EServerData.VOTES_TOTAL;
-        //serverDataService.set(serverData, serverDataService.getInt(serverData) + 1);
-    }
 }
