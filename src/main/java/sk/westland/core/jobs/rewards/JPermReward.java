@@ -5,9 +5,10 @@ import org.bukkit.entity.Player;
 
 public class JPermReward implements JIReward {
 
-    private String permission;
-    private String permName;
-    private PermRenderType permRenderType;
+    private final String permission;
+    private final String permName;
+    private PermRenderType permRenderType = PermRenderType.SHOW;
+    private boolean permissionState = true;
 
     public JPermReward(String permission, String permName) {
         this.permission = permission;
@@ -20,10 +21,23 @@ public class JPermReward implements JIReward {
         this.permRenderType = permRenderType;
     }
 
+    public JPermReward(String permission, String permName, boolean permissionState) {
+        this.permission = permission;
+        this.permName = permName;
+        this.permissionState = permissionState;
+    }
+
+    public JPermReward(String permission, String permName, PermRenderType permRenderType, boolean permissionState) {
+        this.permission = permission;
+        this.permName = permName;
+        this.permRenderType = permRenderType;
+        this.permissionState = permissionState;
+    }
+
     @Override
     public JIReward reward(Player player) {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-                "lp user " + player.getName() + " permission set " + permission + " true"
+                "lp user " + player.getName() + " permission set " + permission + " " + permissionState
         );
 
         return this;
@@ -37,7 +51,7 @@ public class JPermReward implements JIReward {
 
             default:
             case SHOW:
-                return "Limitovaný príkaz &7(/" + permName + ")";
+                return "Limitovaný príkaz §7(/" + permName + ")";
         }
     }
 

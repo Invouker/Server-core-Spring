@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import sk.westland.core.items.ItemBuilder;
+import sk.westland.world.items.Materials;
 
 import java.util.Locale;
 
@@ -15,6 +16,18 @@ public class JItemReward implements JIReward {
 
     public JItemReward(ItemStack itemStack, int amount) {
         this.itemStack = new ItemBuilder(itemStack).setAmount(amount).build();
+    }
+
+    public JItemReward(Materials.Items items) {
+        this.itemStack = items.getItem();
+    }
+
+    public JItemReward(Materials.Resources items) {
+        this.itemStack = items.getItem();
+    }
+
+    public JItemReward(ItemBuilder itemBuilder) {
+        this.itemStack = itemBuilder.build();
     }
 
     public JItemReward(ItemStack itemStack) {

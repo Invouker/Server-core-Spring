@@ -10,6 +10,12 @@ public class JMoneyReward implements JIReward {
     private double moneyValue;
     private MoneyService moneyService;
 
+    public JMoneyReward(double moneyValue, MoneyService moneyService) {
+        this.moneyType = MoneyType.Money;
+        this.moneyValue = moneyValue;
+        this.moneyService = moneyService;
+    }
+
     public JMoneyReward(MoneyType moneyType, double moneyValue, MoneyService moneyService) {
         this.moneyType = moneyType;
         this.moneyValue = moneyValue;
