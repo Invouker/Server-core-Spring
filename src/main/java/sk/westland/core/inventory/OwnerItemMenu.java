@@ -18,7 +18,7 @@ public abstract class OwnerItemMenu extends ItemMenu {
         this.player = wlPlayer.getPlayer();
     }
 
-    public OwnerItemMenu(WLPlayer wlPlayer, Type type, String title, String n) {
+    public OwnerItemMenu(WLPlayer wlPlayer, Type type, String title, String noInit) {
         super(type, title, "");
         this.wlPlayer = wlPlayer;
         this.player = wlPlayer.getPlayer();

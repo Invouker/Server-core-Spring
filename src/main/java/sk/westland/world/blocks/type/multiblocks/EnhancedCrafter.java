@@ -19,25 +19,20 @@ import java.util.EnumSet;
 import java.util.List;
 
 @Component
-public class Grinder extends MultiBlock implements Listener {
+public class EnhancedCrafter extends MultiBlock implements Listener {
 
-    public Grinder() {
+    public EnhancedCrafter() {
+        super(Material.CRAFTING_TABLE, MultiBlockType.Enhanced_Crafter,
+                EnumSet.of(BlockFace.WEST, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH));
 
-        super(Material.WARPED_FENCE, MultiBlockType.Grinder,
-                EnumSet.of(BlockFace.DOWN));
-        setBlockMaterial(Material.CAULDRON, Material.DISPENSER, Material.WARPED_FENCE);
+        setBlockMaterial(Material.BOOKSHELF, Material.DISPENSER, Material.CRAFTING_TABLE);
 
-        addRecipe(Material.FLINT, Material.GRAVEL);
-        addRecipe(Material.COBBLESTONE, Material.STONE);
-        addRecipe(Material.SAND, Material.COBBLESTONE);
-        addRecipe(Materials.Resources.COAL_DUST.getItem(), Material.COAL);
-        addRecipe(Materials.Resources.COAL_DUST.getItem(), Material.CHARCOAL);
-        addRecipe(new ItemBuilder(Material.REDSTONE).setAmount(9).build(), Material.REDSTONE_BLOCK);
+        addRecipe(new ItemBuilder(Materials.Resources.ENHANCED_NETHERITE_INGOT.getItem(), 1).build(), Material.NETHERITE_INGOT, Material.DIAMOND, Material.GUNPOWDER);
     }
-
 
     @Override
     public void onMultiBlockActivation(Player player, List<Block> blocks, IMBRecipe imbRecipe, PlayerInteractEvent event) {
-        Utils.playSound(blocks.get(0).getLocation(), Sound.BLOCK_GRINDSTONE_USE);
+        Utils.playSound(blocks.get(0).getLocation(), Sound.ENTITY_PLAYER_BURP);
+        event.setCancelled(true);
     }
 }

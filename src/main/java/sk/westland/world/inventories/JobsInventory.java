@@ -166,6 +166,7 @@ public class JobsInventory extends OwnerItemMenu {
         String[] lore = new String[rewardList.size()];
         for (int i = 0; i < rewardList.size(); i++) {
             JIReward jiReward = rewardList.get(i);
+            if(jiReward.render() == null) continue;
             lore[i] =  "§6" + jiReward.render();
         }
 
@@ -192,6 +193,7 @@ public class JobsInventory extends OwnerItemMenu {
         String[] lore = new String[rewardList.size()];
         for (int i = 0; i < rewardList.size(); i++) {
             JIReward jiReward = rewardList.get(i);
+            if(jiReward.render() == null) continue;
             lore[i] = "§a" + jiReward.render();
         }
 

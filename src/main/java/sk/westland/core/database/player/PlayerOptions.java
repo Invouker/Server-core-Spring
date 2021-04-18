@@ -12,13 +12,13 @@ public class PlayerOptions {
 
     private long playerId;
 
-
     private boolean showJoinMessage = true;
     private boolean showQuitMessage = false;
     private boolean chatReactionSound = true;
     private boolean showDeathMessage = true;
     private boolean showScoreboard = true;
     private boolean teleportEffect = true;
+    private boolean showAutoMessage = true;
 
     public PlayerOptions() {
     }
@@ -85,5 +85,13 @@ public class PlayerOptions {
 
     public void setTeleportEffect(boolean teleportEffect) {
         this.teleportEffect = teleportEffect;
+    }
+
+    public boolean isShowAutoMessage() {
+        return showAutoMessage;
+    }
+
+    public void setShowAutoMessage(boolean showAutoMessage) {
+        this.showAutoMessage = showAutoMessage;
     }
 }

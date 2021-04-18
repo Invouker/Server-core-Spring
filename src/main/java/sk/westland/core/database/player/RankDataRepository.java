@@ -8,8 +8,7 @@ import java.util.Optional;
 @Repository
 public interface RankDataRepository extends JpaRepository<RankData, Long>, PlayerID<RankData> {
 
-    Optional<RankData> findByPlayerIdAndIsSynced(long playerId, boolean isSynced);
-    Optional<RankData> findByDiscordUuidAndIsSynced(String discordUuid, boolean isSynced);
+    Optional<RankData> findByPlayerId(long playerId);
     Optional<RankData> findByDiscordUuid(String discordUuid);
 
 }

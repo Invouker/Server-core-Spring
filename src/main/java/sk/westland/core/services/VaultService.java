@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import sk.westland.core.WestLand;
 import sk.westland.core.event.PluginEnableEvent;
 
-@Service
 public class VaultService implements Listener {
 
     private Permission perms = null;

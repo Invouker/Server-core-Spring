@@ -25,6 +25,10 @@ public class CraftingRecipe {
        this.craftingType = craftingType;
     }
 
+    public CraftingRecipe(String key, RecipeType recipeType, CustomResourceItem customResourceItem) {
+        this(key, recipeType, customResourceItem.getItem());
+    }
+
     public CraftingRecipe(String key, RecipeType recipeType, ItemStack result) {
         namespacedKey = new NamespacedKey(WestLand.getInstance(), key);
         this.recipeType = recipeType;
@@ -61,7 +65,6 @@ public class CraftingRecipe {
     public CraftingRecipe setIngredient(char key, RecipeChoice recipeChoice) {
         switch(Objects.requireNonNull(craftingType)) {
             case ShapedRecipe: {
-                System.out.println("Key: " + key + " recipeChoice: " + recipeChoice.toString());
                 shapedRecipe.setIngredient(key, recipeChoice);
                 break;
             }

@@ -28,7 +28,7 @@ public abstract class CustomResourceItem  {
 
     public abstract int getModelID();
 
-    protected abstract void onPluginEnable(PluginEnableEvent event);
+    public void onPluginEnable(PluginEnableEvent event) {}
 
     @EventHandler(priority = EventPriority.HIGHEST)
     private void onPluginInit(PluginEnableEvent event) {

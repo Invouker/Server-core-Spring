@@ -35,7 +35,6 @@ import sk.westland.world.items.Materials;
 import java.util.HashMap;
 import java.util.Map;
 
-@Service
 public class HorseService implements Listener {
 
     public static final double HORSE_MAX_HEALTH = 50d;

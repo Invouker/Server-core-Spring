@@ -36,7 +36,7 @@ public class WorthChestItem extends CustomItem implements Craftable, Listener {
                 .setModelId(getModelID())
                 .setCustomItem(this)
                 .setNbt_Int(WestLand.CUSTOM_BLOCK_NBT, BlockType.WORTH_CHEST.getId())
-                .setLore("", "§7Automatický predáva blocky", "a itemy ktoré do nej vložité.", "").build();
+                .setLore("", "§7Automatický predáva blocky", "§7a itemy ktoré do nej vložité.", "").build();
     }
 
     @Override

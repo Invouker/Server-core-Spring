@@ -15,7 +15,8 @@ import java.util.Objects;
 
 public abstract class ItemMenu extends CustomInventory {
 
-    public ItemMenu(@NotNull Type type, @NotNull String title, String nc) {
+
+    public ItemMenu(@NotNull Type type, @NotNull String title, String noInit) {
         super(type, title);
     }
 

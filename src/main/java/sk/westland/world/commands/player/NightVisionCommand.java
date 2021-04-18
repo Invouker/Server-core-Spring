@@ -4,7 +4,9 @@ import dev.alangomes.springspigot.context.Context;
 import dev.alangomes.springspigot.security.HasPermission;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +24,7 @@ public class NightVisionCommand implements Runnable, Listener {
     @Autowired
     private Context context;
 
-    private static final ArrayList<Player> players = new ArrayList<>();
-
-    public static ArrayList<Player> getPlayers() {
-        return players;
-    }
+    public static ArrayList<Player> players = new ArrayList<>();
 
     @Override
     public void run() {
@@ -48,6 +46,15 @@ public class NightVisionCommand implements Runnable, Listener {
 
             players.add(player);
         }
+    }
 
+    @EventHandler
+    private void onPlayerQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        if(!players.contains(player))
+            return;
+
+        player.removePotionEffect(PotionEffectType.NIGHT_VISION);
+        players.remove(player);
     }
 }

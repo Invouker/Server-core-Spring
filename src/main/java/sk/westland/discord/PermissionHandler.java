@@ -100,7 +100,7 @@ public class PermissionHandler implements Listener, Runnable {
         Rank rank = Rank.getDiscordGroupByVault(groupName);
         String discordGroup = rank.getDiscordGroup();
         DiscordHandler discordHandler = WestLand.getDiscordHandler();
-        Optional<RankData> rankDataOptional = rankDataRepository.findByPlayerIdAndIsSynced(playerId, true);
+        Optional<RankData> rankDataOptional = rankDataRepository.findByPlayerId(playerId);
 
         if(!rankDataOptional.isPresent())
             return;

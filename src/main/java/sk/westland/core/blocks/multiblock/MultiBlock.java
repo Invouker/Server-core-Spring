@@ -12,6 +12,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.springframework.beans.factory.annotation.Autowired;
 import sk.westland.core.services.BlockService;
+import sk.westland.core.utils.RunnableHelper;
 import sk.westland.core.utils.Utils;
 
 import java.util.ArrayList;
@@ -220,13 +221,13 @@ public abstract class MultiBlock implements IMultiBlock {
                     if(firstEmpty == -1)
                         return;
 
-                    inventory.addItem(imbRecipe.getResult());
-
                     inventoryItem.setAmount(inventoryItem.getAmount() - itemStack.getAmount());
                     continue main;
                 }
             }
         }
+
+        RunnableHelper.runTask(()->inventory.addItem(imbRecipe.getResult()));
     }
 
     protected IMBRecipe getRecipe(List<ItemStack> inventory) {

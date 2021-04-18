@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Service
 public class MessageService implements Listener{
 
     @Autowired
@@ -30,7 +29,6 @@ public class MessageService implements Listener{
     private VaultService vaultService;
 
     private List<Player> activeAdminChat = new ArrayList<>();
-
 
     public boolean isPlayerInAdminChat(Player player) {
         return activeAdminChat.contains(player);

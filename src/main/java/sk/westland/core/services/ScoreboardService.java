@@ -19,7 +19,6 @@ import sk.westland.core.utils.RunnableDelay;
 
 import java.util.HashMap;
 
-@Service
 public class ScoreboardService implements Listener, Runnable {
 
     @Autowired

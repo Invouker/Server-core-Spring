@@ -2,16 +2,9 @@ package sk.westland.core.enums;
 
 public enum EServerData {
 
-    VOTES_TOTAL(Integer.class)
+    VOTES_TOTAL,
+    AUTOMESSAGE_TIME
     ;
 
-    private final Class<?> clazz;
-
-    EServerData(Class<?> clazz) {
-        this.clazz = clazz;
-    }
-
-    public Class<?> getClazz() {
-        return clazz;
-    }
+    EServerData() {}
 }

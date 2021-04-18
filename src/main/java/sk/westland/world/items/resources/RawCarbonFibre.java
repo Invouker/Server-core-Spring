@@ -7,20 +7,30 @@ import org.springframework.stereotype.Component;
 import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.items.CustomResourceItem;
 import sk.westland.core.items.ItemBuilder;
+import sk.westland.world.items.Materials;
 
 @Component
-public class CopperDust extends CustomResourceItem implements Listener {
+public class RawCarbonFibre extends CustomResourceItem implements Listener {
+
+    @Override
+    public void onPluginEnable(PluginEnableEvent event) {
+        super.onPluginEnable(event);
+
+        recipeService.addFurnaceRecipe("compressedCarbonFurnace", Materials.Resources.COMPRESSED_CARBON.getItem(), getItem(), 6, 16);
+
+    }
 
     @Override
     public ItemStack getItem() {
         return new ItemBuilder(Material.PAPER)
-                .setName("§rCopper dust")
-                .setModelId(getModelID()).build();
+                .setName("§rCarbon Fibre")
+                .setModelId(getModelID())
+                .build();
     }
 
     @Override
     public int getModelID() {
-        return 2;
+        return 5;
     }
 
 }

@@ -3,14 +3,17 @@ package sk.westland.core.utils;
 import org.bukkit.craftbukkit.libs.jline.internal.Log;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Component;
 import sk.westland.core.WestLand;
 
 import java.util.List;
 import java.util.function.Consumer;
 
+@Component
 public class RunnableHelper {
 
     public static void runTask(Runnable runnable) {
+
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -80,7 +83,7 @@ public class RunnableHelper {
         runTaskTimerAsynchronously(runnable, 0, period);
     }
 
-    public static <T, ID> void save(JpaRepository<T, ID> repository, T entity, Consumer<T> doneListener) {
+    public static <T, ID> void save(JpaRepository<T, ID> repository, T entity, Consumer<T> doneListener, boolean aSync) {
         if(repository == null) {
             Log.error("RunnableHelper.save = Repository is null");
             return;
@@ -90,6 +93,7 @@ public class RunnableHelper {
             return;
         }
 
+        if(aSync)
         runTaskAsynchronously(() -> {
             T newEntity = repository.save(entity);
 
@@ -101,6 +105,18 @@ public class RunnableHelper {
                 doneListener.accept(newEntity);
             });
         });
+        else
+            runTask(() -> {
+                T newEntity = repository.save(entity);
+
+                if(doneListener == null) {
+                    return;
+                }
+
+                runTask(() -> {
+                    doneListener.accept(newEntity);
+                });
+            });
     }
 
     public static <T, ID> void save(JpaRepository<T, ID> repository, T entity) {

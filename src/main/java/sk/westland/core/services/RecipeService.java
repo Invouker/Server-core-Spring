@@ -28,7 +28,6 @@ import sk.westland.world.items.Materials;
 
 import java.util.*;
 
-@Service
 public class RecipeService implements Listener {
 
     @Autowired

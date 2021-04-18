@@ -29,7 +29,6 @@ import sk.westland.world.blocks.type.*;
 
 import java.util.*;
 
-@Service
 public class BlockService implements Listener {
 
     @Autowired

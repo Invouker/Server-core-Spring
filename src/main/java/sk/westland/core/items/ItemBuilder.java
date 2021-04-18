@@ -38,9 +38,13 @@ public class ItemBuilder {
      *
      * @param is The ItemStack to create the ItemBuilder over (clone).
      */
-    public ItemBuilder(@NotNull ItemStack is)
-    {
+    public ItemBuilder(@NotNull ItemStack is) {
         this.is = is.clone();
+    }
+
+    public ItemBuilder(@NotNull ItemStack is, int amount) {
+        this.is = is.clone();
+        is.setAmount(amount);
     }
 
     /**
@@ -102,6 +106,22 @@ public class ItemBuilder {
             return this;
 
         im.addEnchant(ench, level, true);
+        is.setItemMeta(im);
+        return this;
+    }
+
+    @NotNull
+    public ItemBuilder addEnchGlow(boolean state) {
+        if(!state)
+            return this;
+
+        ItemMeta im = is.getItemMeta();
+        if (im == null)
+            return this;
+
+        im.addEnchant(Enchantment.DAMAGE_ALL, 1, true);
+        addItemFlag(ItemFlag.HIDE_ENCHANTS);
+
         is.setItemMeta(im);
         return this;
     }
@@ -724,6 +744,10 @@ public class ItemBuilder {
     }
 
     public ItemBuilder applyDurability(short damage) {
+
+        if(damage == 0)
+            return this;
+
         ItemMeta im = is.getItemMeta();
 
         if(im instanceof Damageable) {

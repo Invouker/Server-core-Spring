@@ -21,11 +21,14 @@ import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.event.player.WLPlayerDamageEvent;
 import sk.westland.core.items.*;
 import sk.westland.core.utils.ChatInfo;
+import sk.westland.core.utils.RunnableHelper;
 import sk.westland.core.utils.Utils;
 import sk.westland.world.items.Materials;
 
 @Component
-public class SellWand extends CustomItem implements Craftable, Listener {
+public class WorthWand extends CustomItem implements Craftable, Listener {
+
+    private final String WAND_NBT_KEY = "WAND_DURABILITY";
 
     @Override
     public CraftingRecipe getCraftingRecipe() {
@@ -37,9 +40,8 @@ public class SellWand extends CustomItem implements Craftable, Listener {
 
     @Override
     public ItemStack getItem() {
-        String WAND_NBT_KEY = "WAND_DURABILITY";
-        int WAND_DURABILITY = 250;
-        return customItemStack = new ItemBuilder(Material.IRON_HOE)
+        int WAND_DURABILITY = 50;
+        return customItemStack = new ItemBuilder(Material.STICK)
                 .setModelId(getModelID())
                 .setName("§eSell Wand")
                 .setCustomItem(this)
@@ -50,7 +52,16 @@ public class SellWand extends CustomItem implements Craftable, Listener {
                         "§7kliknutím pravým tlačítkom na",
                         "§7chestu predáte v nej itemy ktoré",
                         "§7sa dajú predať v klasickom obchode!",
+                        "",
+                        "§7Počet použití: §f" + WAND_DURABILITY,
                         "")
+                .build();
+    }
+
+    private ItemStack setWandDurability(ItemStack itemStack, int durability) {
+        return new ItemBuilder(itemStack)
+                .setLoreLine(6,  "§7Počet použití: §f" + durability)
+                .setNbt_Int(WAND_NBT_KEY, durability)
                 .build();
     }
 
@@ -81,12 +92,15 @@ public class SellWand extends CustomItem implements Craftable, Listener {
 
         Block block = event.getClickedBlock();
         Player player = event.getPlayer();
-        if(block.getType() != Material.CHEST)
+        assert block != null;
+
+        if (block.getType() != Material.CHEST)
             return;
 
         Chest chest = (Chest) block.getState();
         Inventory inventory = chest.getInventory();
         int sellPrice = 0;
+
         for (int i = 0; i < chest.getInventory().getContents().length; i++) {
             ItemStack itemStack = chest.getInventory().getItem(i);
             if(itemStack == null)
@@ -109,6 +123,20 @@ public class SellWand extends CustomItem implements Craftable, Listener {
         }
 
         ChatInfo.SUCCESS.send(player, "Predal si itemy v hodnote §6" + sellPrice+ "$");
+
+        {
+            ItemStack itemMainHand = player.getInventory().getItemInMainHand();
+            int durability = Nbt.getNbt_Int(itemMainHand, WAND_NBT_KEY);
+
+            ItemStack sellWand = setWandDurability(itemMainHand, Nbt.getNbt_Int(itemMainHand, WAND_NBT_KEY) - 1);
+            if(durability > 1)
+                player.getInventory().setItemInMainHand(sellWand);
+            else {
+                player.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
+                player.updateInventory();
+                itemInteractionService.playSound(player, Sound.ENTITY_ITEM_BREAK);
+            }
+        }
 
         if(sellPrice == 0)
             Utils.playSound(block.getLocation(), Sound.ENTITY_BAT_DEATH);

@@ -1,5 +1,6 @@
 package sk.westland.core.utils;
 
+import dev.alangomes.springspigot.context.Context;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Bukkit;
@@ -61,6 +62,10 @@ public enum ChatInfo {
 
     public void send(Player player, String message) {
         player.sendMessage(prefix + message);
+    }
+
+    public void send(Context context, String message) {
+        context.getSender().sendMessage(prefix + message);
     }
 
     public void send(WLPlayer player, String message) {

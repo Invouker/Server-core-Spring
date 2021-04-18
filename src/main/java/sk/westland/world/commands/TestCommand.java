@@ -124,33 +124,9 @@ public class TestCommand implements Runnable {
     @HasPermission("commands.test6")
     class Test6 implements Runnable {
 
-        @Autowired
-        private Context context;
-
-        @CommandLine.Parameters(index = "0", completionCandidates = JobsSuggestion.class)
-        private String job;
-
-        @Autowired
-        private PlayerService playerService;
-
-        @Autowired
-        private MoneyService moneyService;
-
         @Override
         public void run() {
-            JobList jobList = JobList.findByName(job);
-            if(jobList == null) {
-                ChatInfo.ERROR.send(context.getPlayer(), "Zadal si nesprávny názov práce!");
-                return;
-            }
 
-            JobsInventory jobsInventory =
-                    new JobsInventory(moneyService,
-                            playerService,
-                            playerService.getWLPlayer(context.getPlayer()),
-                            jobList,
-                            0);
-            jobsInventory.open(context.getPlayer());
         }
     }
 

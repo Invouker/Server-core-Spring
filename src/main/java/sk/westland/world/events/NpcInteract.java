@@ -8,6 +8,7 @@ import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.event.player.WLPlayerInteractWithNPCEvent;
 import sk.westland.core.services.HorseService;
 import sk.westland.core.services.MoneyService;
+import sk.westland.world.inventories.DailyRewardInventory;
 import sk.westland.world.inventories.entities.HorseUpgradeInventory;
 import sk.westland.world.inventories.shops.HorseBuyInventory;
 
@@ -31,6 +32,11 @@ public class NpcInteract implements Listener {
         if(event.getNPCName().contains("Vylepšenie kon")) {
             HorseUpgradeInventory horseUpgradeInventory = new HorseUpgradeInventory(horseService);
             horseUpgradeInventory.open(wlPlayer);
+        }
+
+        if(event.getNPCName().contains("Daily reward")) {
+            DailyRewardInventory dailyRewardInventory = new DailyRewardInventory(wlPlayer, moneyService);
+            dailyRewardInventory.open(wlPlayer);
         }
     }
 }

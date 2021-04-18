@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.enums.MoneyType;
+import sk.westland.core.utils.ChatInfo;
 
-@Service
 public class MoneyService {
 
     @Autowired
@@ -114,10 +114,12 @@ public class MoneyService {
         switch (moneyType) {
             case Gems: {
                 wlPlayer.giveGems(amount);
+                ChatInfo.SUCCESS.send(wlPlayer, "Dostal si §6" + amount + " " + moneyType.getMultipleName() + "§f!");
                 return true;
             }
             case Shard: {
                 wlPlayer.giveShards(amount);
+                ChatInfo.SUCCESS.send(wlPlayer, "Dostal si §6" + amount + " " + moneyType.getMultipleName() + "§f!");
                 return true;
             }
             case Money: {

@@ -8,7 +8,6 @@ import sk.westland.core.enums.EServerData;
 
 import java.util.Optional;
 
-@Service
 public class ServerDataService {
 
     @Autowired

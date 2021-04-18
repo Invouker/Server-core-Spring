@@ -32,8 +32,7 @@ public class IronRod extends CustomResourceItem implements Craftable, Listener {
     }
 
     @Override
-    protected void onPluginEnable(PluginEnableEvent event) {
-
+    public void onPluginEnable(PluginEnableEvent event) {
         recipeService.registerRecipe(getCraftingRecipe());
     }
 }

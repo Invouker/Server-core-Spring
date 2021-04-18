@@ -22,17 +22,14 @@ public class DiscordHandler implements Runnable, Listener {
 
     private JDA jda;
     private Guild guild;
-    private Thread thread;
 
     private List<PlayerSync> playerSyncList = new ArrayList<>();
 
-    private PlayerService playerService;
-    private RankDataRepository rankDataRepository;
-    private UserDataRepository userDataRepository;
-    private VaultService vaultService;
+    private final RankDataRepository rankDataRepository;
+    private final UserDataRepository userDataRepository;
+    private final VaultService vaultService;
 
-    public DiscordHandler(PlayerService playerService, RankDataRepository rankDataRepository, UserDataRepository userDataRepository, VaultService vaultService) {
-        this.playerService = playerService;
+    public DiscordHandler(RankDataRepository rankDataRepository, UserDataRepository userDataRepository, VaultService vaultService) {
         this.rankDataRepository = rankDataRepository;
         this.userDataRepository = userDataRepository;
         this.vaultService = vaultService;
@@ -54,7 +51,7 @@ public class DiscordHandler implements Runnable, Listener {
     public void run() {
         try {
             jda = JDABuilder.createDefault("Nzk3ODU4MjA0OTIxODg4Nzg4.X_slWw.LB4oyW65w6Dwq08pC9a-6ZyRQ1I", GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES)
-                    .addEventListeners(new LinkCommand(playerService, rankDataRepository, userDataRepository, vaultService))
+                    .addEventListeners(new LinkCommand(rankDataRepository, userDataRepository, vaultService))
                     .disableCache(CacheFlag.VOICE_STATE, CacheFlag.EMOTE)
                     .build();
             jda.setAutoReconnect(true);

@@ -2,6 +2,7 @@ package sk.westland.world.events;
 
 import com.Zrips.CMI.Modules.tp.Teleportations;
 import com.Zrips.CMI.events.CMIAsyncPlayerTeleportEvent;
+import com.Zrips.CMI.events.CMIPlayerTeleportEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -18,6 +19,7 @@ import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.potion.PotionEffect;
@@ -43,7 +45,7 @@ public class BasicEvents implements Listener {
     @Autowired
     private DiscordService discordService;
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    //@EventHandler(priority = EventPriority.HIGHEST)
     private void onEntityExplode(EntityExplodeEvent event) {
         if(event.getEntityType() == EntityType.CREEPER || event.getEntityType() == EntityType.PRIMED_TNT)
             event.getEntity().remove();
@@ -65,8 +67,8 @@ public class BasicEvents implements Listener {
             return; // Only main-hand interaction
 
         Entity entity = event.getRightClicked();
-        if(entity.getType() != EntityType.PLAYER)
-            return; // Only Player-Type NPC
+        //if(entity.getType() != EntityType.PLAYER)
+            //return; // Only Player-Type NPC
 
         Player player = event.getPlayer();
         WLPlayer wlPlayer = playerService.getWLPlayer(player);
@@ -75,7 +77,7 @@ public class BasicEvents implements Listener {
         //System.out.println("Interakcia s : " + entity.getName());
 
         if(entity.getName().startsWith(ChatColor.GOLD + "") || entity.getName().startsWith(ChatColor.YELLOW + "")) {
-            Bukkit.getPluginManager().callEvent(new WLPlayerInteractWithNPCEvent(wlPlayer, (Player)entity));
+            Bukkit.getPluginManager().callEvent(new WLPlayerInteractWithNPCEvent(wlPlayer, entity));
         }
     }
 
@@ -97,7 +99,7 @@ public class BasicEvents implements Listener {
         }, 0l, 2l);
     }*/
 
-    @EventHandler(ignoreCancelled = true)
+    //@EventHandler(ignoreCancelled = true)
     private void onPrepareAnvil(PrepareAnvilEvent event) {
         AnvilInventory anvilInventory = event.getInventory();
         for (Materials.Items items : Materials.Items.values()) {
@@ -112,15 +114,7 @@ public class BasicEvents implements Listener {
     }
 
 
-    @EventHandler
-    private void onPlayerQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        if(!NightVisionCommand.getPlayers().contains(event.getPlayer()))
-            return;
 
-        player.removePotionEffect(PotionEffectType.NIGHT_VISION);
-        NightVisionCommand.getPlayers().remove(player);
-    }
 /*
     @EventHandler
     private void onPlayerJoin(PlayerJoinEvent event) {
@@ -139,17 +133,17 @@ public class BasicEvents implements Listener {
     }*/
 
     @EventHandler(ignoreCancelled = true)
-    public void onCMIAsyncPlayerTeleport(CMIAsyncPlayerTeleportEvent event) {
+    private void onCMIPlayerTeleport(CMIPlayerTeleportEvent event) {
         EnumSet<Teleportations.TeleportType> teleportTypes =
-                EnumSet.of(Teleportations.TeleportType.Tp, Teleportations.TeleportType.randomTp,
+                EnumSet.of(Teleportations.TeleportType.Top, Teleportations.TeleportType.Tp, Teleportations.TeleportType.randomTp,
                         Teleportations.TeleportType.TpHere, Teleportations.TeleportType.TpPos,
                         Teleportations.TeleportType.Back, Teleportations.TeleportType.Spawn);
 
         if(teleportTypes.contains(event.getType())) {
             Player player = event.getPlayer();
             Utils.playSound(event.getTo(), Sound.ENTITY_ENDERMAN_TELEPORT);
-            player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20*3, 20, false, false, false));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20*4, 20, false, false, false));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20*3, 2, false, false, false));
         }
     }
-
 }

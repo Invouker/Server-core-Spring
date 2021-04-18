@@ -16,6 +16,8 @@ import sk.westland.core.services.PlayerService;
 import sk.westland.core.utils.ChatInfo;
 import sk.westland.core.utils.RunnableHelper;
 
+import java.util.concurrent.TimeUnit;
+
 @Component
 @CommandLine.Command(name = "sync")
 public class SRankCommand implements Runnable {
@@ -35,30 +37,40 @@ public class SRankCommand implements Runnable {
     @Override
     public void run() {
         DiscordHandler discordHandler = WestLand.getDiscordHandler();
-        for (PlayerSync playerSync : discordHandler.getPlayerSyncList()) {
-            if(playerSync.getCode().equals(code)) {
-                playerSync.setPlayer(context.getPlayer());
-                Guild guild = discordHandler.getJda().getGuildById("796403023681290251");
 
-                Member member = guild
-                        .getMemberById(
-                                playerSync.getPlayerDiscordId()
-                        );
-
-                User user = null;
-                if(member == null) {
-                    System.out.println("Member doesnt exists");
-                    user = playerSync.getUser();
-                }
-                    else user = member.getUser();
-
-                user.openPrivateChannel().queue((privateChannel -> {
-                    privateChannel.sendMessage("Úspešne si si zosynchronizoval účet!").queue();
-                }));
-                long playerID = playerService.getWLPlayer(context.getPlayer()).getUserData().getId();
-                RunnableHelper.save(rankDataRepository, new RankData(playerID, user.getId(), true));
-                ChatInfo.SUCCESS.sendAll("Uspešne si si zosynchronizoval účet s : " + user.getName());
+        PlayerSync playerSync = null;
+        for (PlayerSync playerSync_: discordHandler.getPlayerSyncList()) {
+            if(playerSync_ != null &&
+                    playerSync_.getCode() != null &&
+                    playerSync_.getCode().equals(code)) {
+                playerSync = playerSync_;
             }
         }
+
+       if(playerSync == null) {
+           ChatInfo.WARNING.send(context, "Tento kód buhužial neexistuje, skús znova!");
+           return;
+       }
+
+        playerSync.setPlayer(context.getPlayer());
+        Guild guild = discordHandler.getJda().getGuildById("796403023681290251");
+
+        assert guild != null;
+        Member member = guild.getMemberById(playerSync.getPlayerDiscordId());
+
+        User user = null;
+        if(member == null) {
+            user = playerSync.getUser();
+        }
+        else user = member.getUser();
+
+        user.openPrivateChannel().queue((privateChannel -> {
+            privateChannel.sendMessage("Úspešne si si zosynchronizoval účet!").queue((msg) -> {
+                msg.delete().queueAfter(3, TimeUnit.SECONDS);
+            });
+        }));
+        long playerID = playerService.getWLPlayer(context.getPlayer()).getUserData().getId();
+        RunnableHelper.save(rankDataRepository, new RankData(playerID, user.getId()));
+        ChatInfo.SUCCESS.send(context, "Uspešne si si zosynchronizoval účet s discord účtom: " + user.getName());
     }
 }

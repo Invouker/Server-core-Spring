@@ -71,8 +71,6 @@ public class WestLand extends JavaPlugin {
         Bukkit.getConsoleSender().sendMessage("§a");
         Bukkit.getConsoleSender().sendMessage("§aLoading Spring framework...");
 
-        discordHandler = new DiscordHandler(playerService, rankDataRepository, userDataRepository, vaultService);
-
         saveDefaultConfig();
 
         defaultClassLoader = Thread.currentThread().getContextClassLoader();
@@ -99,14 +97,15 @@ public class WestLand extends JavaPlugin {
 
         try {
             this.context = application.run();
-        }catch (Exception ex) {
-            ex.printStackTrace();
+        }catch (UnsupportedOperationException ignored) {
         }
         setupDatabase(properties);
 
         application.setDefaultProperties(properties);
 
         Bukkit.getPluginManager().callEvent(new PluginEnableEvent(this));
+
+        discordHandler = new DiscordHandler(rankDataRepository, userDataRepository, vaultService);
 
         try {
             placeHolder = new PlaceHolder(this, playerService, scoreboardService, serverDataService);
@@ -137,6 +136,8 @@ public class WestLand extends JavaPlugin {
     public void onDisable() {
         super.onDisable();
         Bukkit.getPluginManager().callEvent(new ServerDisableEvent(westLand));
+
+        playerService.saveAllUsers(false);
 
         placeHolder.unregister();
         discordHandler.shutdown();

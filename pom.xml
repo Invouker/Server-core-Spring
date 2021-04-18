@@ -160,7 +160,7 @@
         <dependency>
             <groupId>dev.alangomes</groupId>
             <artifactId>spigot-spring-boot-starter</artifactId>
-            <version>0.20.7</version>
+            <version>0.20.6</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>

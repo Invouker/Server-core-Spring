@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import sk.westland.core.database.player.PlayerData;
 import sk.westland.core.database.player.PlayerOptions;
 import sk.westland.core.database.player.UserData;
+import sk.westland.core.enums.EPlayerTimeReward;
 import sk.westland.core.enums.JobList;
 import sk.westland.world.items.Materials;
 
@@ -98,6 +99,10 @@ public class WLPlayer  {
         playerData.setShards(shards);
     }
 
+    public void addShards(double shards) {
+        playerData.setShards(playerData.getShards() + shards);
+    }
+
     public double getGems() {
         return playerData.getGems();
     }
@@ -106,9 +111,13 @@ public class WLPlayer  {
         playerData.setGems(gems);
     }
 
-    public void giveShards(double shards) { setShards(getShards() + shards); }
+    public void addGems(double gems) {
+        playerData.setGems(playerData.getGems() + gems);
+    }
 
-    public void giveGems(double gems) { setGems(getGems() + gems); }
+    public void giveShards(double shards) { addShards(shards); }
+
+    public void giveGems(double gems) { addGems(gems); }
 
     public int getActiveJoinMessage() {
         return playerData.getActiveJoinMessage();
@@ -128,6 +137,42 @@ public class WLPlayer  {
 
     public List<String> getCraftingRecipes() {
         return playerData.getCraftingRecipe();
+    }
+
+    public long getRewardClaimedTime(EPlayerTimeReward timeReward) {
+        switch (timeReward) {
+            case Daily: return playerData.getDailyRewardClaimed();
+            case Weekly: return playerData.getWeeklyRewardClaimed();
+            case Monthly: return playerData.getMonthlyRewardClaimed();
+            case PremiumDaily: return playerData.getDailyPremiumRewardClaimed();
+            case PremiumWeekly: return playerData.getWeeklyPremiumRewardClaimed();
+        }
+        return 0L;
+    }
+
+    public void setRewardClaimedTime(EPlayerTimeReward timeReward, long time) {
+        switch (timeReward) {
+            case Daily: {
+                playerData.setDailyRewardClaimed(time);
+                break;
+            }
+            case Weekly: {
+                playerData.setWeeklyRewardClaimed(time);
+                break;
+            }
+            case Monthly: {
+                playerData.setMonthlyRewardClaimed(time);
+                break;
+            }
+            case PremiumDaily: {
+                playerData.setDailyPremiumRewardClaimed(time);
+                break;
+            }
+            case PremiumWeekly: {
+                playerData.setWeeklyPremiumRewardClaimed(time);
+                break;
+            }
+        }
     }
 
     public int getHighestLevelClaimed(JobList job) {

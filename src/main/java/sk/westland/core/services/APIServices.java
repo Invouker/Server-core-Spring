@@ -9,7 +9,6 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.springframework.stereotype.Service;
 import sk.westland.core.event.PluginEnableEvent;
 
-@Service
 public class APIServices implements Listener {
 
     private LuckPerms luckPerms;

@@ -29,11 +29,10 @@ import sk.westland.core.items.*;
 import sk.westland.core.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Component
-public class Hammer extends CustomItem implements Listener, Craftable {
+public class BetterShovel extends CustomItem implements Listener, Craftable {
 
     private final String METADATA_KEY = "last_dig_direction";
 
@@ -47,8 +46,8 @@ public class Hammer extends CustomItem implements Listener, Craftable {
 
     @Override
     public ItemStack getItem() {
-        return customItemStack = new ItemBuilder(Material.DIAMOND_PICKAXE)
-                .setName("§bDiamond Hammer")
+        return customItemStack = new ItemBuilder(Material.DIAMOND_SHOVEL)
+                .setName("§eExcavator shovel")
                 .setModelId(getModelID())
                 .setNbt_Int("radius", 3)
                 .setCustomItem(this)
@@ -63,37 +62,21 @@ public class Hammer extends CustomItem implements Listener, Craftable {
 
     @Override
     public String itemID() {
-        return "hammer";
+        return "excavatorShovel";
     }
 
     @Override
     protected void onPluginEnable(PluginEnableEvent event) {
         recipeService.registerRecipe(getCraftingRecipe());
 
-        ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-        protocolManager.addPacketListener(new PacketAdapter(WestLand.getInstance(),
-                ListenerPriority.NORMAL,
-                PacketType.Play.Client.BLOCK_DIG) {
-            @Override
-            public void onPacketReceiving(PacketEvent packetEvent) {
-
-
-
-                if (packetEvent.getPacketType() == PacketType.Play.Client.BLOCK_DIG) {
-                    PacketContainer packetContainer = packetEvent.getPacket();
-
-                    packetEvent.getPlayer().setMetadata(METADATA_KEY, new FixedMetadataValue(event.getWestLand(), packetContainer.getDirections().read(0)) {
-
-                    });
-                }
-            }
-        });
     }
 
     @Override
     protected void onPlayerBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
+
         EnumWrappers.Direction direction = EnumWrappers.Direction.valueOf(String.valueOf(player.getMetadata(METADATA_KEY).get(0).value()));
+        // Nastavenie metadát prebieha v  in Hammer.class
 
         ItemStack itemStack = event.getPlayer().getInventory().getItemInMainHand();
         List<Block> blocks = getSquare(event.getBlock(), direction);

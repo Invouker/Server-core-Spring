@@ -25,7 +25,7 @@ public class CopperIngot extends CustomResourceItem implements Listener {
     }
 
     @Override
-    protected void onPluginEnable(PluginEnableEvent event) {
+    public void onPluginEnable(PluginEnableEvent event) {
         recipeService.addFurnaceRecipe("copperIngot", Materials.Resources.COPPER_INGOT, Materials.Resources.COPPER_DUST, 3, 8);
     }
 }

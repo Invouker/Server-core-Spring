@@ -84,7 +84,8 @@ public class Utils {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < length; i++) {
             stringBuilder.append(
-                    Utils.BaseMath.getRandomBoolean() ?
+                    BaseMath
+                            .getRandomBoolean() ?
                             alphabet[Utils.BaseMath.getRandomInt(alphabet.length-1)] :
                             Character.toUpperCase(alphabet[Utils.BaseMath.getRandomInt(alphabet.length-1)])
             );
@@ -126,6 +127,16 @@ public class Utils {
 
         public static int getRandomMinMaxInt(int min, int max) {
             return random.nextInt(max - min) + min;
+        }
+
+        public static boolean isInPercent(int percent, int maxPercent) {
+                                                    // 1 - 100  R: 20 > P: 25   26-100 :: false
+                                                    // čim menšie číslo P tým väčšia šanca
+            return Utils.BaseMath.getRandomMinMaxInt(1, maxPercent) > (maxPercent-percent);
+        }
+
+        public static boolean isInPercent(int percent) {
+            return isInPercent(percent, 100);
         }
 
         public static boolean getRandomBoolean() {

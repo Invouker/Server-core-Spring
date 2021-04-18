@@ -24,6 +24,12 @@ public class PlayerData {
     private int level = 1;
     private int exp = 0;
 
+    private long dailyRewardClaimed = 0L;
+    private long dailyPremiumRewardClaimed = 0L;
+    private long weeklyRewardClaimed = 0L;
+    private long weeklyPremiumRewardClaimed = 0L;
+    private long monthlyRewardClaimed = 0L;
+
     @Column(columnDefinition = "text")
     @Convert(converter = StringConverter.class)
     private List<String> craftingRecipe;
@@ -115,4 +121,43 @@ public class PlayerData {
         this.alreadyJobRewarded = alreadyJobRewarded;
     }
 
+    public long getDailyRewardClaimed() {
+        return dailyRewardClaimed;
+    }
+
+    public void setDailyRewardClaimed(long dailyRewardClaimed) {
+        this.dailyRewardClaimed = dailyRewardClaimed;
+    }
+
+    public long getWeeklyRewardClaimed() {
+        return weeklyRewardClaimed;
+    }
+
+    public void setWeeklyRewardClaimed(long weeklyRewardClaimed) {
+        this.weeklyRewardClaimed = weeklyRewardClaimed;
+    }
+
+    public long getMonthlyRewardClaimed() {
+        return monthlyRewardClaimed;
+    }
+
+    public void setMonthlyRewardClaimed(long monthlyRewardClaimed) {
+        this.monthlyRewardClaimed = monthlyRewardClaimed;
+    }
+
+    public long getDailyPremiumRewardClaimed() {
+        return dailyPremiumRewardClaimed;
+    }
+
+    public void setDailyPremiumRewardClaimed(long dailyPremiumRewardClaimed) {
+        this.dailyPremiumRewardClaimed = dailyPremiumRewardClaimed;
+    }
+
+    public long getWeeklyPremiumRewardClaimed() {
+        return weeklyPremiumRewardClaimed;
+    }
+
+    public void setWeeklyPremiumRewardClaimed(long weeklyPremiumRewardClaimed) {
+        this.weeklyPremiumRewardClaimed = weeklyPremiumRewardClaimed;
+    }
 }

@@ -2,12 +2,14 @@ package sk.westland.world.commands.discord;
 
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.validation.Validator;
 import sk.westland.core.WestLand;
 import sk.westland.core.database.player.RankData;
 import sk.westland.core.database.player.RankDataRepository;
@@ -22,16 +24,15 @@ import sk.westland.discord.PermissionHandler;
 
 import java.awt.*;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 public class LinkCommand extends ListenerAdapter {
 
-    private PlayerService playerService;
-    private RankDataRepository rankDataRepository;
-    private UserDataRepository userDataRepository;
-    private VaultService vaultService;
+    private final RankDataRepository rankDataRepository;
+    private final UserDataRepository userDataRepository;
+    private final VaultService vaultService;
 
-    public LinkCommand(PlayerService playerService, RankDataRepository rankDataRepository, UserDataRepository userDataRepository, VaultService vaultService) {
-        this.playerService = playerService;
+    public LinkCommand(RankDataRepository rankDataRepository, UserDataRepository userDataRepository, VaultService vaultService) {
         this.rankDataRepository = rankDataRepository;
         this.userDataRepository = userDataRepository;
         this.vaultService = vaultService;
@@ -73,43 +74,54 @@ public class LinkCommand extends ListenerAdapter {
         DiscordHandler discordHandler = WestLand.getDiscordHandler();
         User user = event.getAuthor();
 
-        Optional<RankData> rankDataOptional = rankDataRepository.findByDiscordUuidAndIsSynced(event.getAuthor().getId(), true);
+        if(rankDataRepository == null) {
+            Bukkit.getLogger().warning("RankDataRepository cannot be null");
+            return;
+        }
+
+        Optional<RankData> rankDataOptional = rankDataRepository.findByDiscordUuid(event.getAuthor().getId());
 
         if(rankDataOptional.isPresent()) {
             event.getMessage().delete().queue();
-            event.getTextChannel().sendMessage("Tvoj účet už bol zosynchronizovaný!").queue();
+            event.getTextChannel().sendMessage("Tvoj účet už bol zosynchronizovaný!").queue((msg) -> {
+                msg.delete().queueAfter(3, TimeUnit.SECONDS);
+            });
             return;
         }
 
         if(discordHandler.containsPlayerSync(user.getId())) {
+            event.getMessage().delete().queue();
             user.openPrivateChannel().queue((privateChannel -> {
-                privateChannel.sendMessage("Už máš vygenerovaný kód!").queue();
+                privateChannel.sendMessage("Už máš vygenerovaný kód!").queue((msg) -> {
+                    msg.delete().queueAfter(3, TimeUnit.SECONDS);
+                    privateChannel.close().queue();
+                });
             }));
             return;
         }
-        event.getTextChannel().sendMessage("Kód aj s návodom ti budú doručené do súkromej správy!").queue();
+
+        event.getTextChannel().sendMessage("Kód aj s návodom ti budú doručené do súkromej správy!").queue((msg) -> {
+            msg.delete().queueAfter(3, TimeUnit.SECONDS);
+        });
+
         String code = Utils.generateRandomChars(8);
         user.openPrivateChannel().queue((privateChannel -> {
             privateChannel.sendMessage(new EmbedBuilder()
-                    .setAuthor("WestLand")
+                    .setAuthor("PREPOJENIE ÚČTU")
                     .setColor(Color.YELLOW)
-                    .setDescription("Idk čo sem")
-                    .addField("Tvoj kód ktorý zadáš príkazom do hry", "`/sync " + code + "`", true)
-                    .setFooter("Správa bola automaticky vygenerovaná").build())
-                    .queue();
+                    .addField(" ", "Autorizačný kód: `" + code + "`, s nikým svoj kód nezdieľaj!\n" +
+                            "Tvoj účet bude prepojený a získaš svoj príslušný rank.", true)
+                    .addField(" ", "Pre dokončenie je nutné napísať následovný príkaz\n" +
+                            "na našom serveri: `/sync " + code + "`", false)
+                    .setFooter("Správa bude automatický zmazaná do 10 minút!").build())
+                    .queue((msg) ->
+                            msg.delete().queueAfter(10, TimeUnit.MINUTES));//;
+            privateChannel.close().queue();
         }));
+
         PlayerSync playerSync = new PlayerSync(user.getId(), code);
         playerSync.setUser(user);
         discordHandler.addPlayer(playerSync);
+        event.getMessage().delete().queue();
     }
-
-    /*
-    @Override
-    @Command(command = "link",
-            description = {"" +
-                    "Pre linknutie discord účtov, s účtom ", "ktorý vlastníte na minecraft serveri."},
-            aliases = {"sync","ranksync", "syncrank"})
-    public void onCommand(User user, String command, String[] args, String arg, MessageReceivedEvent event) {
-
-    }*/
 }

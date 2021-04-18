@@ -246,7 +246,7 @@ public class PMoneyCommands implements Runnable {
                 ChatInfo.SUCCESS.send(targetPlayer, "Aktuálne máš " + moneyService.get(targetPlayer, moneyType) + " " + moneyType.name() + "!");
             else ChatInfo.ERROR.send(context.getSender(), "Error ");
 
-            ChatInfo.SUCCESS.send(context.getPlayer(), "Dal si hráčovy " + targetPlayer.getName() + " " + moneyService.get(targetPlayer, moneyType) + " " + moneyType.getName());
+            ChatInfo.SUCCESS.send(context.getSender(), "Dal si hráčovy " + targetPlayer.getName() + " " + moneyService.get(targetPlayer, moneyType) + " " + moneyType.getName());
             playerService.save(targetPlayer);
         }
 

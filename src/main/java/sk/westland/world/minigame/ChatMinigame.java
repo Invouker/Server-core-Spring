@@ -47,7 +47,8 @@ public class ChatMinigame implements Listener, Runnable {
                     .filter((player) -> playerService.getWLPlayer(player).getPlayerOptions().isChatReactionSound())
                     .forEach(player -> Utils.playSound(player, Sound.ENTITY_PUFFER_FISH_BLOW_UP));
            // Utils.playSound(Sound.ENTITY_PUFFER_FISH_BLOW_UP);
-            task = Bukkit.getScheduler().runTaskLater(WestLand.getInstance(), this, 20*60L);
+            //20*60*5
+            task = Bukkit.getScheduler().runTaskLater(WestLand.getInstance(), this, Math.max(20*60*15, 60-Bukkit.getOnlinePlayers().size()));
 
         }, RunnableDelay.DELAY(), 20*62*5L);
     }

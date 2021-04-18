@@ -6,9 +6,7 @@ import sk.westland.core.items.Craftable;
 import sk.westland.core.items.CustomItem;
 import sk.westland.core.items.CustomResourceItem;
 import sk.westland.world.items.blocks.*;
-import sk.westland.world.items.resources.CopperDust;
-import sk.westland.world.items.resources.CopperIngot;
-import sk.westland.world.items.resources.IronRod;
+import sk.westland.world.items.resources.*;
 import sk.westland.world.items.spawners.MagicSpawner;
 import sk.westland.world.items.tools.*;
 
@@ -16,10 +14,10 @@ public class Materials {
 
     public enum Items {
         //Craftable                                               // MODEL ID
-        CROWBAR(new Crowbar(), null),
         HAMMER(new Hammer(), null),
-        BETTER_HOE(new BetterHoe(), null),
+        BETTER_HOE(new BetterHoe(), null),              //DIAMOND PICKAXE 1
         BETTER_PICKAXE(new BetterPickaxe(), null),
+        BETTER_SHOVEL(new BetterShovel(), null),
 
         // Blocks
         BLOCK_PLACER(new BlockPlacerItem(), null),
@@ -28,9 +26,9 @@ public class Materials {
         MOB_GRINDER(new BlockMobGrinderItem(), null),
         CHUNK_COLLECTOR(new BlockChunkCollectorItem(), null),
 
-        SADDLE_ITEM(null, new SaddleItem()),
+        SADDLE_ITEM(null, new SaddleItem()),            // SADDLE 2
         MAGIC_SPAWNER(null, new MagicSpawner()),
-        SELL_WAND(null, new SellWand());
+        WORTH_WAND(null, new WorthWand());
 
         private Craftable craftable;
         private CustomItem customItem;
@@ -79,10 +77,15 @@ public class Materials {
     }
 
     public enum Resources {
-        // MODEL ID // MATERIAL
-        IRON_ROD(new IronRod()),        // 5     // stick
-        COPPER_DUST(new CopperDust()),
-        COPPER_INGOT(new CopperIngot())
+                                                            // MODEL ID // MATERIAL
+        ENHANCED_NETHERITE_INGOT(new EnhancedNetheriteIngot()), // DEFAULT - ENCHANTED
+        COPPER_DUST(new CopperDust()),                      // 2    PAPER
+        COPPER_INGOT(new CopperIngot()),                    // 3    PAPER
+        IRON_ROD(new IronRod()),                            // 4    PAPER
+        RAW_CARBON_FIBRE(new RawCarbonFibre()),             // 5    PAPER
+        COMPRESSED_CARBON(new CompressedCarbon()),          // 6    PAPER
+        DARK_DIAMOND(new DarkDiamond()) ,               // 7    PAPER
+        COAL_DUST(new CoalDust())                  // 8    PAPER
         ;
 
         private CustomResourceItem customResourceItem;

@@ -10,7 +10,8 @@ public enum EPlayerOptions {
     CHAT_REACTION_SOUND,
     SHOW_DEATH_MESSAGE,
     SHOW_SCOREBOARD,
-    TELEPORT_EFFECT
+    TELEPORT_EFFECT,
+    SHOW_AUTOMESSAGE
     ;
 
     public boolean getPlayerOptions(WLPlayer wlPlayer) {
@@ -31,6 +32,8 @@ public enum EPlayerOptions {
                 return playerOptions.isShowScoreboard();
             case TELEPORT_EFFECT:
                 return playerOptions.isTeleportEffect();
+            case SHOW_AUTOMESSAGE:
+                return playerOptions.isShowAutoMessage();
         }
         return false;
     }
@@ -63,6 +66,10 @@ public enum EPlayerOptions {
             }
             case TELEPORT_EFFECT: {
                 playerOptions.setTeleportEffect(option);
+                break;
+            }
+            case SHOW_AUTOMESSAGE: {
+                playerOptions.setShowAutoMessage(option);
                 break;
             }
         }

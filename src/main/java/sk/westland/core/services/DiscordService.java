@@ -145,6 +145,9 @@ public class DiscordService implements Listener, Runnable {
 
 
         new MessageHistory((MessageChannel) infoStatusChannel).retrievePast(1).queue((messageList) -> {
+            if(messageList == null)
+                return;
+
             List<String> onlinePlayers = new ArrayList<>();
             Bukkit.getOnlinePlayers().forEach((player) -> onlinePlayers.add(player.getName()));
             double tps = BigDecimal.valueOf(MinecraftServer.getServer().recentTps[0]).setScale(2, RoundingMode.HALF_UP).doubleValue();
