@@ -44,7 +44,7 @@ public class ScoreDisplay {
             String first = text.substring(0, Math.min(text.length(), 32));
             String color = org.bukkit.ChatColor.getLastColors(first);
             team.setPrefix(first);
-            if(text.length() > 32)
+            if(text.length() > 31)
                 team.setSuffix(color + text.substring(32));
 
             displayLine();
@@ -96,7 +96,7 @@ public class ScoreDisplay {
 
     private void setupBoard() {
         board = Bukkit.getScoreboardManager().getNewScoreboard();
-        objective = board.registerNewObjective("NEasyScoreboard", "dummy", Component.empty().toBuilder().asComponent());
+        objective = board.registerNewObjective("westland", "dummy", Component.empty().toBuilder().asComponent());
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         player.setScoreboard(board);
     }

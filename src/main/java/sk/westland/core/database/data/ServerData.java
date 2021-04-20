@@ -20,6 +20,7 @@ public class ServerData {
     private double doubleData;
     private long longData;
     private float floatData;
+    private boolean booleanData;
 
     public ServerData() {
     }
@@ -43,9 +44,15 @@ public class ServerData {
         this.serverData = serverData;
         this.doubleData = data;
     }
+
     public ServerData(EServerData serverData, int data) {
         this.serverData = serverData;
         this.intData = data;
+    }
+
+    public ServerData(EServerData serverData, boolean data) {
+        this.serverData = serverData;
+        this.booleanData = data;
     }
 
     public long getId() {
@@ -102,5 +109,13 @@ public class ServerData {
 
     public void setIntData(int intData) {
         this.intData = intData;
+    }
+
+    public boolean getBooleanData() {
+        return booleanData;
+    }
+
+    public void setBooleanData(boolean booleanData) {
+        this.booleanData = booleanData;
     }
 }

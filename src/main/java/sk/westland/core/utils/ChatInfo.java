@@ -16,6 +16,7 @@ public enum ChatInfo {
         SUCCESS("§b§l[!] §f", ComponentBuilder.text("[#] ").bold(true).color(ChatColor.DARK_GREEN).build(), ChatColor.GREEN),
         WARNING("§c§l[!] §c", ComponentBuilder.text("[!] ").bold(true).color(ChatColor.RED).build(), ChatColor.YELLOW),
         ERROR("§4§l[!!] §c", ComponentBuilder.text("[!!] ").bold(true).color(ChatColor.DARK_RED).build(), ChatColor.RED),
+        DEBUG("§c[DEBUG] §c", ComponentBuilder.text("[DEBUG]  ").bold(true).color(ChatColor.RED).build(), ChatColor.RED),
         COMMAND_HELPER(ChatColor.of("#005ce6") +"§l~~ ", ComponentBuilder.text("§l ").bold(true).color(ChatColor.of("#FF04AA")).build(), ChatColor.of("#FF04AA"));
 
     private String prefix;
@@ -58,6 +59,14 @@ public enum ChatInfo {
         }
 
         return message;
+    }
+
+    public static void sendTitle(String message, String subMessage) {
+        Bukkit.getOnlinePlayers().forEach((player) -> player.sendTitle(message, subMessage, 30, 80, 30));
+    }
+
+    public static void setActionBar(String message) {
+        Bukkit.getOnlinePlayers().forEach((player) -> player.sendActionBar(message));
     }
 
     public void send(Player player, String message) {

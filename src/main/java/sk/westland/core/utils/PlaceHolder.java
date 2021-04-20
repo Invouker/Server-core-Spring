@@ -8,7 +8,7 @@ import sk.westland.core.enums.EServerData;
 import sk.westland.core.services.PlayerService;
 import sk.westland.core.services.ScoreboardService;
 import sk.westland.core.services.ServerDataService;
-import sk.westland.core.services.VoteParty;
+import sk.westland.core.services.VotePartyService;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -112,12 +112,12 @@ public class PlaceHolder extends PlaceholderExpansion {
         // %westland_voteparty_votes%
         if(identifier.equalsIgnoreCase("voteparty_votes")) {
             int totalVotes = serverDataService.getIntData(EServerData.VOTES_TOTAL);
-            return String.valueOf(totalVotes % VoteParty.VOTEPARTY);
+            return String.valueOf(totalVotes % VotePartyService.VOTEPARTY);
         }
 
         // %westland_voteparty_total%
         if(identifier.equalsIgnoreCase("voteparty_total")) {
-            return String.valueOf(VoteParty.VOTEPARTY);
+            return String.valueOf(VotePartyService.VOTEPARTY);
         }
 
         {

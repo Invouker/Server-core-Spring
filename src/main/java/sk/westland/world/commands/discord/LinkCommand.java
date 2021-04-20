@@ -2,7 +2,9 @@ package sk.westland.world.commands.discord;
 
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageType;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -66,6 +68,9 @@ public class LinkCommand extends ListenerAdapter {
         super.onMessageReceived(event);
 
         if(event.getAuthor().isBot())
+            return;
+
+        if(!event.getMessage().isFromType(ChannelType.TEXT))
             return;
 
         if(!event.getMessage().getContentDisplay().startsWith("!link"))

@@ -112,4 +112,24 @@ public class ServerDataService {
         serverData.setIntData(data);
         serverDataRepository.save(serverData);
     }
+
+    public boolean getBooleanData(EServerData eServerData) {
+        if(!serverDataRepository.findByServerData(eServerData).isPresent())
+            return false;
+
+        return serverDataRepository.findByServerData(eServerData).get().getBooleanData();
+    }
+
+    public void setBooleanData(EServerData eServerData, boolean data) {
+        Optional<ServerData> serverDataOptional = serverDataRepository.findByServerData(eServerData);
+
+        if(!serverDataOptional.isPresent()) {
+            serverDataRepository.save(new ServerData(eServerData, data));
+            return;
+        }
+
+        ServerData serverData = serverDataOptional.get();
+        serverData.setBooleanData(data);
+        serverDataRepository.save(serverData);
+    }
 }

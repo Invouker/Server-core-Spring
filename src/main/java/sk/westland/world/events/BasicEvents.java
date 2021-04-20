@@ -11,15 +11,12 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.potion.PotionEffect;
@@ -31,7 +28,6 @@ import sk.westland.core.event.player.WLPlayerInteractWithNPCEvent;
 import sk.westland.core.services.DiscordService;
 import sk.westland.core.services.PlayerService;
 import sk.westland.core.utils.Utils;
-import sk.westland.world.commands.player.NightVisionCommand;
 import sk.westland.world.items.Materials;
 
 import java.util.EnumSet;
@@ -142,8 +138,8 @@ public class BasicEvents implements Listener {
         if(teleportTypes.contains(event.getType())) {
             Player player = event.getPlayer();
             Utils.playSound(event.getTo(), Sound.ENTITY_ENDERMAN_TELEPORT);
-            player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20*4, 20, false, false, false));
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20*3, 2, false, false, false));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20*3, 20, false, false, false));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20*2, 2, false, false, false));
         }
     }
 }

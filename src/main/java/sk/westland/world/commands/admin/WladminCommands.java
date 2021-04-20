@@ -10,10 +10,12 @@ import sk.westland.core.enums.EPlayerTimeReward;
 import sk.westland.core.enums.EServerData;
 import sk.westland.core.services.PlayerService;
 import sk.westland.core.services.ServerDataService;
+import sk.westland.core.services.VotePartyService;
 import sk.westland.core.utils.ChatInfo;
 import sk.westland.world.commands.Converter.PlayerArgConverter;
 import sk.westland.world.commands.suggestion.PlayerSuggestion;
 import sk.westland.world.commands.suggestion.TimeRewardSuggestion;
+import sk.westland.world.commands.suggestion.VotePartySuggestion;
 import sk.westland.world.events.AutoMessageEvent;
 
 @Component
@@ -48,9 +50,41 @@ public class WladminCommands implements Runnable {
 
         @Override
         public void run() {
-            if(stringTime.equals("reset")) {
+            if(stringTime.equalsIgnoreCase("reset")) {
                 ChatInfo.SUCCESS.send(context, "Úspešne si resetoval hráčovy time reward");
                 playerService.getWLPlayer(player).setRewardClaimedTime(ePlayerTimeReward, 0);
+            }
+        }
+    }
+
+
+    @Component
+    @CommandLine.Command(name = "voteparty")
+    @HasPermission("westland.commands.voteparty")
+    public static class voteparty implements Runnable {
+
+        @Autowired
+        private Context context;
+
+        @CommandLine.Parameters(index = "0", completionCandidates = VotePartySuggestion.class)
+        private String param;
+
+        @Autowired
+        private VotePartyService votePartyService;
+
+        @Autowired
+        private PlayerService playerService;
+
+        @Override
+        public void run() {
+            if(param.equals("spawn")) {
+                ChatInfo.SUCCESS.send(context, "Úspešne si spawnol voteparty");
+                votePartyService.spawnVoteParty();
+            }
+
+            if(param.equalsIgnoreCase("despawn") || param.equalsIgnoreCase("remove")) {
+                ChatInfo.SUCCESS.send(context, "Úspešne si despawnoval voteparty");
+                votePartyService.despawn();
             }
         }
     }
@@ -77,6 +111,30 @@ public class WladminCommands implements Runnable {
             serverDataService.setIntData(EServerData.AUTOMESSAGE_TIME, time*60);
             AutoMessageEvent.getAutoMessageEvent().reStart();
             ChatInfo.SUCCESS.send(context, "Úspešne si nastavil automessage interval na " + time + " minút");
+        }
+    }
+
+    @Component
+    @CommandLine.Command(name = "debug")
+    @HasPermission("westland.commands.debug")
+    public static class debug implements Runnable {
+
+        @Autowired
+        private Context context;
+
+        @CommandLine.Parameters(index = "0")
+        private boolean param;
+
+        @Autowired
+        private PlayerService playerService;
+
+        @Autowired
+        private ServerDataService serverDataService;
+
+        @Override
+        public void run() {
+            serverDataService.setBooleanData(EServerData.DEBUG, param);
+            ChatInfo.SUCCESS.send(context, "Úspešne si nastavil debug na §6" + (param ? "Zapnutý" : "Vypnutý" ) + "§f minút.");
         }
     }
 }

@@ -4,23 +4,21 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
-import sk.westland.core.entity.player.WLPlayer;
 
-public class WLPlayerEvent extends Event {
+import java.util.List;
+
+public class WLVotePartyDeath extends Event {
 
     private static final HandlerList HANDLERS_LIST = new HandlerList();
-    private WLPlayer wlPlayer;
 
-    public WLPlayerEvent(WLPlayer wlPlayer) {
-        this.wlPlayer = wlPlayer;
+    private List<Player> attackedPlayersList;
+
+    public WLVotePartyDeath(List<Player> attackedPlayersList) {
+        this.attackedPlayersList = attackedPlayersList;
     }
 
-    public WLPlayer getWlPlayer() {
-        return wlPlayer;
-    }
-
-    public Player getPlayer() {
-        return wlPlayer.getPlayer();
+    public List<Player> getAttackedPlayersList() {
+        return attackedPlayersList;
     }
 
     @NotNull
@@ -32,5 +30,4 @@ public class WLPlayerEvent extends Event {
     public static HandlerList getHandlerList() {
         return HANDLERS_LIST;
     }
-
 }

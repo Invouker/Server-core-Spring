@@ -172,4 +172,5 @@ public class WestLand extends JavaPlugin {
     public static DiscordHandler getDiscordHandler() {
         return discordHandler;
     }
+
 }

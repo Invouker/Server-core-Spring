@@ -57,7 +57,6 @@ public class PermissionHandler implements Listener, Runnable {
             return;
         }
 
-        System.out.println();
         EventBus eventBus = apiServices.getLuckPerms().getEventBus();
         eventBus.subscribe(WestLand.getInstance(), NodeAddEvent.class, this::onNodeAdd);
         eventBus.subscribe(WestLand.getInstance(), NodeRemoveEvent.class, this::onNodeRemove);

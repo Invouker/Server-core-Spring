@@ -48,6 +48,6 @@ public class Application {
     public ScoreboardService scoreboardService() { return new ScoreboardService(); }
 
     @Bean
-    public VoteParty voteParty() { return new VoteParty(); }
+    public VotePartyService voteParty() { return new VotePartyService(); }
 
 }

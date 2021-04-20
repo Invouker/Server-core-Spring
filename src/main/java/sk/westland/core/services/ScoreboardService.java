@@ -8,7 +8,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerResourcePackStatusEvent;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import sk.westland.core.WestLand;
 import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.enums.EPlayerOptions;
@@ -82,7 +81,7 @@ public class ScoreboardService implements Listener, Runnable {
         scoreDisplay.setLine(" ", 9);
         scoreDisplay.setLine(ChatColor.of("#AED6F1") +" Server", 10);
         scoreDisplay.setLine("  &fOnline: " + ChatColor.of("#D6EAF8") + "%server_online%", 11);
-        scoreDisplay.setLine("  &fVoteParty: " + ChatColor.of("#D6EAF8") + (totalVotes % VoteParty.VOTEPARTY) + "/" + VoteParty.VOTEPARTY, 12);
+        scoreDisplay.setLine("  &fVoteParty: " + ChatColor.of("#D6EAF8") + (totalVotes % VotePartyService.VOTEPARTY) + "/" + VotePartyService.VOTEPARTY, 12);
         scoreDisplay.setLine(" ", 13);
 
         scoreDisplayHashMap.put(player, scoreDisplay);
@@ -110,7 +109,7 @@ public class ScoreboardService implements Listener, Runnable {
             scoreDisplay.setLine(" ", 9);
             scoreDisplay.setLine(ChatColor.of("#AED6F1") +" Server", 10);
             scoreDisplay.setLine("  &fOnline: " + ChatColor.of("#D6EAF8") + "%server_online%", 11);
-            scoreDisplay.setLine("  &fVoteParty: " + ChatColor.of("#D6EAF8") + (totalVotes % VoteParty.VOTEPARTY) + "/" + VoteParty.VOTEPARTY, 12);
+            scoreDisplay.setLine("  &fVoteParty: " + ChatColor.of("#D6EAF8") + (totalVotes % VotePartyService.VOTEPARTY) + "/" + VotePartyService.VOTEPARTY, 12);
             scoreDisplay.setLine(" ", 13);
         });
 
