@@ -144,24 +144,27 @@ public class DiscordService implements Listener, Runnable {
             return;
 
 
-        new MessageHistory((MessageChannel) infoStatusChannel).retrievePast(1).queue((messageList) -> {
-            if(messageList == null)
-                return;
+        try {
+            new MessageHistory((MessageChannel) infoStatusChannel).retrievePast(1).queue((messageList) -> {
+                if (messageList == null)
+                    return;
 
-            List<String> onlinePlayers = new ArrayList<>();
-            Bukkit.getOnlinePlayers().forEach((player) -> onlinePlayers.add(player.getName()));
-            double tps = BigDecimal.valueOf(MinecraftServer.getServer().recentTps[0]).setScale(2, RoundingMode.HALF_UP).doubleValue();
-            List<String> admins = new ArrayList<>();
-            Bukkit.getOnlinePlayers().stream().filter((player -> player.hasPermission("admin") || player.isOp())).forEach((player) -> admins.add(player.getName()));
+                List<String> onlinePlayers = new ArrayList<>();
+                Bukkit.getOnlinePlayers().forEach((player) -> onlinePlayers.add(player.getName()));
+                double tps = BigDecimal.valueOf(MinecraftServer.getServer().recentTps[0]).setScale(2, RoundingMode.HALF_UP).doubleValue();
+                List<String> admins = new ArrayList<>();
+                Bukkit.getOnlinePlayers().stream().filter((player -> player.hasPermission("admin") || player.isOp())).forEach((player) -> admins.add(player.getName()));
 
-            try {
-                MessageEmbed messageEmbed = generateEmbedMessage(serverStatus, tps, onlinePlayers, admins, Long.parseLong(PlaceholderAPI.setPlaceholders(null, "%server_unique_joins%")));
-                if (messageList == null || messageList.isEmpty())
-                    ((TextChannel) infoStatusChannel).sendMessage(messageEmbed).queue();
-                else
-                    messageList.get(0).editMessage(messageEmbed).queue();
-            }catch (Exception ignore) { }
-        });
+                try {
+                    MessageEmbed messageEmbed = generateEmbedMessage(serverStatus, tps, onlinePlayers, admins, Long.parseLong(PlaceholderAPI.setPlaceholders(null, "%server_unique_joins%")));
+                    if (messageList.isEmpty())
+                        ((TextChannel) infoStatusChannel).sendMessage(messageEmbed).queue();
+                    else
+                        messageList.get(0).editMessage(messageEmbed).queue();
+                } catch (Exception ignore) {
+                }
+            });
+        }catch (Exception ignored) { }
     }
 
     enum ServerStatus {

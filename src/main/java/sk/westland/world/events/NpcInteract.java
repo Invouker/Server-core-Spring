@@ -41,7 +41,7 @@ public class NpcInteract implements Listener {
         }
 
         if(event.getNPCName().contains("Vylepšenie koň")) {
-            HorseUpgradeInventory horseUpgradeInventory = new HorseUpgradeInventory(horseService);
+            HorseUpgradeInventory horseUpgradeInventory = new HorseUpgradeInventory(horseService, moneyService, event.getPlayer());
             horseUpgradeInventory.open(wlPlayer);
         }
 

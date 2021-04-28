@@ -4,27 +4,27 @@ import dev.alangomes.springspigot.context.Context;
 import dev.alangomes.springspigot.security.HasPermission;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine;
 import sk.westland.core.WestLand;
 import sk.westland.core.database.player.PlayerData;
-import sk.westland.core.enums.JobList;
-import sk.westland.core.services.HorseService;
-import sk.westland.core.services.MessageService;
-import sk.westland.core.services.MoneyService;
-import sk.westland.core.services.PlayerService;
+import sk.westland.core.enums.InventoryChestType;
+import sk.westland.core.inventory.rc.InventoryHandler;
+import sk.westland.core.services.*;
 import sk.westland.core.utils.ChatInfo;
 import sk.westland.core.utils.Utils;
-import sk.westland.world.commands.suggestion.JobsSuggestion;
 import sk.westland.world.inventories.ChangeJoinMessageItemMenu;
 import sk.westland.world.inventories.ChangeQuitMessageItemMenu;
-import sk.westland.world.inventories.JobsInventory;
 import sk.westland.world.inventories.entities.HorseUpgradeInventory;
 import sk.westland.world.items.Materials;
 import sk.westland.world.minigame.PartyGame;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Component
 @CommandLine.Command(name = "test")
@@ -40,15 +40,15 @@ public class TestCommand implements Runnable {
     @Autowired
     private MessageService messageService;
 
-    @CommandLine.Parameters(index = "0", defaultValue = "false")
-    private boolean join;
+    @CommandLine.Parameters(index = "0", defaultValue = "0")
+    private String join;
 
     @Override
     public void run() {
-        if(join) {
+        if(join.equalsIgnoreCase("j")) {
             ChangeJoinMessageItemMenu testInventory = new ChangeJoinMessageItemMenu(playerService.getWLPlayer(context.getPlayer()), messageService);
             testInventory.open(context.getPlayer());
-        }else {
+        }else if(join.equalsIgnoreCase("q")){
             ChangeQuitMessageItemMenu testInventory = new ChangeQuitMessageItemMenu(playerService.getWLPlayer(context.getPlayer()), messageService);
             testInventory.open(context.getPlayer());
         }
@@ -112,9 +112,12 @@ public class TestCommand implements Runnable {
         @Autowired
         private HorseService horseService;
 
+        @Autowired
+        private MoneyService moneyService;
+
         @Override
         public void run() {
-            HorseUpgradeInventory horseUpgradeInventory = new HorseUpgradeInventory(horseService);
+            HorseUpgradeInventory horseUpgradeInventory = new HorseUpgradeInventory(horseService, moneyService, context.getPlayer());
             horseUpgradeInventory.open(context.getPlayer());
         }
     }
@@ -124,9 +127,39 @@ public class TestCommand implements Runnable {
     @HasPermission("commands.test6")
     class Test6 implements Runnable {
 
+        @Autowired
+        private InventoryService inventoryService;
+
+        @Autowired
+        private Context context;
+
         @Override
         public void run() {
+            InventoryHandler inventoryHandler = new InventoryHandler("IDK", Bukkit.getPlayer("XpresS"), InventoryChestType.CHEST_9,
+                    (interactEvent) -> {
+                        System.out.println("Klikanie s : " + interactEvent.getWhoClicked().getName());
+                        interactEvent.setResult(Event.Result.ALLOW);
+                        interactEvent.setCancelled(true);
+                    },
+                    (inventoryDragEvent) -> {
 
+
+                    },
+                    (inventoryClickEvent) -> {
+
+                        System.out.println("Klikanie s : " + inventoryClickEvent.getWhoClicked().getName());
+                        inventoryClickEvent.setResult(Event.Result.ALLOW);
+                        inventoryClickEvent.setCancelled(true);
+                    },
+                    (inventoryOpenEvent) -> {
+                inventoryOpenEvent.getInventory().addItem(new ItemStack(Material.ACACIA_BUTTON));},
+                    inventoryCloseEvent -> { });
+
+            inventoryHandler.setItems(7, new ItemStack(Material.ACACIA_WALL_SIGN));
+
+            inventoryHandler.updateInventory();
+            inventoryService.registerInventory(inventoryHandler);
+            context.getPlayer().openInventory(inventoryHandler.getInventory());
         }
     }
 

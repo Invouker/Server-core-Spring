@@ -50,4 +50,7 @@ public class Application {
     @Bean
     public VotePartyService voteParty() { return new VotePartyService(); }
 
+    @Bean
+    public InventoryService inventoryService() { return new InventoryService(); }
+
 }

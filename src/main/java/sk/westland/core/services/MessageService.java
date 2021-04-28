@@ -109,6 +109,7 @@ public class MessageService implements Listener{
 
     @EventHandler
     private void onPlayerJoin(WLPlayerJoinEvent event) {
+        System.out.println("WLPlayer Join");
         Player player = event.getPlayer();
         WLPlayer wlPlayer = playerService.getWLPlayer(player);
         if(wlPlayer == null)

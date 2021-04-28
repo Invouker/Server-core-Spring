@@ -14,6 +14,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -46,6 +47,13 @@ public class BasicEvents implements Listener {
         if(event.getEntityType() == EntityType.CREEPER || event.getEntityType() == EntityType.PRIMED_TNT)
             event.getEntity().remove();
             event.setCancelled(true);
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    private void onEntitySpawn(EntitySpawnEvent event) {
+        if(event.getEntityType() == EntityType.PHANTOM) {
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler
@@ -138,8 +146,8 @@ public class BasicEvents implements Listener {
         if(teleportTypes.contains(event.getType())) {
             Player player = event.getPlayer();
             Utils.playSound(event.getTo(), Sound.ENTITY_ENDERMAN_TELEPORT);
-            player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20*3, 20, false, false, false));
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20*2, 2, false, false, false));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 35, 20, false, false, false));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 30, 2, false, false, false));
         }
     }
 }

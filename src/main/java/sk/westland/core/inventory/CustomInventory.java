@@ -26,7 +26,7 @@ import java.util.List;
 
 public abstract class CustomInventory implements InventoryHolder, Listener {
 
-    protected static final ItemStack CLOSE_INVENTORY_ITEM = new ItemBuilder(Material.STRUCTURE_VOID).setName("§cClose Inventory").build();
+    protected static final ItemStack CLOSE_INVENTORY_ITEM = new ItemBuilder(Material.BARRIER).setName("§cClose Inventory").build();
     protected static final ItemStack GRAY_GLASS = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName("§r ").build();
 
     protected static final ItemStack STICK_EMPTY = new ItemBuilder(Material.STICK).setModelId(10).setName("§r ").build();

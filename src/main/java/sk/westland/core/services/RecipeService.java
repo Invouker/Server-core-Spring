@@ -6,6 +6,7 @@ import net.minecraft.server.v1_16_R3.MinecraftKey;
 import net.minecraft.server.v1_16_R3.Recipes;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import org.bukkit.craftbukkit.v1_16_R3.CraftServer;
@@ -40,6 +41,9 @@ public class RecipeService implements Listener {
     private void onPluginInit(PluginEnableEvent event) {
        Bukkit.getScheduler().runTaskLater(WestLand.getInstance(), ()->{
            Bukkit.getLogger().info("Registring WestLand recipes!");
+
+           removeRecipeByType(Material.HOPPER);
+
            if (!craftingRecipes.isEmpty())
                craftingRecipes.forEach(CraftingRecipe::register);
 
@@ -83,6 +87,19 @@ public class RecipeService implements Listener {
 
                     player.undiscoverRecipe(((Keyed) recipe).getKey());
                 }
+            }
+        }
+    }
+
+    private void removeRecipeByType(Material material) {
+        Iterator<Recipe> iter = Bukkit.getServer().recipeIterator();
+        while (iter.hasNext()) {
+            Recipe r = iter.next();
+            // May not be safe to depend on == here for recipe comparison
+            // Probably safer to compare the recipe result (an ItemStack)
+
+            if (r.getResult().getType() == material) {
+                iter.remove();
             }
         }
     }

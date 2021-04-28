@@ -105,10 +105,12 @@ public class DailyRewardInventory extends OwnerItemMenu {
         EPlayerTimeReward ePlayerTimeReward = null;
         switch (slot) {
             case 12: {
+                if(getPlayer().hasPermission("westland.reward.premium.daily"))
                 ePlayerTimeReward = EPlayerTimeReward.PremiumDaily;
                 break;
             }
             case 14: {
+                if(getPlayer().hasPermission("westland.reward.premium.weekly"))
                 ePlayerTimeReward = EPlayerTimeReward.PremiumWeekly;
                 break;
             }

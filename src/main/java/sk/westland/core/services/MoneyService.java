@@ -78,7 +78,7 @@ public class MoneyService {
                     return true;
                 }
                 case Money: {
-                    vaultService.getEconomy().depositPlayer(getOfflinePlayer(wlPlayer), amount);
+                    vaultService.getEconomy().withdrawPlayer(getOfflinePlayer(wlPlayer), amount);
                     return true;
                 }
             }

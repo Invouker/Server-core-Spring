@@ -1,4 +1,3 @@
-
 package sk.westland.core.inventory;
 
 import org.bukkit.Material;
@@ -21,25 +20,33 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public abstract class ItemShopMenu extends ItemMenu {
+public abstract class NCItemShopMenu extends NCCustomInventory {
 
-    private MoneyService moneyService;
-    private Player player;
+    protected MoneyService moneyService;
+    protected Player player;
 
     // Key = Display item
     // Value:
     // - Item to give
     // - Type of money
     // - Amount of money
-    private Map<ItemStack, Triple<ItemStack, MoneyType, Integer>> itemMap = new HashMap<>();
+    protected Map<ItemStack, Triple<ItemStack, MoneyType, Integer>> itemMap = new HashMap<>();
     private ItemStack[] items;
 
-    public ItemShopMenu(Type type, String title, MoneyService moneyService, Player player) {
+    public NCItemShopMenu(@NotNull Type type, @NotNull String title, MoneyService moneyService, Player player) {
         super(type, title);
 
         items = new ItemStack[type.size];
         this.moneyService = moneyService;
         this.player = player;
+    }
+
+    public NCItemShopMenu(@NotNull Type type, @NotNull String title, MoneyService moneyService, Player player, String withoutInit) {
+        super(type, title, withoutInit);
+        this.moneyService = moneyService;
+        this.player = player;
+
+        items = new ItemStack[type.size];
     }
 
     public void updateInventory() {
@@ -51,7 +58,22 @@ public abstract class ItemShopMenu extends ItemMenu {
     }
 
     @Override
-    protected void onClick(Player player, int slot, ItemStack item, ItemStack cursor, InventoryClickEvent event) {
+    protected void onOpen(@NotNull Player player) {
+        updateInventory();
+    }
+
+    @Override
+    protected void onClose(@NotNull Player player) {
+
+    }
+
+    @Override
+    protected void itemInit() {
+
+    }
+
+    @Override
+    protected void onClick(@NotNull Player player, int slot, @Nullable ItemStack item, @Nullable ItemStack cursor, @NotNull InventoryClickEvent event) {
         if(item == null || item.getType() == Material.AIR)
             return;
 
@@ -103,10 +125,27 @@ public abstract class ItemShopMenu extends ItemMenu {
 
         isDisplay = Nbt.setNbt_Bool(isDisplay, "ShopItem", true);
 
-        if(isGive != null)
-            this.itemMap.put(isDisplay, new ImmutableTriple<>(isGive, moneyType, price));
+        ItemStack itemStackDisplay = new ItemBuilder(isDisplay)
+                .addLore(
+                        "§fCena:§a " + price + " " + moneyType.getMultipleName(),
+                        "§7Aktuálne máš " +
+                                moneyService
+                                        .get(
+                                                player,
+                                                moneyType) + " " +
+                                moneyType
+                                        .getMultipleName()
+                                        .toLowerCase(Locale.ROOT),
+                        "",
+                        "§aKlikni pre zakúpenie!"
+                )
+                .build();
 
-        this.items[index] = isDisplay;
+        if(isGive != null)
+            this.itemMap.put(itemStackDisplay, new ImmutableTriple<>(isGive, moneyType, price));
+
+        this
+                .items[index] = itemStackDisplay;
     }
 
     private int addItem(@NotNull ItemStack isDisplay, @Nullable ItemStack isGive, @NotNull MoneyType moneyType, int price) {
@@ -156,10 +195,5 @@ public abstract class ItemShopMenu extends ItemMenu {
                 .addLore("", "§eCena§f " + price + " " + moneyType.getMultipleName() )
                 .build();
         setItem(index, isDisplay, is, moneyType, price);
-    }
-
-    protected void onOpen(@NotNull Player player)
-    {
-        updateInventory();
     }
 }
