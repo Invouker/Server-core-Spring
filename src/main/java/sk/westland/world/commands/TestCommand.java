@@ -1,5 +1,6 @@
 package sk.westland.world.commands;
 
+import co.aikar.commands.annotation.Dependency;
 import dev.alangomes.springspigot.context.Context;
 import dev.alangomes.springspigot.security.HasPermission;
 import org.bukkit.*;
@@ -12,7 +13,14 @@ import org.springframework.stereotype.Component;
 import picocli.CommandLine;
 import sk.westland.core.WestLand;
 import sk.westland.core.database.player.PlayerData;
+import sk.westland.core.database.player.PlayerDataRepostiroy;
+import sk.westland.core.database.player.UserData;
+import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.enums.InventoryChestType;
+import sk.westland.core.hibernate.AbstractController;
+import sk.westland.core.hibernate.AsyncCallBackExceptionHandler;
+import sk.westland.core.hibernate.RunicException;
+import sk.westland.core.hibernate.repositories.UserRepository;
 import sk.westland.core.inventory.rc.InventoryHandler;
 import sk.westland.core.services.*;
 import sk.westland.core.utils.ChatInfo;
@@ -23,7 +31,12 @@ import sk.westland.world.inventories.entities.HorseUpgradeInventory;
 import sk.westland.world.items.Materials;
 import sk.westland.world.minigame.PartyGame;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Component
@@ -249,6 +262,51 @@ public class TestCommand implements Runnable {
     @CommandLine.Command(name = "9")
     @HasPermission("commands.test9")
     class Test9 implements Runnable {
+
+        @Autowired
+        private Context context;
+
+        @Override
+        public void run() {
+           /* EntityManagerFactory emf = Persistence.createEntityManagerFactory("persistence-unit");
+            EntityManager em = emf.createEntityManager();
+            EntityTransaction tx = em.getTransaction();
+            tx.begin();
+
+            PlayerDataRepostiroy playerDataRepository = new PlayerDataRepostiroy(em);
+            Optional<PlayerData> playerData =  playerDataRepository.findByPlayerId(3);
+            if(playerData.isPresent()) {
+                ChatInfo.SUCCESS.sendAll("Test shards: " + playerData.get().getShards());
+            }else {
+                ChatInfo.ERROR.sendAll("Doesnt found");
+            }
+
+            tx.commit();
+            em.close();
+            emf.close();*/
+
+            UserRepository userRepository = new UserRepository();
+            try {
+                System.out.println("userRepository.findById(3).get().getUserName(): " + userRepository.findByUserName("XpresS").get().getId());
+            } catch (RunicException e) {
+                e.printStackTrace();
+            }
+
+            AbstractController<PlayerData> abstractController = new AbstractController<>(PlayerData.class);
+            abstractController.findAll((a)-> {
+                for(int i = 0; i < 10; i++) {
+                    System.out.println("Shards: " + a.get(i).getShards());
+                }
+                 }, (c)-> {
+                System.out.println(c.getMessage());
+            });
+        }
+    }
+
+    @Component
+    @CommandLine.Command(name = "10")
+    @HasPermission("commands.test10")
+    class Test10 implements Runnable {
 
         @Autowired
         private Context context;

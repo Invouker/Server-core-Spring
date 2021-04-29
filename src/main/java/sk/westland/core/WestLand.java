@@ -1,11 +1,13 @@
 package sk.westland.core;
 
+import co.aikar.commands.PaperCommandManager;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import dev.alangomes.springspigot.SpringSpigotInitializer;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.io.DefaultResourceLoader;
@@ -21,12 +23,15 @@ import sk.westland.core.utils.ResFlag;
 import sk.westland.world.items.Materials;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
+@EntityScan(basePackages = "sk.westland.core.database")
 public class WestLand extends JavaPlugin {
 
     public static final String CUSTOM_BLOCK_NBT = "BLOCK_ID";
@@ -37,6 +42,8 @@ public class WestLand extends JavaPlugin {
 
     private PlaceHolder placeHolder;
     private static DiscordHandler discordHandler;
+
+    private static PaperCommandManager paperCommandManager;
 
     @Autowired
     private PlayerService playerService;
@@ -62,6 +69,8 @@ public class WestLand extends JavaPlugin {
     @PersistenceContext
     private EntityManager em;
 
+
+
     @Override
     public void onEnable() {
         super.onEnable();
@@ -71,7 +80,10 @@ public class WestLand extends JavaPlugin {
         Bukkit.getConsoleSender().sendMessage("§a");
         Bukkit.getConsoleSender().sendMessage("§aLoading Spring framework...");
 
+
         saveDefaultConfig();
+        paperCommandManager = new PaperCommandManager(this);
+        WestLand.getPaperCommandManager().registerDependency(PlayerService.class, playerService);
 
         defaultClassLoader = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(getClassLoader());
@@ -120,6 +132,8 @@ public class WestLand extends JavaPlugin {
         for (ResFlag resFlag : ResFlag.values()) {
             FlagPermissions.addFlag(resFlag.getFlagName());
         }
+
+        System.out.println("is em null ? " + em == null ? "is null" : "not null");
 
         //FlagPermissions.addFlag("mob-catch");
 
@@ -173,4 +187,7 @@ public class WestLand extends JavaPlugin {
         return discordHandler;
     }
 
+    public static PaperCommandManager getPaperCommandManager() {
+        return paperCommandManager;
+    }
 }

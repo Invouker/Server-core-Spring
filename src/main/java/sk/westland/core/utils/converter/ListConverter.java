@@ -44,6 +44,9 @@ public class ListConverter implements AttributeConverter<Map<String, List<Intege
     public Map<String, List<Integer>> convertToEntityAttribute(String dbData) {
         Map<String, List<Integer>> map = new HashMap<>();
 
+        if(dbData == null)
+            return map;
+
         String[] data = dbData.split("\\$");
         for(String jobData : data) {
             List<Integer> collected = new ArrayList<>();

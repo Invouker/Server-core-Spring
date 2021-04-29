@@ -1,12 +1,14 @@
 package sk.westland.core;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import sk.westland.core.services.*;
 
 @SpringBootApplication(scanBasePackages = "sk.westland")
 @EnableJpaRepositories()
+@EntityScan(basePackages = "sk.westland.core.database")
 public class Application {
 
     @Bean

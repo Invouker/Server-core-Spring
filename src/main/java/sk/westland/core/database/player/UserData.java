@@ -4,6 +4,16 @@ import javax.persistence.*;
 
 @Table(name = "wl_users")
 @Entity
+@NamedQueries({
+        @NamedQuery(name = "UserData.findByUserName",
+                query = "SELECT u FROM UserData u WHERE u.userName = :userName"),
+
+        @NamedQuery(name = "UserData.findById",
+                query = "SELECT u FROM UserData u WHERE u.id = :id"),
+
+        @NamedQuery(name = "UserData.findByUuid",
+                query = "SELECT u FROM UserData u WHERE u.uuid = :uuid")
+})
 public class UserData {
 
     @Id

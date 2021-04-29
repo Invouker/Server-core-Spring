@@ -73,6 +73,7 @@ sk\westland\world\items\tools\WorthWand.class
 sk\westland\world\items\tools\BetterHoe.class
 sk\westland\world\inventories\entities\HorseColorInventory.class
 sk\westland\discord\ranksync\Rank.class
+sk\westland\core\hibernate\EntityNotFoundException.class
 sk\westland\world\blocks\type\MobGrinder$BlockDirection.class
 sk\westland\world\events\JobsEvent.class
 sk\westland\world\commands\suggestion\BooleanSuggestion.class
@@ -96,6 +97,7 @@ sk\westland\core\utils\RunnableHelper$6.class
 sk\westland\world\commands\admin\CustomItemCommands.class
 sk\westland\core\services\HorseService$HorseType.class
 sk\westland\world\commands\OptionCommands.class
+sk\westland\core\hibernate\repositories\UserRepository.class
 sk\westland\core\inventory\ItemMenu$1.class
 sk\westland\world\commands\suggestion\PlayerOptionsSuggestion.class
 sk\westland\core\enums\EPlayerOptions$1.class
@@ -110,6 +112,7 @@ sk\westland\core\services\PlayerService.class
 sk\westland\core\database\data\ServerData.class
 sk\westland\core\utils\Utils.class
 sk\westland\core\inventory\CustomInventory$Type$8.class
+sk\westland\world\commands\admin\WladminCommands$voteparty.class
 sk\westland\core\enums\HorseArmour.class
 sk\westland\core\utils\BookPageHelper.class
 sk\westland\world\blocks\type\WorthChest.class
@@ -121,13 +124,16 @@ sk\westland\world\commands\TestCommand$Test4.class
 sk\westland\world\inventories\ChangeJoinMessageItemMenu.class
 sk\westland\world\commands\player\PMoneyCommands$GiveMoney.class
 sk\westland\world\commands\suggestion\TimeRewardSuggestion.class
+sk\westland\core\hibernate\AbstractController.class
 sk\westland\core\utils\RunnableHelper$4.class
+sk\westland\core\hibernate\RunicException.class
 sk\westland\core\inventory\ItemMenu.class
 sk\westland\core\utils\RunnableHelper.class
 sk\westland\core\inventory\CustomInventory$Type$6.class
 sk\westland\core\utils\ChatInfo.class
 sk\westland\world\inventories\shops\HorseBuyInventory.class
 sk\westland\world\items\resources\EnhancedNetheriteIngot.class
+sk\westland\core\event\player\WLVotePartyDeath.class
 sk\westland\world\commands\admin\AdminChat.class
 sk\westland\world\commands\player\JobRewardCommand.class
 sk\westland\world\items\resources\CompressedCarbon.class
@@ -175,6 +181,7 @@ sk\westland\world\blocks\type\multiblocks\Compressor.class
 sk\westland\core\entity\player\WLPlayer$1.class
 sk\westland\world\commands\discord\MessageCommand.class
 sk\westland\core\blocks\BlockLevel.class
+sk\westland\world\commands\TestCommand$Test10.class
 sk\westland\core\services\MessageService.class
 sk\westland\core\event\NPCEvent.class
 sk\westland\discord\commands\CommandRegister.class
@@ -194,6 +201,7 @@ sk\westland\world\items\Materials$Items.class
 sk\westland\core\event\player\WLPlayerQuitEvent.class
 sk\westland\core\event\PluginEnableEvent.class
 sk\westland\world\commands\player\ShardCommands.class
+sk\westland\core\hibernate\AsyncCallBackObjectList.class
 sk\westland\world\inventories\entities\HorseColorInventory$1.class
 sk\westland\core\enums\HorseTier.class
 sk\westland\world\commands\TestCommand$Test7.class
@@ -208,6 +216,7 @@ sk\westland\world\items\spawners\MagicSpawner.class
 sk\westland\core\services\BlockService$1.class
 sk\westland\world\blocks\type\ChunkCollector.class
 sk\westland\world\blocks\type\BlockBreaker.class
+sk\westland\core\hibernate\AsyncCallBackExceptionHandler.class
 sk\westland\core\enums\JoinMessages.class
 sk\westland\world\items\blocks\BlockMobGrinderItem.class
 sk\westland\core\utils\RunnableHelper$2.class
@@ -221,10 +230,12 @@ sk\westland\world\commands\admin\WLRecipe$RemoveAllCommand.class
 sk\westland\discord\commands\Command.class
 sk\westland\world\items\blocks\BlockUpgradeItem.class
 sk\westland\world\items\Materials.class
+sk\westland\core\hibernate\EntityManagerNotInitializedException.class
 sk\westland\core\blocks\CustomBlock.class
 sk\westland\world\items\resources\CoalDust.class
 sk\westland\core\items\Nbt.class
 sk\westland\world\blocks\type\multiblocks\Grinder.class
+sk\westland\core\database\player\PlayerDataRepostiroy.class
 sk\westland\world\commands\OptionCommands$1.class
 sk\westland\world\commands\admin\WLRecipe.class
 sk\westland\world\commands\admin\CustomItemCommands$SellWand.class
@@ -250,6 +261,7 @@ sk\westland\core\items\ItemSlot.class
 sk\westland\core\items\CustomItem.class
 sk\westland\world\inventories\blocks\BreakerInventory.class
 sk\westland\discord\DiscordHandler.class
+sk\westland\core\hibernate\AsyncCallBackObject.class
 sk\westland\core\items\CraftingType.class
 sk\westland\core\entity\player\WLPlayer.class
 sk\westland\world\inventories\JobsInventory.class
