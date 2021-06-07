@@ -12,7 +12,6 @@ import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.enums.JoinMessages;
 import sk.westland.core.inventory.OwnerItemMenu;
 import sk.westland.core.items.ItemBuilder;
-import sk.westland.core.services.MessageService;
 import sk.westland.core.utils.ChatInfo;
 
 import java.util.ArrayList;
@@ -22,15 +21,11 @@ import java.util.List;
 public class ChangeJoinMessageItemMenu extends OwnerItemMenu {
 
     List<ItemStack> items = new ArrayList<>();
-    private ItemBuilder item = new ItemBuilder(Material.RED_CONCRETE_POWDER).setName("§cNONE");
-    private ItemStack glassItem = new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setName("§a").build();
+    private final ItemBuilder item = new ItemBuilder(Material.RED_CONCRETE_POWDER).setName("§cNONE");
+    private final ItemStack glassItem = new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setName("§a").build();
 
-    private MessageService messageService;
-
-    public ChangeJoinMessageItemMenu(WLPlayer player, MessageService messageService) {
-        super(player, Type.Chest5, "§7Zmena pripájacích správ");
-
-        this.messageService = messageService;
+    public ChangeJoinMessageItemMenu(WLPlayer player) {
+        super(player, Type.Chest5, "§8Zmena pripájacích správ");
 
         prepareItems();
         updateInventory();
@@ -52,7 +47,7 @@ public class ChangeJoinMessageItemMenu extends OwnerItemMenu {
                 addItem(items.get(i));
             }
         setItemsRange(36, 9, glassItem);
-        setItem(4, 4, CLOSE_INVENTORY_ITEM);
+        setItemCloseInventory();
     }
 
     private List<String> getItemLore(String joinMessage) {
@@ -83,8 +78,6 @@ public class ChangeJoinMessageItemMenu extends OwnerItemMenu {
 
         updateInventory();
 
-        if(slot == 40)
-            close(getPlayer());
 
     }
 

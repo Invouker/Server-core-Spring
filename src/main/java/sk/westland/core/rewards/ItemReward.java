@@ -1,4 +1,4 @@
-package sk.westland.core.jobs.rewards;
+package sk.westland.core.rewards;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
@@ -10,40 +10,40 @@ import sk.westland.world.items.Materials;
 
 import java.util.Locale;
 
-public class JItemReward implements JIReward {
+public class ItemReward implements IReward<ItemReward> {
 
-    private ItemStack itemStack;
+    private final ItemStack itemStack;
 
-    public JItemReward(ItemStack itemStack, int amount) {
+    public ItemReward(ItemStack itemStack, int amount) {
         this.itemStack = new ItemBuilder(itemStack).setAmount(amount).build();
     }
 
-    public JItemReward(Materials.Items items) {
+    public ItemReward(Materials.Items items) {
         this.itemStack = items.getItem();
     }
 
-    public JItemReward(Materials.Resources items) {
+    public ItemReward(Materials.Resources items) {
         this.itemStack = items.getItem();
     }
 
-    public JItemReward(ItemBuilder itemBuilder) {
+    public ItemReward(ItemBuilder itemBuilder) {
         this.itemStack = itemBuilder.build();
     }
 
-    public JItemReward(ItemStack itemStack) {
+    public ItemReward(ItemStack itemStack) {
         this.itemStack = itemStack;
     }
 
-    public JItemReward(Material mat) {
+    public ItemReward(Material mat) {
         this.itemStack = new ItemStack(mat);
     }
 
-    public JItemReward(Material mat, int amount) {
+    public ItemReward(Material mat, int amount) {
         this.itemStack = new ItemStack(mat, amount);
     }
 
     @Override
-    public JItemReward reward(Player player) {
+    public ItemReward reward(Player player) {
         if(player.getInventory().firstEmpty() == -1)
             return this;
 

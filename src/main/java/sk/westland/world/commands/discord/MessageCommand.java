@@ -1,17 +1,8 @@
 package sk.westland.world.commands.discord;
 
 
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import sk.westland.discord.commands.Command;
-import sk.westland.discord.commands.ICommand;
-
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-public class MessageCommand implements ICommand {
-
+public class MessageCommand {//implements ICommand {
+/*
     @Override
     @Command(command = "msg", description = "For admins")
     public void onCommand(User user, String command, String[] args, String arg, MessageReceivedEvent event) {
@@ -50,5 +41,5 @@ public class MessageCommand implements ICommand {
         }
         return stringBuilder.toString();
     }
-
+*/
 }

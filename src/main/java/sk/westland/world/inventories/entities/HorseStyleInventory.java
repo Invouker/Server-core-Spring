@@ -17,19 +17,22 @@ import sk.westland.core.items.ItemBuilder;
 import sk.westland.core.items.Nbt;
 import sk.westland.core.services.HorseService;
 import sk.westland.core.services.MoneyService;
+import sk.westland.core.services.RunnableService;
 
 public class  HorseStyleInventory extends NCCustomInventory {
 
     private static final int SADDLE_ITEM = 10;
 
-    private HorseService horseService;
+    private final RunnableService runnableService;
+    private final HorseService horseService;
     private ItemStack saddle;
 
-    private MoneyService moneyService;
-    private Player player;
+    private final  MoneyService moneyService;
+    private final Player player;
 
-    public HorseStyleInventory(HorseService horseService, ItemStack saddle, MoneyService moneyService, Player player) {
+    public HorseStyleInventory(HorseService horseService, ItemStack saddle, MoneyService moneyService, RunnableService runnableService, Player player) {
         super(Type.Chest4, "Horse Style Upgrade", "c");
+        this.runnableService = runnableService;
         this.horseService = horseService;
         this.saddle = saddle;
 
@@ -100,7 +103,7 @@ public class  HorseStyleInventory extends NCCustomInventory {
         new BukkitRunnable() {
             @Override
             public void run() {
-                HorseUpgradeInventory horseUpgradeInventory = new HorseUpgradeInventory(horseService, saddle, moneyService, player);
+                HorseUpgradeInventory horseUpgradeInventory = new HorseUpgradeInventory(horseService, saddle, moneyService, runnableService, player);
                 horseUpgradeInventory.open(player);
             }
         }.runTask(WestLand.getInstance());

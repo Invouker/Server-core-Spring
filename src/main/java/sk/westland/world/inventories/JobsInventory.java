@@ -4,6 +4,7 @@ import com.gamingmesh.jobs.Jobs;
 import com.gamingmesh.jobs.container.Job;
 import com.gamingmesh.jobs.container.JobProgression;
 import me.clip.placeholderapi.PlaceholderAPI;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -18,7 +19,7 @@ import sk.westland.core.items.ItemBuilder;
 import sk.westland.core.items.Nbt;
 import sk.westland.core.jobs.JobRewards;
 import sk.westland.core.jobs.JobStorage;
-import sk.westland.core.jobs.rewards.JIReward;
+import sk.westland.core.rewards.IReward;
 import sk.westland.core.services.MoneyService;
 import sk.westland.core.services.PlayerService;
 import sk.westland.core.utils.ChatInfo;
@@ -33,9 +34,9 @@ public class JobsInventory extends OwnerItemMenu {
     private final MoneyService moneyService;
     private final PlayerService playerService;
 
-    private final int fromLevel;
-    private final int untilLevel;
-    private final int page;
+    private int fromLevel;
+    private int untilLevel;
+    private int page;
     private final JobList job;
 
     private static final String NBT_KEY_LEVE_ID = "LEVEL";
@@ -112,11 +113,12 @@ public class JobsInventory extends OwnerItemMenu {
             }
         }
         {
-            setItem(4, 5, new ItemBuilder(STICK_CLOSE).setName("§cZatvoriť").build());
-            if (page > 0) setItem(3, 5, pageInventory(Direction.Left));
-            else setItem(3, 5, STICK_EMPTY);
+            setItemCloseInventory();
+            //setItem(4, 5, new ItemBuilder(CLOSE_INVENTORY_ITEM).setName("§cZatvoriť").build());
+            if (page > 0) setItem(3, 5, new ItemStack(Material.ARROW));//pageInventory(Direction.Left)
+            else setItem(3, 5, new ItemBuilder(Material.RED_BED).setName("§cVrátiť sa").build());
 
-            if ((job.getMaxLevel() / 21) - 1 >= page) setItem(5, 5, pageInventory(Direction.Right));
+            if ((job.getMaxLevel() / 21) - 1 >= page) setItem(5, 5, new ItemStack(Material.ARROW));
             else setItem(5, 5, STICK_EMPTY);
         } // Next / Previous Pages
         {
@@ -158,16 +160,16 @@ public class JobsInventory extends OwnerItemMenu {
     private ItemStack renderUnlockedItem(int level) {
         JobStorage jobStorage = jobRewards.getJobStorage();
 
-        List<JIReward> rewardList = jobStorage.getJobRewards(job, level);
+        List<IReward> rewardList = jobStorage.getJobRewards(job, level);
 
         if(rewardList == null)
             return getInvalidRewardItem(level);
 
         String[] lore = new String[rewardList.size()];
         for (int i = 0; i < rewardList.size(); i++) {
-            JIReward jiReward = rewardList.get(i);
-            if(jiReward.render() == null) continue;
-            lore[i] =  "§6" + jiReward.render();
+            IReward iReward = rewardList.get(i);
+            if(iReward.render() == null) continue;
+            lore[i] =  "§6" + iReward.render();
         }
 
         return new ItemBuilder(Material.YELLOW_STAINED_GLASS_PANE)
@@ -186,15 +188,15 @@ public class JobsInventory extends OwnerItemMenu {
 
     private ItemStack renderLockedItem(int level) {
         JobStorage jobStorage = jobRewards.getJobStorage();
-        List<JIReward> rewardList = jobStorage.getJobRewards(job, level);
+        List<IReward> rewardList = jobStorage.getJobRewards(job, level);
         if(rewardList == null)
             return getInvalidRewardItem(level);
 
         String[] lore = new String[rewardList.size()];
         for (int i = 0; i < rewardList.size(); i++) {
-            JIReward jiReward = rewardList.get(i);
-            if(jiReward.render() == null) continue;
-            lore[i] = "§a" + jiReward.render();
+            IReward iReward = rewardList.get(i);
+            if(iReward.render() == null) continue;
+            lore[i] = "§a" + iReward.render();
         }
 
         return new ItemBuilder(Material.RED_STAINED_GLASS_PANE)
@@ -213,20 +215,31 @@ public class JobsInventory extends OwnerItemMenu {
     @Override
     protected void onClick(int slot, @Nullable ItemStack item, @Nullable ItemStack cursor, @NotNull InventoryClickEvent event) {
 
+        if(item != null && item.getType() == Material.RED_BED) {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "dm open praceOdmeny " + getPlayer().getName());
+            return;
+        }
+
         switch (slot) {
             case 48: { // previous page
                 if(page > 0) {
                     Utils.playSound(getPlayer(), Sound.UI_BUTTON_CLICK);
-
-                    close(getPlayer());
+                    //close(getPlayer());
 
                     if (page - 1 >= 0) {
-                        JobsInventory jobsInventory =
+                        this.page = this.page - 1;
+                        this.fromLevel = page * 21 == 0 ? 1 : page * 21;
+                        this.untilLevel = job.getMaxLevel()+1;
+
+                        itemInit();
+                        /*JobsInventory jobsInventory =
                                 new JobsInventory(moneyService,
                                         playerService,
                                         getWlPlayer(), job,
                                         (page - 1));
                         jobsInventory.open(getPlayer());
+
+                         */
                     }
                 }
                 break;
@@ -235,16 +248,20 @@ public class JobsInventory extends OwnerItemMenu {
             case 50: { // next page
                 if((job.getMaxLevel() / 21)-1 >= page) {
                     Utils.playSound(getPlayer(), Sound.UI_BUTTON_CLICK);
-                    close(getPlayer());
+                    //close(getPlayer());
 
                     if (page >= 0) {
-                        JobsInventory jobsInventory =
+                        /*JobsInventory jobsInventory =
                                 new JobsInventory(moneyService,
                                         playerService,
                                         getWlPlayer(), job,
                                         (page + 1));
-                        jobsInventory.open(getPlayer());
+                        jobsInventory.open(getPlayer());*/
+                        this.page = this.page + 1;
+                        this.fromLevel = page * 21 == 0 ? 1 : page * 21;
+                        this.untilLevel = job.getMaxLevel()+1;
 
+                        itemInit();
                     }
                 }
                 break;
@@ -263,21 +280,21 @@ public class JobsInventory extends OwnerItemMenu {
                 return;
 
             if(getWlPlayer().isJobRewardClaimed(job, level)) {
-                ChatInfo.ERROR.sendAll("Už si si vybral odmenu pre tento level!");
+                ChatInfo.ERROR.send(getPlayer(), "Už si si vybral odmenu pre tento level!");
                 return;
             }
 
-            List<JIReward> rewards = jobRewards.getJobStorage().getJobRewards(job, level);
+            List<IReward> rewards = jobRewards.getJobStorage().getJobRewards(job, level);
             if(rewards == null)
                 return;
 
-            for(JIReward reward : rewards) {
+            for(IReward reward : rewards) {
                 if(reward == null)
                     return;
                 reward.reward(getPlayer());
             }
             playerService.getWLPlayer(getPlayer()).jobRewardClaim(job, level);
-            ChatInfo.SUCCESS.sendAll("Úspešne si si vybral odmenu za " + job.getName() + ", pre level " + level);
+            ChatInfo.SUCCESS.send(getPlayer(), "Úspešne si si vybral odmenu za " + job.getName() + ", pre level " + level);
             Utils.playSound(getPlayer(), Sound.ENTITY_PLAYER_LEVELUP);
 
             itemInit();
@@ -303,7 +320,13 @@ public class JobsInventory extends OwnerItemMenu {
     }
 
     private com.gamingmesh.jobs.container.Job getJobFromName(String name) {
-        List<JobProgression> jobs = Jobs.getPlayerManager().getJobsPlayer(getPlayer()).getJobProgression();
+
+        List<JobProgression> jobs = Jobs
+                .getPlayerManager()
+                .getJobsPlayer(
+                        getPlayer())
+                .getJobProgression();
+
         for(JobProgression jobProgression : jobs) {
             com.gamingmesh.jobs.container.Job job = jobProgression.getJob();
             if(job.getName().contains(name))

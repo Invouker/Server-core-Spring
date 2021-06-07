@@ -10,6 +10,6 @@ public class VotePartySuggestion implements Iterable<String> {
 
     @Override
     public Iterator<String> iterator() {
-        return Arrays.asList("reset", "remove").iterator();
+        return Arrays.asList("spawn", "despawn").iterator();
     }
 }

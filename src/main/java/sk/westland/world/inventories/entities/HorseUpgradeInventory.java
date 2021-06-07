@@ -14,14 +14,13 @@ import sk.westland.core.enums.HorseArmour;
 import sk.westland.core.enums.HorseStats;
 import sk.westland.core.enums.HorseTier;
 import sk.westland.core.enums.MoneyType;
-import sk.westland.core.inventory.NCCustomInventory;
 import sk.westland.core.inventory.NCItemShopMenu;
 import sk.westland.core.items.ItemBuilder;
 import sk.westland.core.items.Nbt;
 import sk.westland.core.services.HorseService;
 import sk.westland.core.services.MoneyService;
+import sk.westland.core.services.RunnableService;
 import sk.westland.core.utils.ChatInfo;
-import sk.westland.core.utils.RunnableHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,21 +30,23 @@ public class HorseUpgradeInventory extends NCItemShopMenu {
     private static final int[] UPGRADE_POSITION = new int[] { 12,13,14,15,16,    23 };
     private static final int SADDLE_ITEM = 19;
     private HorseService horseService;
+    private RunnableService runnableService;
     private ItemStack saddle = null;
 
     private boolean closeClick = true;
 
 
-    public HorseUpgradeInventory(HorseService horseService, MoneyService moneyService, Player player) {
+    public HorseUpgradeInventory(HorseService horseService, MoneyService moneyService, RunnableService runnableService, Player player) {
         super(Type.Chest5, "Horse Inventory Upgrade", moneyService, player, "");
         this.horseService = horseService;
-
+        this.runnableService = runnableService;
         itemInit();
     }
 
-    public HorseUpgradeInventory(HorseService horseService, ItemStack saddle, MoneyService moneyService, Player player) {
+    public HorseUpgradeInventory(HorseService horseService, ItemStack saddle, MoneyService moneyService, RunnableService runnableService, Player player) {
         super(Type.Chest5, "Horse Inventory Upgrade", moneyService, player, "");
         this.horseService = horseService;
+        this.runnableService = runnableService;
         this.saddle = saddle;
 
         getInventory().setItem(SADDLE_ITEM, saddle);
@@ -55,13 +56,24 @@ public class HorseUpgradeInventory extends NCItemShopMenu {
 
     @Override
     protected void itemInit() {
+        /*
         for (int i = 0; i < UPGRADE_POSITION.length; i++) {
             int pos = UPGRADE_POSITION[i];
             ItemBuilder itemStack = new ItemBuilder(HorseUpgradeItem.values()[i].getItem());
-            setItem(pos, itemStack.build(), itemStack.build(), MoneyType.Money, 250);
-        }
+            //    private static final int[] UPGRADE_POSITION = new int[] { 12,13,14,15,16,    23 };
 
-        setItemCloseInventory(4, 4);
+        }*/
+
+        setItem(12, HorseUpgradeItem.values()[0].getItem(), HorseUpgradeItem.values()[0].getItem(), MoneyType.Shard, 25); //health
+        //setItem(13, , HorseUpgradeItem.values()[1].getItem(), MoneyType.Shard, 95);
+        setItem(13, HorseUpgradeItem.values()[1].getItem()); // armor
+        setItem(14, HorseUpgradeItem.values()[2].getItem(), HorseUpgradeItem.values()[2].getItem(), MoneyType.Shard, 95);
+        //setItem(15, , HorseUpgradeItem.values()[3].getItem(), MoneyType.Shard, 95); // color
+        setItem(15, HorseUpgradeItem.values()[3].getItem());
+        setItem(16, HorseUpgradeItem.values()[4].getItem(), HorseUpgradeItem.values()[4].getItem(), MoneyType.Shard, 95); // speed
+        //setItem(23, , HorseUpgradeItem.values()[5].getItem(), MoneyType.Shard, 95); // style
+        setItem(23, HorseUpgradeItem.values()[5].getItem());
+
 
         updateInventory();
         for (int i = 0; i < getInventory().getSize(); i++) {
@@ -69,6 +81,8 @@ public class HorseUpgradeInventory extends NCItemShopMenu {
             if(isUpgradePosition(i)) continue;
             getInventory().setItem(i, GRAY_GLASS);
         }
+
+        setItemCloseInventory();
     }
 
     private boolean isUpgradePosition(int i) {
@@ -99,6 +113,9 @@ public class HorseUpgradeInventory extends NCItemShopMenu {
         if(moneyService.canPay(player, moneyType, itemPrice)) {
             // Pay for the item
             moneyService.pay(player, moneyType, itemPrice);
+        } else {
+            ChatInfo.ERROR.send(player, "Nemáš dostatok penazí!");
+            return;
         }
 
         switch (slot) {
@@ -203,7 +220,7 @@ public class HorseUpgradeInventory extends NCItemShopMenu {
         if(saddle == null)
             return;
 
-        RunnableHelper.runTaskLater(() -> {
+        runnableService.runTaskLater(() -> {
             if(closeClick)
                 player.getInventory().addItem(saddle);
         },5L);
@@ -214,9 +231,9 @@ public class HorseUpgradeInventory extends NCItemShopMenu {
         HEALTH(ChatColor.of("#ff704d") + "Health Upgrade", Material.REDSTONE, new String[]{"", "Možnosť vylepšiť", "zdravie koňa", "Max tier: 6", ""}),
         ARMOR(ChatColor.of("#99ccff") + "Armor Upgrade", Material.IRON_HORSE_ARMOR, new String[]{"", "Možnosť vylepšiť na", "brnenie koňa", "", "§cMomentálne nedostupné"}),
         JUMP(ChatColor.of("#ffffb3") + "Jump Upgrade", Material.IRON_BOOTS, new String[]{"", "Možnosť vylepšiť", "skok koňa", "Max tier: 6", ""}),
-        COLOR(ChatColor.of("#bfff80") + "Color Select", Material.BLACK_DYE, new String[]{"", "Možnosť si vybrať", "farbu koňa", "",}),
+        COLOR(ChatColor.of("#bfff80") + "Color Select", Material.BLACK_DYE, new String[]{"", "Možnosť si vybrať", "farbu koňa", "", "§cMomentálne nedostupné"}),
         SPEED(ChatColor.of("#ccccff") + "Speed Upgrade", Material.SUGAR, new String[]{"", "Možnosť vylepšiť", "rýchlosť koňa", "Max tier: 6", ""}),
-        STYLE(ChatColor.of("#d98cb3") + "Style Select", Material.BLAZE_POWDER, new String[]{"", "Možnosť si vybrať", "štýl koňa", ""}),
+        STYLE(ChatColor.of("#d98cb3") + "Style Select", Material.BLAZE_POWDER, new String[]{"", "Možnosť si vybrať", "štýl koňa", "", "§cMomentálne nedostupné"}),
         //ARMOR_COLOUR("Armor Colour Select", Material.LEATHER_HORSE_ARMOR, new String[]{"", "Možno vybrať", "farbu armoru", "", "§eCena upgradu §f30$"})
         ;
 

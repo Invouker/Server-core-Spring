@@ -19,7 +19,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import sk.westland.core.WestLand;
 import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.event.PluginEnableEvent;
@@ -39,8 +38,8 @@ public class RecipeService implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     private void onPluginInit(PluginEnableEvent event) {
-       Bukkit.getScheduler().runTaskLater(WestLand.getInstance(), ()->{
-           Bukkit.getLogger().info("Registring WestLand recipes!");
+       Bukkit.getScheduler().runTaskLater(WestLand.getInstance(), () -> {
+           Bukkit.getLogger().info("[WestLand] Registring WestLand recipes!");
 
            removeRecipeByType(Material.HOPPER);
 

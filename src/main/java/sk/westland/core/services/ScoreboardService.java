@@ -38,10 +38,11 @@ public class ScoreboardService implements Listener, Runnable {
     }
 
     @EventHandler
-    private void onResourcePackEventLo(PlayerResourcePackStatusEvent event) {
+    private void onResourcePackEventLo(PlayerResourcePackStatusEvent event) throws ClassNotFoundException {
         Player player = event.getPlayer();
         WLPlayer wlPlayer = playerService.getWLPlayer(player);
         if(event.getStatus() == PlayerResourcePackStatusEvent.Status.SUCCESSFULLY_LOADED)
+            Thread.currentThread().getContextClassLoader().loadClass("sk.westland.core.enums.EPlayerOptions");
             showScoreboardForPlayer(player, EPlayerOptions.SHOW_SCOREBOARD.getPlayerOptions(wlPlayer));
     }
 
@@ -74,13 +75,13 @@ public class ScoreboardService implements Listener, Runnable {
         scoreDisplay.setLine(ChatColor.of("#838282") + "    %server_time_dd.MM.yyyy HH:mm%", 2);
         scoreDisplay.setLine(" ", 3);
         scoreDisplay.setLine(ChatColor.of("#AED6F1") + " %cmi_user_name%", 4);
-        scoreDisplay.setLine("  &fPeniaze: " + ChatColor.of("#D6EAF8") + "%cmi_user_balance_formated%\u2E9A", 5);
+        scoreDisplay.setLine("  &fPeniaze: " + ChatColor.of("#D6EAF8") + "%cmi_user_balance_formated% \u2E9A", 5);
         scoreDisplay.setLine(" ", 6);
-        scoreDisplay.setLine("  &2◄ &fGemy: " + ChatColor.of("#D6EAF8") + "%westland_gems% &a⻳", 7);
-        scoreDisplay.setLine("  &b◄ &fShardy: " + ChatColor.of("#D6EAF8") + "%westland_shards% &f⺞", 8);
+        scoreDisplay.setLine("  &2◄ &fGemy: " + ChatColor.of("#D6EAF8") + "%westland_gems% ⻳", 7);
+        scoreDisplay.setLine("  &b◄ &fShardy: " + ChatColor.of("#D6EAF8") + "%westland_shards% ⺞", 8);
         scoreDisplay.setLine(" ", 9);
         scoreDisplay.setLine(ChatColor.of("#AED6F1") +" Server", 10);
-        scoreDisplay.setLine("  &fOnline: " + ChatColor.of("#D6EAF8") + "%server_online%", 11);
+        scoreDisplay.setLine("  &fOnline: " + ChatColor.of("#D6EAF8") + "%server_online%⺙", 11);
         scoreDisplay.setLine("  &fVoteParty: " + ChatColor.of("#D6EAF8") + (totalVotes % VotePartyService.VOTEPARTY) + "/" + VotePartyService.VOTEPARTY, 12);
         scoreDisplay.setLine(" ", 13);
 
@@ -102,13 +103,13 @@ public class ScoreboardService implements Listener, Runnable {
             scoreDisplay.setLine(ChatColor.of("#838282") + "    %server_time_dd.MM.yyyy HH:mm%", 2);
             scoreDisplay.setLine(" ", 3);
             scoreDisplay.setLine(ChatColor.of("#AED6F1") + " %cmi_user_name%", 4);
-            scoreDisplay.setLine("  &fPeniaze: " + ChatColor.of("#D6EAF8") + "%cmi_user_balance_formated%\u2E9A", 5);
+            scoreDisplay.setLine("  &fPeniaze: " + ChatColor.of("#D6EAF8") + "%cmi_user_balance_formated% \u2E9A", 5);
             scoreDisplay.setLine(" ", 6);
-            scoreDisplay.setLine("  &2◄ &fGemy: " + ChatColor.of("#D6EAF8") + "%westland_gems% &a⻳", 7);
-            scoreDisplay.setLine("  &b◄ &fShardy: " + ChatColor.of("#D6EAF8") + "%westland_shards% &f⺞", 8);
+            scoreDisplay.setLine("  &2◄ &fGemy: " + ChatColor.of("#D6EAF8") + "%westland_gems% ⻳", 7);
+            scoreDisplay.setLine("  &b◄ &fShardy: " + ChatColor.of("#D6EAF8") + "%westland_shards% ⺞", 8);
             scoreDisplay.setLine(" ", 9);
             scoreDisplay.setLine(ChatColor.of("#AED6F1") +" Server", 10);
-            scoreDisplay.setLine("  &fOnline: " + ChatColor.of("#D6EAF8") + "%server_online%", 11);
+            scoreDisplay.setLine("  &fOnline: " + ChatColor.of("#D6EAF8") + "%server_online% ⺙", 11);
             scoreDisplay.setLine("  &fVoteParty: " + ChatColor.of("#D6EAF8") + (totalVotes % VotePartyService.VOTEPARTY) + "/" + VotePartyService.VOTEPARTY, 12);
             scoreDisplay.setLine(" ", 13);
         });

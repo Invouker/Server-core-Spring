@@ -5,13 +5,12 @@ import dev.alangomes.springspigot.security.HasPermission;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine;
+import sk.westland.core.App;
 import sk.westland.core.WestLand;
-import sk.westland.core.database.player.PlayerData;
 import sk.westland.core.enums.InventoryChestType;
 import sk.westland.core.inventory.rc.InventoryHandler;
 import sk.westland.core.services.*;
@@ -21,43 +20,16 @@ import sk.westland.world.inventories.ChangeJoinMessageItemMenu;
 import sk.westland.world.inventories.ChangeQuitMessageItemMenu;
 import sk.westland.world.inventories.entities.HorseUpgradeInventory;
 import sk.westland.world.items.Materials;
-import sk.westland.world.minigame.PartyGame;
-
-import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Component
 @CommandLine.Command(name = "test")
 @HasPermission("commands.test")
-public class TestCommand implements Runnable {
-
-    @Autowired
-    private Context context;
-
-    @Autowired
-    private PlayerService playerService;
-
-    @Autowired
-    private MessageService messageService;
-
-    @CommandLine.Parameters(index = "0", defaultValue = "0")
-    private String join;
-
-    @Override
-    public void run() {
-        if(join.equalsIgnoreCase("j")) {
-            ChangeJoinMessageItemMenu testInventory = new ChangeJoinMessageItemMenu(playerService.getWLPlayer(context.getPlayer()), messageService);
-            testInventory.open(context.getPlayer());
-        }else if(join.equalsIgnoreCase("q")){
-            ChangeQuitMessageItemMenu testInventory = new ChangeQuitMessageItemMenu(playerService.getWLPlayer(context.getPlayer()), messageService);
-            testInventory.open(context.getPlayer());
-        }
-    }
+public class TestCommand {
 
     @Component
     @CommandLine.Command(name = "2")
     @HasPermission("commands.test2")
-    class Test2 implements Runnable {
+    static class Test2 implements Runnable {
 
         @Autowired
         private Context context;
@@ -65,21 +37,29 @@ public class TestCommand implements Runnable {
         @Autowired
         private PlayerService playerService;
 
-        @Autowired
-        private MessageService messageService;
-
-
         @Override
         public void run() {
-            context.getPlayer().getInventory().addItem(Materials.Items.BLOCK_PLACER.getItem());
-            context.getSender().sendMessage("Pridal sa ti item do inventára!");
-
-            PlayerData playerData = playerService.getWLPlayer(context.getPlayer()).getPlayerData();
-
-            List<String> recipes = playerData.getCraftingRecipe();
+            ChangeJoinMessageItemMenu testInventory = new ChangeJoinMessageItemMenu(playerService.getWLPlayer(context.getPlayer()));
+            testInventory.open(context.getPlayer());
         }
     }
 
+    @Component
+    @CommandLine.Command(name = "3")
+    @HasPermission("commands.test3")
+    static class Test3 implements Runnable {
+
+        @Autowired
+        private Context context;
+
+        @Autowired
+        private PlayerService playerService;
+        @Override
+        public void run() {
+            ChangeQuitMessageItemMenu testInventory = new ChangeQuitMessageItemMenu(playerService.getWLPlayer(context.getPlayer()));
+            testInventory.open(context.getPlayer());
+        }
+    }
 
     @Component
     @CommandLine.Command(name = "4")
@@ -101,7 +81,7 @@ public class TestCommand implements Runnable {
     @Component
     @CommandLine.Command(name = "5")
     @HasPermission("commands.test5")
-    class Test5 implements Runnable {
+    static class Test5 implements Runnable {
 
         @Autowired
         private Context context;
@@ -115,9 +95,12 @@ public class TestCommand implements Runnable {
         @Autowired
         private MoneyService moneyService;
 
+        @Autowired
+        private RunnableService runnableService;
+
         @Override
         public void run() {
-            HorseUpgradeInventory horseUpgradeInventory = new HorseUpgradeInventory(horseService, moneyService, context.getPlayer());
+            HorseUpgradeInventory horseUpgradeInventory = new HorseUpgradeInventory(horseService, moneyService, runnableService, context.getPlayer());
             horseUpgradeInventory.open(context.getPlayer());
         }
     }
@@ -177,11 +160,13 @@ public class TestCommand implements Runnable {
         @Autowired
         private MoneyService moneyService;
 
+        @Autowired
+        private VotePartyService votePartyService;
+
         @Override
         public void run() {
-            Location location = context.getPlayer().getLocation();
-            new PartyGame(location);
-            ChatInfo.ERROR.send(context.getPlayer(), "Spawnol si zombika, pičo");
+            votePartyService.spawnVoteParty();
+            ChatInfo.SUCCESS.send(context.getPlayer(), "Spawnol si VoteParty!");
         }
     }
 
@@ -258,7 +243,13 @@ public class TestCommand implements Runnable {
 
         @Override
         public void run() {
-
+            ChatInfo.SUCCESS.sendAll("Shards: " +
+                    App.
+                            getService(
+                                    PlayerService.class)
+                            .getWLPlayer(
+                                    context.getPlayer())
+                            .getShards());
         }
     }
 }

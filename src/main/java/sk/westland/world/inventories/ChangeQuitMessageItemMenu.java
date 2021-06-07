@@ -12,7 +12,6 @@ import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.enums.QuitMessages;
 import sk.westland.core.inventory.OwnerItemMenu;
 import sk.westland.core.items.ItemBuilder;
-import sk.westland.core.services.MessageService;
 import sk.westland.core.utils.ChatInfo;
 
 import java.util.ArrayList;
@@ -22,16 +21,13 @@ import java.util.List;
 public class ChangeQuitMessageItemMenu extends OwnerItemMenu {
 
     List<ItemStack> items = new ArrayList<>();
-    private ItemBuilder item = new ItemBuilder(Material.RED_CONCRETE_POWDER).setName("§cNONE");
-    private ItemStack glassItem = new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setName("§a").build();
+    private final ItemBuilder item = new ItemBuilder(Material.RED_CONCRETE_POWDER).setName("§cNONE");
+    private final ItemStack glassItem = new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setName("§a").build();
 
-    private MessageService messageService;
+    public ChangeQuitMessageItemMenu(WLPlayer player) {
+        super(player, Type.Chest5, "§8Zmena odpájacích správ");
 
-    public ChangeQuitMessageItemMenu(WLPlayer player, MessageService messageService) {
-        super(player, Type.Chest5, "§7Zmena odpájacích správ");
-
-        this.messageService = messageService;
-
+        prepareItems();
         updateInventory();
     }
 
@@ -51,22 +47,21 @@ public class ChangeQuitMessageItemMenu extends OwnerItemMenu {
                 addItem(items.get(i));
             }
         setItemsRange(36, 9, glassItem);
-        setItem(4, 4, CLOSE_INVENTORY_ITEM);
+        setItemCloseInventory();
     }
 
-    @Override
-    protected void itemInit() {
+    private void prepareItems() {
         getInventory().clear();
-        for(QuitMessages quitMessage : QuitMessages.values()) {
-            String lore = quitMessage.formattedJoinMessageWithoutPrefix().replaceAll("%player%",  getPlayer().getName());
-            items.add(item.setName(quitMessage.getName()).setLore(getItemLore(lore)).build().clone());
+        for(QuitMessages quitMessages : QuitMessages.values()) {
+            String lore = quitMessages.formattedJoinMessageWithoutPrefix().replaceAll("%player%",  getPlayer().getName());
+            items.add(item.setName(quitMessages.getName()).setLore(getItemLore(lore)).build().clone());
         }
+
     }
 
     private List<String> getItemLore(String joinMessage) {
         return Arrays.asList("§a", "§c" + joinMessage, "§a");
     }
-
     @Override
     protected void onClick(int slot, @Nullable ItemStack item, @Nullable ItemStack cursor, @NotNull InventoryClickEvent event) {
         event.setCancelled(true);
@@ -81,10 +76,6 @@ public class ChangeQuitMessageItemMenu extends OwnerItemMenu {
             getWlPlayer().setActiveQuitMessage(slot);
 
         updateInventory();
-
-        if(slot == 40)
-            close(getPlayer());
-
     }
 
     @Override
@@ -92,4 +83,7 @@ public class ChangeQuitMessageItemMenu extends OwnerItemMenu {
 
     @Override
     protected void onClose(@NotNull Player player) { }
+
+    @Override
+    protected void itemInit() { }
 }

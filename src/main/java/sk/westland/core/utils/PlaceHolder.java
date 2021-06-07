@@ -96,11 +96,11 @@ public class PlaceHolder extends PlaceholderExpansion {
         }
         // %westland_gems%
         if(identifier.equalsIgnoreCase("gems")) {
-            return String.valueOf(playerService.getWLPlayer(player).getGems());
+            return String.valueOf(Double.valueOf(playerService.getWLPlayer(player).getGems()).intValue());
         }
         // %westland_shards%
         if(identifier.equalsIgnoreCase("shards")) {
-            return String.valueOf(playerService.getWLPlayer(player).getShards());
+            return String.valueOf(Double.valueOf(playerService.getWLPlayer(player).getShards()).intValue());
         }
 
         // %westland_votes_total%
@@ -119,6 +119,32 @@ public class PlaceHolder extends PlaceholderExpansion {
         if(identifier.equalsIgnoreCase("voteparty_total")) {
             return String.valueOf(VotePartyService.VOTEPARTY);
         }
+
+        // %westland_voteparty_votes_until%
+        if(identifier.equalsIgnoreCase("voteparty_votes_until")) {
+            int totalVotes = serverDataService.getIntData(EServerData.VOTES_TOTAL);
+            return String.valueOf(VotePartyService.VOTEPARTY - (totalVotes % VotePartyService.VOTEPARTY));
+        }
+
+        // %westland_rola%
+        if(identifier.equalsIgnoreCase("rola")) {
+            //Roľník, Farmár, Osadník, Bojovník, Kovár
+            if(player.hasPermission("rola.kovar"))
+                return "Kovár";
+
+            if(player.hasPermission("rola.bojovnik"))
+                return "Bojovník";
+
+            if(player.hasPermission("rola.osadnik"))
+                return "Osadník";
+
+            if(player.hasPermission("rola.farmar"))
+                return "Farmár";
+
+            if(player.hasPermission("rola.rolnik"))
+                return "Roľník";
+        }
+
 
         {
             String var = identifier.toLowerCase();

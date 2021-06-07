@@ -10,9 +10,11 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.springframework.stereotype.Component;
+import sk.westland.core.App;
 import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.event.player.WLPlayerDamageEvent;
 import sk.westland.core.items.*;
+import sk.westland.core.services.UtilsService;
 import sk.westland.world.items.Materials;
 
 @Component
@@ -21,13 +23,13 @@ public class BetterPickaxe extends CustomItem implements Listener, Craftable {
     @Override
     public CraftingRecipe getCraftingRecipe() {
         return new CraftingRecipe(itemID(), RecipeType.Item, getItem(), CraftingType.ShapedRecipe)
-               .shape( "ISI",
-                       "ARA",
-                       "ARA")
+               .shape( "ESE",
+                       "AIA",
+                       "AIA")
                .setIngredient('S', Material.NETHER_STAR)
-               .setIngredient('A', Material.AIR)
-               .setIngredient('I', Material.NETHERITE_INGOT)
-               .setIngredient('R', recipeService.item(Materials.Resources.IRON_ROD.getItem()));
+                .setIngredient('E', recipeService.item(Materials.Resources.ENHANCED_NETHERITE_INGOT.getItem()))
+                .setIngredient('A', Material.AIR)
+                .setIngredient('I', recipeService.item(Materials.Resources.IRON_ROD.getItem()));
     }
 
     @Override
@@ -82,7 +84,14 @@ public class BetterPickaxe extends CustomItem implements Listener, Craftable {
 
         switch(event.getBlock().getType()) {
             case IRON_ORE: {
-                world.dropItemNaturally(location, Materials.Resources.COPPER_DUST.getItem());
+                if(App.getService(UtilsService.class).getRandomInt(5) == 1)
+                    world.dropItemNaturally(location, Materials.Resources.COPPER_DUST.getItem());
+                break;
+            }
+
+            case COAL_ORE: {
+                if(App.getService(UtilsService.class).getRandomInt(5) == 1)
+                    world.dropItemNaturally(location, Materials.Resources.COAL_DUST.getItem());
                 break;
             }
 

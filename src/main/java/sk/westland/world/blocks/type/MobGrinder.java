@@ -1,10 +1,13 @@
 package sk.westland.world.blocks.type;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.ExperienceOrb;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -19,6 +22,7 @@ import sk.westland.world.items.Materials;
 
 import java.util.EnumSet;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class MobGrinder extends CustomBlock {
 
@@ -45,6 +49,11 @@ public class MobGrinder extends CustomBlock {
             return;
 
         Directional directional = (Directional) block.getBlockData();
+        try {
+            this.getClass().getClassLoader().loadClass("sk.westland.world.blocks.type.MobGrinder$BlockDirection");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         BlockDirection blockDirection = BlockDirection.getBlockFace(directional.getFacing());
 
         int x = blockDirection.getX();
@@ -103,6 +112,12 @@ public class MobGrinder extends CustomBlock {
                 .filter(entity -> !blockedEntityTypes.contains(entity.getType()))
                 .limit(killEntityLimit)
                 .forEach(entity -> {
+                    Player player = Bukkit.getPlayer(owner);
+                    if(player != null && player.getLocation().distance(location) < 5)
+                        entity.getLocation().getWorld().spawn(location, ExperienceOrb.class, (exp)-> {
+                           exp.setExperience(ThreadLocalRandom.current().nextInt(1,10));
+                        });
+
                     ((Damageable) entity).damage(Integer.MAX_VALUE);
                     if(!BlockLevel.isEqualsOrBetter(BlockLevel.RARE))
                         return;
@@ -129,7 +144,7 @@ public class MobGrinder extends CustomBlock {
     }
 
 
-    private enum BlockDirection {
+    enum BlockDirection {
 
         NORTH(0, 1, -2, BlockFace.NORTH),
         EAST(2, 1, 0, BlockFace.EAST),

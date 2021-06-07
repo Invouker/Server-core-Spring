@@ -2,6 +2,7 @@ package sk.westland.world.commands.admin;
 
 import dev.alangomes.springspigot.context.Context;
 import dev.alangomes.springspigot.security.HasPermission;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -80,11 +81,13 @@ public class WladminCommands implements Runnable {
             if(param.equals("spawn")) {
                 ChatInfo.SUCCESS.send(context, "Úspešne si spawnol voteparty");
                 votePartyService.spawnVoteParty();
+                return;
             }
 
-            if(param.equalsIgnoreCase("despawn") || param.equalsIgnoreCase("remove")) {
+            if(param.equalsIgnoreCase("despawn")) {
                 ChatInfo.SUCCESS.send(context, "Úspešne si despawnoval voteparty");
                 votePartyService.despawn();
+                return;
             }
         }
     }
@@ -135,6 +138,21 @@ public class WladminCommands implements Runnable {
         public void run() {
             serverDataService.setBooleanData(EServerData.DEBUG, param);
             ChatInfo.SUCCESS.send(context, "Úspešne si nastavil debug na §6" + (param ? "Zapnutý" : "Vypnutý" ) + "§f minút.");
+        }
+    }
+
+    @Component
+    @CommandLine.Command(name = "getpos")
+    @HasPermission("westland.commands.position")
+    public static class getpos implements Runnable {
+
+        @Autowired
+        private Context context;
+
+        @Override
+        public void run() {
+            Location location = context.getPlayer().getLocation();
+            ChatInfo.SUCCESS.send(context, "§fPozícia: §e" + location.toString());
         }
     }
 }

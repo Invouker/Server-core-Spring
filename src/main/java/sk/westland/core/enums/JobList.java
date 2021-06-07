@@ -42,6 +42,7 @@ public enum JobList {
 
     public static JobList findByName(String name) {
         for (JobList job : values()) {
+            System.out.println("Jobs: " + job.getName());
             if(job.getName().equalsIgnoreCase(name))
                 return job;
         }

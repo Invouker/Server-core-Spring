@@ -18,21 +18,28 @@ public class HorseBuyInventory extends ItemShopMenu {
         super(Type.Chest3, "Predajca koní", moneyService, player);
         this.horseService = horseService;
 
-        buildAndAddItem(HorseService.Colors.BLACK, HorseService.Style.NONE, MoneyType.Gems, 2705);
-        buildAndAddItem(HorseService.Colors.BROWN, HorseService.Style.NONE, MoneyType.Gems,2350);
-        buildAndAddItem(HorseService.Colors.CHESTNUT, HorseService.Style.NONE, MoneyType.Gems,2100);
-        buildAndAddItem(HorseService.Colors.CREAMY, HorseService.Style.NONE, MoneyType.Gems,2120);
-        buildAndAddItem(HorseService.Colors.DARKBROWN, HorseService.Style.NONE, MoneyType.Gems,2570);
-        buildAndAddItem(HorseService.Colors.GRAY, HorseService.Style.NONE, MoneyType.Gems,2300);
-        buildAndAddItem(HorseService.Colors.WHITE, HorseService.Style.NONE, MoneyType.Gems,3460);
+        //max 159shardov - 4 eura
+        buildAndAddItem(HorseService.Colors.BLACK, HorseService.Style.NONE, 2,4,1,MoneyType.Shard, 160);
+        buildAndAddItem(HorseService.Colors.BROWN, HorseService.Style.WHITE_DOTS,1,2,3, MoneyType.Shard,139);
+        buildAndAddItem(HorseService.Colors.CHESTNUT, HorseService.Style.NONE, MoneyType.Shard,121);
+        buildAndAddItem(HorseService.Colors.CREAMY, HorseService.Style.BLACK_DOTS, 2,2,1, MoneyType.Shard,135);
+        buildAndAddItem(HorseService.Colors.DARKBROWN, HorseService.Style.NONE, MoneyType.Shard,120);
+        buildAndAddItem(HorseService.Colors.GRAY, HorseService.Style.NONE, 2,2,2, MoneyType.Shard,148);
+        buildAndAddItem(HorseService.Colors.WHITE, HorseService.Style.NONE, MoneyType.Shard,120);
 
-        buildAndAddItem(HorseService.HorseType.ZOMBIE, MoneyType.Shard, 110);
-        buildAndAddItem(HorseService.HorseType.SKELETON, MoneyType.Shard, 150);
+        buildAndAddItem(HorseService.HorseType.ZOMBIE, MoneyType.Shard, 181);
+        buildAndAddItem(HorseService.HorseType.SKELETON, MoneyType.Shard, 176);
+
+        setItemCloseInventory();
     }
-
     private void buildAndAddItem(HorseService.HorseType horseType, MoneyType moneyType, int price) {
         ItemBuilder itemStack = new ItemBuilder(horseService.buildHorse(horseType));
         addDisplayItem(itemStack.build().clone(), itemStack.removeLoreLine(5).build().clone(), moneyType, price);
+    }
+
+    private void buildAndAddItem(HorseService.Colors horseColors, HorseService.Style horseStyle,int health, int speed, int jump, MoneyType moneyType, int price){
+        ItemBuilder itemStack = new ItemBuilder(horseService.buildHorse(horseColors, horseStyle, jump, speed, health));
+        addDisplayItem(itemStack.build().clone(), itemStack.removeLoreLine(6).build().clone(), moneyType, price);
     }
 
     private void buildAndAddItem(HorseService.Colors horseColors, HorseService.Style horseStyle, MoneyType moneyType, int price){
@@ -42,6 +49,7 @@ public class HorseBuyInventory extends ItemShopMenu {
 
     @Override
     protected void itemInit() {
+        setItemCloseInventory();
     }
 
     @Override

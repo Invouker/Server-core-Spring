@@ -52,8 +52,9 @@ public abstract class CustomItem {
     protected abstract void onPlayerInteractAtEntityWithItem(PlayerInteractAtEntityEvent event);
     protected abstract void onPlayerBlockPlace(BlockPlaceEvent event);
     protected abstract void onPlayerBlockBreak(BlockBreakEvent event);
+    protected void onPlayerBlockBreakWithAllItems(BlockBreakEvent event) {}
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     private void onPluginInit(PluginEnableEvent event) {
         this.onPluginEnable(event);
 
@@ -76,8 +77,8 @@ public abstract class CustomItem {
                         this::onPlayerDamageWithItem,
                         this::onPlayerInteractAtEntityWithItem,
                         this::onPlayerBlockPlace,
-                        this::onPlayerBlockBreak
-                ));
+                        this::onPlayerBlockBreak,
+                        this::onPlayerBlockBreakWithAllItems));
     }
 
 

@@ -3,12 +3,11 @@ package sk.westland.core.services;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import sk.westland.core.entity.player.WLPlayer;
+import sk.westland.core.enums.EEmoji;
 import sk.westland.core.enums.JoinMessages;
 import sk.westland.core.enums.QuitMessages;
 import sk.westland.core.event.player.WLPlayerJoinEvent;
@@ -28,7 +27,7 @@ public class MessageService implements Listener{
     @Autowired
     private VaultService vaultService;
 
-    private List<Player> activeAdminChat = new ArrayList<>();
+    private final List<Player> activeAdminChat = new ArrayList<>();
 
     public boolean isPlayerInAdminChat(Player player) {
         return activeAdminChat.contains(player);
@@ -61,6 +60,23 @@ public class MessageService implements Listener{
             event.setCancelled(true);
         }
 
+        for(EEmoji eEmoji : EEmoji.values()) {
+            String message = event.getMessage().replaceAll(eEmoji.getText(), eEmoji.getReplacement());
+            /*
+            if(eEmoji.isAdmin() && player.hasPermission("westland.chatemoji.admin")) {
+                event.setMessage(message);
+                continue;
+            }
+
+            if(eEmoji.isPremium() && player.hasPermission("westland.chatemoji.premium")) {
+                event.setMessage(message);
+                continue;
+            }*/
+
+            event.setMessage(message);
+
+        }
+
         if(!player.isOp())
             return;
 
@@ -86,21 +102,30 @@ public class MessageService implements Listener{
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler
     private void onPlayerQuitEvent(WLPlayerQuitEvent event) {
         Player player = event.getPlayer();
         WLPlayer wlPlayer = playerService.getWLPlayer(player);
 
-        if(wlPlayer.getActiveQuitMessage() <= 0)
+        if(wlPlayer.getActiveQuitMessage() < 0)
             return;
+
+        String activeQuitMessage;
+        try {
+            Thread.currentThread().getContextClassLoader().loadClass("sk.westland.core.enums.QuitMessages");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
 
         if(!wlPlayer.hasPermission("westland.message.quit"))
-            return;
+            activeQuitMessage = QuitMessages.values()[0].formattedJoinMessage();
+        else
+            activeQuitMessage = QuitMessages.values()[wlPlayer.getActiveQuitMessage()].formattedJoinMessage();
 
-        String activeQuitMessage = QuitMessages.values()[wlPlayer.getActiveQuitMessage()].formattedJoinMessage();
+
         String quitMessage = activeQuitMessage.replace("%player%", player.getName());
-
-        sendMessage(getListOfActiveMessage(true), quitMessage);
+        System.out.println(quitMessage);
+        sendMessage(getListOfActivePlayerMessage(false), quitMessage);
 
         removePlayerFromAdminChat(player);
 
@@ -109,29 +134,30 @@ public class MessageService implements Listener{
 
     @EventHandler
     private void onPlayerJoin(WLPlayerJoinEvent event) {
-        System.out.println("WLPlayer Join");
         Player player = event.getPlayer();
         WLPlayer wlPlayer = playerService.getWLPlayer(player);
         if(wlPlayer == null)
             return;
 
-        if(wlPlayer.getActiveJoinMessage() <= 0)
+        if(wlPlayer.getActiveJoinMessage() < 0)
             return;
 
-        if(!wlPlayer.hasPermission("westland.message.quit"))
-            return;
+        String activeJoinMessage;
+        if(!wlPlayer.hasPermission("westland.message.join"))
+            activeJoinMessage = JoinMessages.values()[0].formattedJoinMessage();
+        else
+            activeJoinMessage = JoinMessages.values()[wlPlayer.getActiveJoinMessage()].formattedJoinMessage();
 
-        String activeJoinMessage = JoinMessages.values()[wlPlayer.getActiveJoinMessage()].formattedJoinMessage();
         String joinMessage = activeJoinMessage.replace("%player%", player.getName());
-
-        sendMessage(getListOfActiveMessage(true), joinMessage);
+        System.out.println(joinMessage);
+        sendMessage(getListOfActivePlayerMessage(true), joinMessage);
     }
 
     public void sendMessage(List<Player> players, String message) {
         players.forEach(player->player.sendMessage(message));
     }
 
-    private List<Player> getListOfActiveMessage(boolean join) {
+    private List<Player> getListOfActivePlayerMessage(boolean join) {
         List<Player> players = new ArrayList<>();
 
         for(WLPlayer wlPlayer : playerService.getWlPlayerList()) {

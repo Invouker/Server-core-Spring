@@ -92,7 +92,6 @@ public class SaddleItem extends CustomItem implements Listener  {
         Location location = event.getPlayer().getLocation();
 
         int type = Nbt.getNbt_Int(itemStack, HorseStats.TYPE.getStatName(), -1);
-        System.out.println("Type: " + type);
         Class<? extends AbstractHorse> clazz = Horse.class;
         if(type == 2) { // Zombie
             clazz = ZombieHorse.class;

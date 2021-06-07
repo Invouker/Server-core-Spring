@@ -1,7 +1,6 @@
 package sk.westland.world.items.tools;
 
 import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
@@ -29,7 +28,6 @@ import sk.westland.core.items.*;
 import sk.westland.core.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -68,23 +66,28 @@ public class Hammer extends CustomItem implements Listener, Craftable {
 
     @Override
     protected void onPluginEnable(PluginEnableEvent event) {
+        ProtocolManager protocolManager = WestLand.getProtocolManager();
+        if(protocolManager == null) {
+            System.out.println("ProtocolLib is not loaded!");
+            return;
+        }
         recipeService.registerRecipe(getCraftingRecipe());
 
-        ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-        protocolManager.addPacketListener(new PacketAdapter(WestLand.getInstance(),
-                ListenerPriority.NORMAL,
+        protocolManager
+                .addPacketListener(
+                new PacketAdapter(
+                WestLand.getInstance(),
+                ListenerPriority.LOWEST,
                 PacketType.Play.Client.BLOCK_DIG) {
             @Override
             public void onPacketReceiving(PacketEvent packetEvent) {
-
-
-
                 if (packetEvent.getPacketType() == PacketType.Play.Client.BLOCK_DIG) {
                     PacketContainer packetContainer = packetEvent.getPacket();
 
                     packetEvent.getPlayer().setMetadata(METADATA_KEY, new FixedMetadataValue(event.getWestLand(), packetContainer.getDirections().read(0)) {
 
                     });
+
                 }
             }
         });

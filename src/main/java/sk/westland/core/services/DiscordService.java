@@ -15,11 +15,10 @@ import org.bukkit.scheduler.BukkitTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import sk.westland.core.WestLand;
 import sk.westland.core.database.player.UserDataRepository;
-import sk.westland.discord.commands.CommandRegister;
 import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.event.ServerDisableEvent;
 import sk.westland.core.utils.RunnableDelay;
-import sk.westland.core.utils.RunnableHelper;
+import sk.westland.discord.commands.CommandRegister;
 
 import java.awt.*;
 import java.math.BigDecimal;
@@ -36,6 +35,9 @@ public class DiscordService implements Listener, Runnable {
     @Autowired
     private UserDataRepository userDataRepository;
 
+    @Autowired
+    private RunnableService runnableService;
+
     private JDA jda;
     private Guild guild;
     private Thread thread;
@@ -51,7 +53,7 @@ public class DiscordService implements Listener, Runnable {
 
     @EventHandler
     private void onPluginEnable(PluginEnableEvent event) {
-        RunnableHelper.runTaskLaterAsynchronously(()-> {
+        runnableService.runTaskLaterAsynchronously(()-> {
             jda = WestLand.getDiscordHandler().getJda();
 
             guild = jda.getGuildById("796403023681290251");
@@ -204,7 +206,7 @@ public class DiscordService implements Listener, Runnable {
                .addBlankField(false)
                 .addField("Server je spustený od", dateFormat.format(startTime), true)
                 .addField("Počet unikátnych pripojení:", String.valueOf(uniqueConnections), true)
-                .addField("Oficiálny dátum spustenia:", "1.máj (1.5.2021)\n ", true)
+                //.addField("Oficiálny dátum spustenia:", "1.máj (1.5.2021)\n ", true)
                 .build();
     }
 

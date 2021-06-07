@@ -19,6 +19,7 @@ public class PlayerOptions {
     private boolean showScoreboard = true;
     private boolean teleportEffect = true;
     private boolean showAutoMessage = true;
+    private boolean showEventAnnounce = true;
 
     public PlayerOptions() {
     }
@@ -93,5 +94,13 @@ public class PlayerOptions {
 
     public void setShowAutoMessage(boolean showAutoMessage) {
         this.showAutoMessage = showAutoMessage;
+    }
+
+    public boolean isShowEventAnnounce() {
+        return showEventAnnounce;
+    }
+
+    public void setShowEventAnnounce(boolean showEventAnnounce) {
+        this.showEventAnnounce = showEventAnnounce;
     }
 }

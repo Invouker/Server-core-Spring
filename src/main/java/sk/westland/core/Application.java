@@ -51,6 +51,17 @@ public class Application {
     public VotePartyService voteParty() { return new VotePartyService(); }
 
     @Bean
+    public VaultService vaultService() { return new VaultService(); }
+
+    @Bean
     public InventoryService inventoryService() { return new InventoryService(); }
 
+    @Bean
+    public RunnableService runnableService() { return  new RunnableService(); }
+
+    @Bean
+    public UtilsService utilsService() { return new UtilsService(); }
+
+    @Bean
+    public EventManagerService eventManagerService() { return new EventManagerService(); }
 }

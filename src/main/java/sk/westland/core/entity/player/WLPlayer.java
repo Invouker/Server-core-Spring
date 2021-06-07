@@ -1,6 +1,7 @@
 package sk.westland.core.entity.player;
 
 
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -56,6 +57,14 @@ public class WLPlayer  {
     public Inventory getInventory() { return player.getInventory(); }
 
     public Location getLocation() { return player.getLocation(); }
+
+    public void teleport(Location location) { player.teleport(location); }
+
+    public void setGameMode(GameMode gamemode) { player.setGameMode(gamemode); }
+
+    public void sendTitle(String title, String subTitle) {
+        player.sendTitle(title, subTitle, 25, 50, 20);
+    }
 
     /////
 

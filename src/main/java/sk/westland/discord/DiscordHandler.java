@@ -6,12 +6,11 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.bukkit.event.Listener;
+import sk.westland.core.App;
 import sk.westland.core.database.player.RankDataRepository;
 import sk.westland.core.database.player.UserDataRepository;
-import sk.westland.discord.ranksync.PlayerSync;
-import sk.westland.core.services.PlayerService;
 import sk.westland.core.services.VaultService;
-import sk.westland.core.utils.RunnableHelper;
+import sk.westland.discord.ranksync.PlayerSync;
 import sk.westland.world.commands.discord.LinkCommand;
 
 import javax.security.auth.login.LoginException;
@@ -23,18 +22,19 @@ public class DiscordHandler implements Runnable, Listener {
     private JDA jda;
     private Guild guild;
 
-    private List<PlayerSync> playerSyncList = new ArrayList<>();
+    private final List<PlayerSync> playerSyncList = new ArrayList<>();
 
     private final RankDataRepository rankDataRepository;
     private final UserDataRepository userDataRepository;
     private final VaultService vaultService;
 
-    public DiscordHandler(RankDataRepository rankDataRepository, UserDataRepository userDataRepository, VaultService vaultService) {
+    public DiscordHandler(RankDataRepository rankDataRepository, UserDataRepository userDataRepository) {
         this.rankDataRepository = rankDataRepository;
         this.userDataRepository = userDataRepository;
-        this.vaultService = vaultService;
+        this.vaultService = App.getService(VaultService.class);
 
-        RunnableHelper.runTaskAsynchronously(this);
+        new Thread(this).start();
+        //runnableService.runTaskAsynchronously(this);
     }
 
     public JDA getJda() {
@@ -42,6 +42,9 @@ public class DiscordHandler implements Runnable, Listener {
     }
 
     public void shutdown() {
+        if(jda == null)
+            return;
+
         jda.shutdown();
         //thread.interrupt();
         System.out.println("JDA is shutting down!");

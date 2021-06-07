@@ -8,16 +8,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import sk.westland.core.WestLand;
 import sk.westland.core.enums.HorseStats;
 import sk.westland.core.inventory.NCCustomInventory;
 import sk.westland.core.items.ItemBuilder;
 import sk.westland.core.items.Nbt;
 import sk.westland.core.services.HorseService;
 import sk.westland.core.services.MoneyService;
+import sk.westland.core.services.RunnableService;
 
 public class HorseColorInventory extends NCCustomInventory {
 
@@ -26,12 +25,14 @@ public class HorseColorInventory extends NCCustomInventory {
     private HorseService horseService;
     private ItemStack saddle;
 
+    private RunnableService runnableService;
     private MoneyService moneyService;
     private Player player;
 
-    public HorseColorInventory(HorseService horseService, ItemStack saddle,MoneyService moneyService, Player player) {
+    public HorseColorInventory(HorseService horseService, ItemStack saddle, MoneyService moneyService, RunnableService runnableService, Player player) {
         super(Type.Chest5, "Horse Color Upgrade", null);
         this.horseService = horseService;
+        this.runnableService = runnableService;
         this.saddle = saddle;
 
         this.moneyService = moneyService;
@@ -104,13 +105,10 @@ public class HorseColorInventory extends NCCustomInventory {
 
     @Override
     protected void onClose(@NotNull Player player) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                HorseUpgradeInventory horseUpgradeInventory = new HorseUpgradeInventory(horseService, saddle, moneyService, player);
-                horseUpgradeInventory.open(player);
-            }
-        }.runTask(WestLand.getInstance());
+        runnableService.runTask(() -> {
+            HorseUpgradeInventory horseUpgradeInventory = new HorseUpgradeInventory(horseService, saddle, moneyService,runnableService, player);
+            horseUpgradeInventory.open(player);
+        });
     }
 
     private void updateUpgades() {

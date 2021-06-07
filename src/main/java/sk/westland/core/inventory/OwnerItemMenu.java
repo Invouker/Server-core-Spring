@@ -9,8 +9,8 @@ import sk.westland.core.entity.player.WLPlayer;
 
 public abstract class OwnerItemMenu extends ItemMenu {
 
-    private WLPlayer wlPlayer;
-    private Player player;
+    private final WLPlayer wlPlayer;
+    private final Player player;
 
     public OwnerItemMenu(WLPlayer wlPlayer, Type type, String title) {
         super(type, title);

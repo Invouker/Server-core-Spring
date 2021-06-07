@@ -1,33 +1,33 @@
-package sk.westland.core.jobs.rewards;
+package sk.westland.core.rewards;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class JPermReward implements JIReward {
+public class PermReward implements IReward<PermReward> {
 
     private final String permission;
     private final String permName;
     private PermRenderType permRenderType = PermRenderType.SHOW;
     private boolean permissionState = true;
 
-    public JPermReward(String permission, String permName) {
+    public PermReward(String permission, String permName) {
         this.permission = permission;
         this.permName = permName;
     }
 
-    public JPermReward(String permission, String permName, PermRenderType permRenderType) {
+    public PermReward(String permission, String permName, PermRenderType permRenderType) {
         this.permission = permission;
         this.permName = permName;
         this.permRenderType = permRenderType;
     }
 
-    public JPermReward(String permission, String permName, boolean permissionState) {
+    public PermReward(String permission, String permName, boolean permissionState) {
         this.permission = permission;
         this.permName = permName;
         this.permissionState = permissionState;
     }
 
-    public JPermReward(String permission, String permName, PermRenderType permRenderType, boolean permissionState) {
+    public PermReward(String permission, String permName, PermRenderType permRenderType, boolean permissionState) {
         this.permission = permission;
         this.permName = permName;
         this.permRenderType = permRenderType;
@@ -35,7 +35,7 @@ public class JPermReward implements JIReward {
     }
 
     @Override
-    public JIReward reward(Player player) {
+    public PermReward reward(Player player) {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
                 "lp user " + player.getName() + " permission set " + permission + " " + permissionState
         );

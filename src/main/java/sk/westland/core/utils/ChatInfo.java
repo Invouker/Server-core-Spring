@@ -7,7 +7,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import sk.westland.core.App;
 import sk.westland.core.entity.player.WLPlayer;
+import sk.westland.core.enums.EPlayerOptions;
+import sk.westland.core.services.PlayerService;
 
 public enum ChatInfo {
 
@@ -73,12 +76,33 @@ public enum ChatInfo {
         player.sendMessage(prefix + message);
     }
 
+    public void send(String message) {
+        Player player = Bukkit.getPlayer("XpresS");
+        if(player == null)
+            return;
+
+        player.sendMessage(prefix + message);
+    }
+
     public void send(Context context, String message) {
         context.getSender().sendMessage(prefix + message);
     }
 
     public void send(WLPlayer player, String message) {
         player.getPlayer().sendMessage(prefix + message);
+    }
+
+    public void sendAll(EPlayerOptions ePlayerOptions, String message) {
+        App.getService(PlayerService.class).getWlPlayerList().forEach((wlPlayer -> {
+            if(ePlayerOptions.getPlayerOptions(wlPlayer))
+                wlPlayer.sendMessage(prefix + message);
+        }));
+
+    }
+
+    public void send(WLPlayer player, EPlayerOptions ePlayerOptions, String message) {
+        if(ePlayerOptions.getPlayerOptions(player))
+            player.sendMessage(prefix + message);
     }
 
     public void sendCommandHelperS(CommandSender commandSender, String baseCommand, String... commands) {

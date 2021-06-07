@@ -1,17 +1,17 @@
-package sk.westland.core.jobs.rewards;
+package sk.westland.core.rewards;
 
 import org.bukkit.entity.Player;
 
-public class JExpReward implements JIReward {
+public class ExpReward implements IReward<ExpReward> {
 
-    private int exp;
+    private final int exp;
 
-    public JExpReward(int exp) {
+    public ExpReward(int exp) {
         this.exp = exp;
     }
 
     @Override
-    public JExpReward reward(Player player) {
+    public ExpReward reward(Player player) {
         player.giveExp(exp);
 
         return this;

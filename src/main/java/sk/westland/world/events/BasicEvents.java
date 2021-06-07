@@ -1,7 +1,6 @@
 package sk.westland.world.events;
 
 import com.Zrips.CMI.Modules.tp.Teleportations;
-import com.Zrips.CMI.events.CMIAsyncPlayerTeleportEvent;
 import com.Zrips.CMI.events.CMIPlayerTeleportEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -80,7 +79,7 @@ public class BasicEvents implements Listener {
             return; // Only players with type
         //System.out.println("Interakcia s : " + entity.getName());
 
-        if(entity.getName().startsWith(ChatColor.GOLD + "") || entity.getName().startsWith(ChatColor.YELLOW + "")) {
+        if(entity.getName().startsWith(ChatColor.GOLD + "") || entity.getName().startsWith(ChatColor.YELLOW + "") || entity.getName().startsWith(ChatColor.AQUA + "")) {
             Bukkit.getPluginManager().callEvent(new WLPlayerInteractWithNPCEvent(wlPlayer, entity));
         }
     }

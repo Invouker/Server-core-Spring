@@ -1,5 +1,5 @@
 package sk.westland.core.enums;
-
+//sk.westland.core.enums.EPlayerOptions
 import sk.westland.core.database.player.PlayerOptions;
 import sk.westland.core.entity.player.WLPlayer;
 
@@ -11,7 +11,8 @@ public enum EPlayerOptions {
     SHOW_DEATH_MESSAGE,
     SHOW_SCOREBOARD,
     TELEPORT_EFFECT,
-    SHOW_AUTOMESSAGE
+    SHOW_AUTOMESSAGE,
+    SHOW_EVENT_ANNOUNCE
     ;
 
     public boolean getPlayerOptions(WLPlayer wlPlayer) {
@@ -34,6 +35,8 @@ public enum EPlayerOptions {
                 return playerOptions.isTeleportEffect();
             case SHOW_AUTOMESSAGE:
                 return playerOptions.isShowAutoMessage();
+            case SHOW_EVENT_ANNOUNCE:
+                return playerOptions.isShowEventAnnounce();
         }
         return false;
     }
@@ -70,6 +73,10 @@ public enum EPlayerOptions {
             }
             case SHOW_AUTOMESSAGE: {
                 playerOptions.setShowAutoMessage(option);
+                break;
+            }
+            case SHOW_EVENT_ANNOUNCE: {
+                playerOptions.setShowEventAnnounce(option);
                 break;
             }
         }

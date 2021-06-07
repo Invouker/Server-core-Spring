@@ -40,12 +40,16 @@ public class ScoreDisplay {
         public void setLine(String text) {
             if (text.isEmpty())
                 text = " ";
-
+            boolean firstColorTag = false;
             String first = text.substring(0, Math.min(text.length(), 32));
+            if(first.endsWith("&")) {
+                first = first.substring(0, first.length() - 1);
+                firstColorTag = true;
+            }
             String color = org.bukkit.ChatColor.getLastColors(first);
             team.setPrefix(first);
             if(text.length() > 31)
-                team.setSuffix(color + text.substring(32));
+                team.setSuffix(color + (firstColorTag ? text.substring(1, 32) : text.substring(32)));
 
             displayLine();
         }
@@ -159,7 +163,13 @@ public class ScoreDisplay {
             if (!linePositions.contains(position)) {
                 linePositions.add(position);
             }
-            lineUnits.get(position).setLine(PlaceholderAPI.setPlaceholders(player, text));
+
+            try { // if PlaceHolder cannot be loaded
+                lineUnits.get(position).setLine(PlaceholderAPI.setPlaceholders(player, text));
+            }catch (NullPointerException exception) {
+                lineUnits.get(position).setLine(text);
+            }
+
             updateLists();
         };
     }

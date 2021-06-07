@@ -11,10 +11,10 @@ import picocli.CommandLine;
 import sk.westland.core.WestLand;
 import sk.westland.core.database.player.RankData;
 import sk.westland.core.database.player.RankDataRepository;
-import sk.westland.discord.DiscordHandler;
 import sk.westland.core.services.PlayerService;
+import sk.westland.core.services.RunnableService;
 import sk.westland.core.utils.ChatInfo;
-import sk.westland.core.utils.RunnableHelper;
+import sk.westland.discord.DiscordHandler;
 
 import java.util.concurrent.TimeUnit;
 
@@ -33,6 +33,9 @@ public class SRankCommand implements Runnable {
 
     @Autowired
     private PlayerService playerService;
+
+    @Autowired
+    private RunnableService runnableService;
 
     @Override
     public void run() {
@@ -70,7 +73,7 @@ public class SRankCommand implements Runnable {
             });
         }));
         long playerID = playerService.getWLPlayer(context.getPlayer()).getUserData().getId();
-        RunnableHelper.save(rankDataRepository, new RankData(playerID, user.getId()));
+        runnableService.save(rankDataRepository, new RankData(playerID, user.getId()));
         ChatInfo.SUCCESS.send(context, "Uspešne si si zosynchronizoval účet s discord účtom: " + user.getName());
     }
 }

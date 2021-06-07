@@ -1,8 +1,8 @@
-package sk.westland.core.jobs.rewards;
+package sk.westland.core.rewards;
 
 import org.bukkit.entity.Player;
 
-public interface JIReward<T extends JIReward<T>> {
+public interface IReward<T extends IReward<T>> {
 
     T reward(Player player);
 

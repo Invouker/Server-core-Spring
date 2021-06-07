@@ -38,8 +38,8 @@ public class PlayerData {
     @Convert(converter = ListConverter.class)
     private Map<String, List<Integer>> alreadyJobRewarded;
 
-    private int activeJoinMessage = -1;
-    private int activeQuitMessage = -1;
+    private int activeJoinMessage = 0;
+    private int activeQuitMessage = 0;
 
     //@Convert(converter = QuestProgressStorageConverter.class)
     //private LinkedList<QuestProgressStorage> progressStorageMap;

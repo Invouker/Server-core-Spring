@@ -80,7 +80,7 @@ public class PMoneyCommands implements Runnable {
                 return;
             }
 
-           ChatInfo.SUCCESS.send(context.getPlayer(), "Hráč " + targetPlayer.getName() + " má aktuálne " +  moneyService.get(targetPlayer, moneyType) + " shardov!");
+           ChatInfo.SUCCESS.send(context.getPlayer(), "Hráč " + targetPlayer.getName() + " má aktuálne " +  moneyService.get(targetPlayer, moneyType) + " " + moneyType.getName() + "!");
         }
     }
 
@@ -89,14 +89,14 @@ public class PMoneyCommands implements Runnable {
     @HasPermission("commands.pmoney.set")
     public static class SetMoney implements Runnable {
 
-        @CommandLine.Parameters(index = "2", defaultValue = "@s", converter = PlayerArgConverter.class)
-        private Player targetPlayerArg;
-
         @CommandLine.Parameters(index = "0", completionCandidates = MoneySuggestion.class)
         private MoneyType moneyType;
 
         @CommandLine.Parameters(index = "1")
         private int amount;
+
+        @CommandLine.Parameters(index = "2", defaultValue = "@s", converter = PlayerArgConverter.class)
+        private Player targetPlayerArg;
 
         @Autowired
         private Context context;
@@ -130,7 +130,7 @@ public class PMoneyCommands implements Runnable {
 
             if(moneyService.set(targetPlayer, moneyType, amount)) {
                 ChatInfo.SUCCESS.send(context.getPlayer(), "Nastavil si hráčovy " + targetPlayer.getName() + " " + moneyService.get(targetPlayer, moneyType) + " " + moneyType.getName());
-                ChatInfo.SUCCESS.send(targetPlayer, "Aktuálne máš " + targetPlayer.getShards() + " shardov!");
+                ChatInfo.SUCCESS.send(targetPlayer, "Aktuálne máš " + moneyService.get(targetPlayer, moneyType) + " " + moneyType.getName() +"!");
             }
         }
     }
@@ -180,8 +180,9 @@ public class PMoneyCommands implements Runnable {
             }
 
             moneyService.give(targetPlayer, moneyType, -amount);
-            ChatInfo.SUCCESS.send(context.getPlayer(), "Odobral si hráčovy " + targetPlayer.getName() + " " + moneyService.get(targetPlayer, moneyType) + " " + moneyType.getName());
-            ChatInfo.SUCCESS.send(targetPlayer, "Aktuálne máš " + moneyService.get(targetPlayer, moneyType) + " shardov!");
+            if(context.getSender() instanceof Player)
+                ChatInfo.SUCCESS.send(context.getPlayer(), "Odobral si hráčovy " + targetPlayer.getName() + " " + moneyService.get(targetPlayer, moneyType) + " " + moneyType.getName());
+            ChatInfo.SUCCESS.send(targetPlayer, "Aktuálne máš " + moneyService.get(targetPlayer, moneyType) + " " + moneyType.getName() +"!");
         }
     }
 
@@ -217,6 +218,9 @@ public class PMoneyCommands implements Runnable {
         @Override
         public void run() {
             WLPlayer targetPlayer;
+            if(targetPlayerArg.equalsIgnoreCase("@me"))
+                targetPlayerArg = context.getPlayer().getName();
+
             Player targetBukkitPlayer = Bukkit.getPlayer(targetPlayerArg);
             if(targetBukkitPlayer == null) {
                 boolean success = runOffline(targetPlayerArg, moneyType, (int) amount);

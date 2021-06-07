@@ -740,6 +740,8 @@ public class ItemBuilder {
         PersistentDataContainer data = itemMeta.getPersistentDataContainer();
         data.set(NBT_PER_KEY, PersistentDataType.STRING, item.itemID());
         is.setItemMeta(itemMeta);
+
+        setModelId(item.getModelID());
         return this;
     }
 

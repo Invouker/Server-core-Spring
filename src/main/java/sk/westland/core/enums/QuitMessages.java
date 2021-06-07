@@ -4,20 +4,21 @@ import net.md_5.bungee.api.ChatColor;
 
 public enum QuitMessages {
 
+    BASIC("Predvolené", "Hráč %player% sa odpojil!", ChatColor.of("#269900") + "§l[!]", ChatColor.of("#53ff1a"), ChatColor.of("#33cc00")),
     KING("Si kráľ?", "Kráľ %player% sa odpojil!", ChatColor.of("#269900") + "§l[!]", ChatColor.of("#53ff1a"), ChatColor.of("#33cc00")),
     QUEEN("Si královna?", "Královna %player% sa odpojila!", ChatColor.of("#269900")+"§l[!]", ChatColor.of("#53ff1a"), ChatColor.of("#33cc00"));
 
 
-    private String name;
-    private String joinMessage;
-    private String prefix;
+    private final String name;
+    private final String quitMessage;
+    private final String prefix;
 
-    private ChatColor nameColor;
-    private ChatColor textColor;
+    private final ChatColor nameColor;
+    private final ChatColor textColor;
 
-    QuitMessages(String name, String joinMessage, String prefix, ChatColor nameColor, ChatColor textColor) {
+    QuitMessages(String name, String quitMessage, String prefix, ChatColor nameColor, ChatColor textColor) {
         this.name = name;
-        this.joinMessage = joinMessage;
+        this.quitMessage = quitMessage;
         this.prefix = prefix;
         this.nameColor =  nameColor;
         this.textColor = textColor;
@@ -27,8 +28,8 @@ public enum QuitMessages {
         return name;
     }
 
-    public String getJoinMessage() {
-        return joinMessage;
+    public String getQuitMessage() {
+        return quitMessage;
     }
 
     public String getPrefix() {
@@ -44,10 +45,10 @@ public enum QuitMessages {
     }
 
     public String formattedJoinMessage() {
-        return getPrefix() + " " + getTextColor() + getJoinMessage().replace("%player%", getNameColor() + "%player%" + getTextColor());
+        return getPrefix() + " " + getTextColor() + getQuitMessage().replace("%player%", getNameColor() + "%player%" + getTextColor());
     }
 
     public String formattedJoinMessageWithoutPrefix() {
-        return getTextColor() + getJoinMessage().replace("%player%", getNameColor() + "%player%" + getTextColor());
+        return getTextColor() + getQuitMessage().replace("%player%", getNameColor() + "%player%" + getTextColor());
     }
 }

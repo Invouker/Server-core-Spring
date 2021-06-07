@@ -154,6 +154,9 @@ public class ItemInteractionService implements Listener {
     private void onPlayerBreakBlockWithItem(@NotNull BlockBreakEvent event) {
         Player player = event.getPlayer();
 
+
+        //processItemInteraction(itemInteractions.get(localizedName), event, true);
+
         ItemStack itemStack = player.getEquipment() == null ? null : player.getEquipment().getItemInMainHand();
         if(itemStack == null || itemStack.getType() == Material.AIR)
             return;
@@ -172,8 +175,16 @@ public class ItemInteractionService implements Listener {
     }
 
     private void processItemInteraction(InteractionItem item, Event event) {
+        this.processItemInteraction(item, event, false);
+    }
+
+    private void processItemInteraction(InteractionItem item, Event event, boolean second) {
         if(item == null)
             throw new NullPointerException("ItemInteraction is null");
+
+        if(second == true && event instanceof BlockBreakEvent) {
+            item.getConsumerBlockBreakEventAll().accept((BlockBreakEvent) event);
+        }
 
         if(event instanceof PlayerInteractEvent)
             item.getConsumerInteract().accept((PlayerInteractEvent) event);

@@ -19,7 +19,7 @@ public class JobRewardCommand implements Runnable {
     private Context context;
 
     @CommandLine.Parameters(index = "0", completionCandidates = JobsSuggestion.class)
-    private String job;
+    private JobList jobList;
 
     @Autowired
     private PlayerService playerService;
@@ -29,7 +29,7 @@ public class JobRewardCommand implements Runnable {
 
     @Override
     public void run() {
-        JobList jobList = JobList.findByName(job);
+
         if(jobList == null) {
             ChatInfo.ERROR.send(context.getPlayer(), "Zadal si nesprávny názov práce!");
             return;

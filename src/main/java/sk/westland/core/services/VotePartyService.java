@@ -34,8 +34,8 @@ public class VotePartyService implements Listener {
         if(partyGame != null)
             partyGame.despawn();
 
-        partyGame = new PartyGame(new Location(Bukkit.getWorld("testworld"), 113.0, 4.0, 50.0));
-        ChatInfo.SUCCESS.sendAll("Na spawne sa zjavil VoteParty Zombie!");
+        partyGame = new PartyGame(new Location(Bukkit.getWorld("worldspawn"), 69.5, 58, -29.5));
+        ChatInfo.SUCCESS.sendAll("Na spawne sa zjavil VoteParty Illusioner!");
     }
 
     public void despawn() {

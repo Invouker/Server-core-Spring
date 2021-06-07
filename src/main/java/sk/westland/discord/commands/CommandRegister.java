@@ -5,7 +5,6 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.reflections.Reflections;
-import sk.westland.core.utils.RunnableHelper;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
@@ -20,9 +19,9 @@ public class CommandRegister extends ListenerAdapter {
     private final List<Method> registerCommands = new ArrayList<>();
 
     public void CommandRegisters() {
-        RunnableHelper.runTaskLater(()-> {
+        /*RunnableHelper.runTaskLater(()-> {
             registerCommands.addAll(scanForMethods());
-        }, 10L);
+        }, 10L);*/
     }
 
     private List<Method> scanForMethods() {

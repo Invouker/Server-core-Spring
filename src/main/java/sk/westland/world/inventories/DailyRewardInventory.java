@@ -1,11 +1,8 @@
 package sk.westland.world.inventories;
 
-import net.minecraft.server.v1_16_R3.ItemSign;
-import net.minecraft.server.v1_16_R3.RegistryReadOps;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
@@ -15,19 +12,19 @@ import org.jetbrains.annotations.Nullable;
 import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.enums.EPlayerTimeReward;
 import sk.westland.core.enums.MoneyType;
-import sk.westland.core.inventory.ItemMenu;
 import sk.westland.core.inventory.OwnerItemMenu;
 import sk.westland.core.items.ItemBuilder;
 import sk.westland.core.services.MoneyService;
-import sk.westland.core.services.PlayerService;
 import sk.westland.core.utils.ChatInfo;
 import sk.westland.core.utils.Utils;
 import sk.westland.world.items.Materials;
 
-import java.text.DateFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.EnumSet;
+import java.util.List;
 
 public class DailyRewardInventory extends OwnerItemMenu {
 
@@ -106,12 +103,20 @@ public class DailyRewardInventory extends OwnerItemMenu {
         switch (slot) {
             case 12: {
                 if(getPlayer().hasPermission("westland.reward.premium.daily"))
-                ePlayerTimeReward = EPlayerTimeReward.PremiumDaily;
+                    ePlayerTimeReward = EPlayerTimeReward.PremiumDaily;
+                else {
+                    ChatInfo.WARNING.send(getPlayer(), "Pre vyzdvihnutie tejto odmeny, potrebuješ VIP!");
+                    close(getPlayer());
+                }
                 break;
             }
             case 14: {
                 if(getPlayer().hasPermission("westland.reward.premium.weekly"))
-                ePlayerTimeReward = EPlayerTimeReward.PremiumWeekly;
+                    ePlayerTimeReward = EPlayerTimeReward.PremiumWeekly;
+                else {
+                    ChatInfo.WARNING.send(getPlayer(), "Pre vyzdvihnutie tejto odmeny, potrebuješ VIP!");
+                    close(getPlayer());
+                }
                 break;
             }
             case 20: {
@@ -139,37 +144,26 @@ public class DailyRewardInventory extends OwnerItemMenu {
         List<ItemStack> itemStackList = new ArrayList<>();
         switch (ePlayerTimeReward) {
             case Daily: {
-                moneyService.give(wlPlayer, MoneyType.Gems, 7);
-                itemStackList.add(new ItemStack(Material.IRON_INGOT, 7));
-                itemStackList.add(new ItemBuilder(Materials.Resources.COAL_DUST.getItem(), 10).build());
+                moneyService.give(wlPlayer, MoneyType.Gems, 4);
+                itemStackList.add(new ItemStack(Material.IRON_INGOT, 12));
+                itemStackList.add(new ItemStack(Material.PUMPKIN_PIE, 6));
 
-                if(Utils.BaseMath.getRandomInt(10) == 1)
-                    itemStackList.add(new ItemBuilder(Materials.Resources.COPPER_DUST.getItem(), Utils.BaseMath.getRandomMinMaxInt(0,2)).build());
+                if(Utils.BaseMath.getRandomInt(20) >= 12)
+                itemStackList.add(new ItemStack(Material.DIAMOND, 2));
 
-                if(Utils.BaseMath.getRandomInt(15) == 1)
-                        itemStackList.add(new ItemBuilder(Materials.Resources.RAW_CARBON_FIBRE.getItem(),
-                                Utils.BaseMath.getRandomMinMaxInt(0,1)).build());
                 break;
             }
             case PremiumDaily: {
-                moneyService.give(wlPlayer, MoneyType.Gems, 15);
+                moneyService.give(wlPlayer, MoneyType.Gems, 22);
+                moneyService.give(wlPlayer, MoneyType.Money, 450);
                 itemStackList.add(new ItemStack(Material.IRON_INGOT, 25));
-                itemStackList.add(new ItemBuilder(Materials.Resources.COAL_DUST.getItem(), 25).build());
+                itemStackList.add(new ItemStack(Material.PUMPKIN_PIE, 12));
+                itemStackList.add(new ItemStack(Material.EMERALD, Utils.BaseMath.getRandomMinMaxInt(3, 10)));
 
-                if(Utils.BaseMath.getRandomInt(7) >= 4)
-                    itemStackList.add(new ItemBuilder(Materials.Resources.COPPER_DUST.getItem(),
-                            Utils.BaseMath.getRandomMinMaxInt(3, 5)).build());
-
-                if(Utils.BaseMath.getRandomInt(7) >= 4)
-                    itemStackList.add(new ItemBuilder(Materials.Resources.RAW_CARBON_FIBRE.getItem(),
-                            Utils.BaseMath.getRandomMinMaxInt(1, 4)).build());
                 break;
             }
             case Weekly: {
                 moneyService.give(wlPlayer, MoneyType.Gems, 20);
-                if(Utils.BaseMath.getRandomInt(7) == 5)
-                    itemStackList.add(new ItemBuilder(Materials.Resources.RAW_CARBON_FIBRE.getItem(),
-                            Utils.BaseMath.getRandomMinMaxInt(0,3)).build());
 
                 itemStackList.add(new ItemStack(Material.DIAMOND, 5));
 
@@ -192,7 +186,7 @@ public class DailyRewardInventory extends OwnerItemMenu {
                 itemStackList.add(new ItemStack(Material.DIAMOND, 8));
 
                 if(Utils.BaseMath.getRandomInt(20) >= 8)
-                    moneyService.give(wlPlayer, MoneyType.Shard, 3);
+                    moneyService.give(wlPlayer, MoneyType.Shard, 2);
 
                 if(Utils.BaseMath.getRandomInt(20) >= 11)
                     itemStackList.add(new ItemBuilder(Materials.Items.WORTH_WAND.getItem())
@@ -209,10 +203,10 @@ public class DailyRewardInventory extends OwnerItemMenu {
                 moneyService.give(wlPlayer, MoneyType.Gems, 30);
                 itemStackList.add(new ItemStack(Material.NETHERITE_INGOT, 2));
 
-                if(Utils.BaseMath.getRandomInt(3) == 1)
+                if(Utils.BaseMath.getRandomInt(5) >= 2)
                     itemStackList.add(new ItemBuilder(Materials.Items.WORTH_WAND.getItem())
-                        .setNbt_Int("WAND_DURABILITY", 5)
-                        .setLoreLine(6, "§7Počet použití: §f" + 5).build());
+                        .setNbt_Int("WAND_DURABILITY", 10)
+                        .setLoreLine(6, "§7Počet použití: §f" + 10).build());
                 break;
             }
         }

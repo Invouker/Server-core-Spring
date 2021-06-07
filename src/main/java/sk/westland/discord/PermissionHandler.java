@@ -1,6 +1,8 @@
 package sk.westland.discord;
 
+import dev.alangomes.springspigot.util.Synchronize;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.luckperms.api.event.EventBus;
 import net.luckperms.api.event.node.NodeAddEvent;
@@ -19,11 +21,12 @@ import sk.westland.core.database.player.RankData;
 import sk.westland.core.database.player.RankDataRepository;
 import sk.westland.core.database.player.UserData;
 import sk.westland.core.database.player.UserDataRepository;
-import sk.westland.discord.ranksync.Rank;
 import sk.westland.core.services.APIServices;
 import sk.westland.core.services.PlayerService;
-import sk.westland.core.utils.RunnableHelper;
+import sk.westland.discord.ranksync.Rank;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -44,12 +47,12 @@ public class PermissionHandler implements Listener, Runnable {
     private static PermissionHandler permissionHandler;
 
     public PermissionHandler() {
-        RunnableHelper.runTaskLater(this, 20L);
+        Bukkit.getScheduler().runTaskLater(WestLand.getInstance(), this, 10L);
+        //runnableService.runTaskLater(this, 20L);
     }
 
     @Override
     public void run() {
-
         permissionHandler = this;
 
         if(apiServices == null) {
@@ -66,6 +69,7 @@ public class PermissionHandler implements Listener, Runnable {
         return permissionHandler;
     }
 
+    @Synchronize
     private synchronized void onNodeAdd(NodeAddEvent e) {
         if (!e.isUser()) {
             return;
@@ -80,7 +84,7 @@ public class PermissionHandler implements Listener, Runnable {
             if (node instanceof InheritanceNode) {
                 String groupName = ((InheritanceNode) node).getGroupName();
 
-                long playerId = -1;
+                long playerId;
                 if (player == null) { // player is not connected
                     Optional<UserData> userDataOptional = userDataRepository.findByUuid(target.getUniqueId().toString());
                     if(!userDataOptional.isPresent())
@@ -95,7 +99,8 @@ public class PermissionHandler implements Listener, Runnable {
         });
     }
 
-    public void updateRole(long playerId, String groupName) {
+    @Synchronize
+    public synchronized void updateRole(long playerId, String groupName) {
         Rank rank = Rank.getDiscordGroupByVault(groupName);
         String discordGroup = rank.getDiscordGroup();
         DiscordHandler discordHandler = WestLand.getDiscordHandler();
@@ -128,27 +133,17 @@ public class PermissionHandler implements Listener, Runnable {
             if(role == null)
                 return;
 
-            removeAllRoles(guild, discordId);
-/*
-                    guild.addRoleToMember(discordId, role).queue((i) -> {
-                        if(rank.getRankData() == Rank.RankEnum.ADMIN) {
-                            String stafflist = Rank.getDiscordGroupByVault("stafflist").getDiscordGroup();
-                            Role staffRole = guild.getRoleById(stafflist);
-                            if(staffRole == null)
-                                return;
-
-                            guild.addRoleToMember(discordId, staffRole).queue();
-                        }
-                    });*/
+            //removeAllRoles(guild, discordId, member.getRoles());
 
             if(rank.getRankData() == Rank.RankEnum.ADMIN)
-                addRoleToMember(guild, discordId, "stafflist");
-            addRoleToMember(guild, discordId, groupName);
-            addRoleToMember(guild, discordId, "default");
+                addRoleToMember(guild, member, discordId, "stafflist");
+            addRoleToMember(guild, member,discordId, groupName);
+            addRoleToMember(guild, member,discordId, "default");
         });
     }
 
-    private void addRoleToMember(Guild guild, String discordId, String roleName) {
+    private void addRoleToMember(Guild guild, Member member, String discordId, String roleName) {
+        final List<Role> roles = new ArrayList<>();
         for (Rank rank : Rank.getRankList()) {
             if(!rank.getVaultGroup().equalsIgnoreCase(roleName))
                 continue;
@@ -157,12 +152,62 @@ public class PermissionHandler implements Listener, Runnable {
             if(role == null)
                 continue;
 
-            System.out.println("Pridávam rolu:  " + role.getName() + ", hráčovy: " + guild.getMemberById(discordId));
+            if(member.getRoles().contains(role))
+                continue;
+
             guild.addRoleToMember(discordId, role).queue();
+            roles.add(role);
+            System.out.println("Pridávam rolu:  " + role.getName() + ", hráčovy: " + member.getAsMention());
         }
+
+        { // remove other roles
+            main: for (Role role : member.getRoles()) {
+
+                if(roles.contains(role))
+                    continue;
+
+                for(Rank rank : Rank.getRankList()) {
+                    if(rank.getDiscordGroup().equalsIgnoreCase(role.getId()))
+                        continue;
+
+                    continue main;
+                }
+
+                System.out.println("Vymazávam rolu: " + role.getName());
+                guild.removeRoleFromMember(discordId, role).queue();
+
+            }
+
+            roles.clear();
+        }
+        /*
+        { // remove other roles
+            main: for(Role role : member.getRoles()) {
+                for(Role cannotRemoveRole : roles) {
+
+                    if(cannotRemoveRole.getId().equals(role.getId()))
+                        continue main;
+
+                    if(!listContainsRank(role.getId()))
+                        continue main;
+
+                    System.out.println("Vymazavam rolu: " + role.getName());
+                    guild.removeRoleFromMember(discordId, role).queue();
+
+                }
+            }
+        }*/
     }
 
-    private void removeAllRoles(Guild guild, String discordId) {
+    private boolean listContainsRank(String rankId) {
+        for(Rank rank : Rank.getRankList()) {
+            if (rank.getDiscordGroup().equalsIgnoreCase(rankId))
+                return true;
+        }
+        return false;
+    }
+
+    private void removeAllRoles(Guild guild, String discordId, List<Role> roles) {
         for (Rank rank : Rank.getRankList()) {
             Role role = guild.getRoleById(rank.getDiscordGroup());
             if(role == null)

@@ -11,9 +11,10 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.springframework.beans.factory.annotation.Autowired;
+import sk.westland.core.App;
 import sk.westland.core.services.BlockService;
-import sk.westland.core.utils.RunnableHelper;
-import sk.westland.core.utils.Utils;
+import sk.westland.core.services.RunnableService;
+import sk.westland.core.services.UtilsService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +25,9 @@ public abstract class MultiBlock implements IMultiBlock {
 
     @Autowired
     private BlockService blockService;
+
+    @Autowired
+    private RunnableService runnableService;
 
     private Material[] blockMaterial;
     private Material interactableMaterial;
@@ -156,6 +160,12 @@ public abstract class MultiBlock implements IMultiBlock {
     @EventHandler
     private void onPlayerInteract(PlayerInteractEvent event) {
 
+        if(event == null)
+            return;
+
+        if(event.getAction() == null)
+            return;
+
         if(event.getHand() != EquipmentSlot.HAND)
             return;
 
@@ -181,7 +191,7 @@ public abstract class MultiBlock implements IMultiBlock {
         if(!checkConstruction(block))
             return;
 
-        Utils.playArmAnimation(event.getPlayer());
+        App.getService(UtilsService.class).playArmAnimation(event.getPlayer());
 
         List<Block> blocks = getMultiBlockConstruct(event.getClickedBlock());
 
@@ -227,7 +237,7 @@ public abstract class MultiBlock implements IMultiBlock {
             }
         }
 
-        RunnableHelper.runTask(()->inventory.addItem(imbRecipe.getResult()));
+        runnableService.runTask(()->inventory.addItem(imbRecipe.getResult()));
     }
 
     protected IMBRecipe getRecipe(List<ItemStack> inventory) {

@@ -9,6 +9,7 @@ import sk.westland.world.items.blocks.*;
 import sk.westland.world.items.resources.*;
 import sk.westland.world.items.spawners.MagicSpawner;
 import sk.westland.world.items.tools.*;
+import sk.westland.world.items.tools.talismans.FortuneTalisman;
 
 public class Materials {
 
@@ -28,7 +29,11 @@ public class Materials {
 
         SADDLE_ITEM(null, new SaddleItem()),            // SADDLE 2
         MAGIC_SPAWNER(null, new MagicSpawner()),
-        WORTH_WAND(null, new WorthWand());
+        WORTH_WAND(null, new WorthWand()),
+
+        // Talismans
+        FORTUNE_TALISMAN(new FortuneTalisman(), null)
+        ;
 
         private Craftable craftable;
         private CustomItem customItem;

@@ -63,14 +63,10 @@ public abstract class NCItemShopMenu extends NCCustomInventory {
     }
 
     @Override
-    protected void onClose(@NotNull Player player) {
-
-    }
+    protected void onClose(@NotNull Player player) { }
 
     @Override
-    protected void itemInit() {
-
-    }
+    protected void itemInit() { }
 
     @Override
     protected void onClick(@NotNull Player player, int slot, @Nullable ItemStack item, @Nullable ItemStack cursor, @NotNull InventoryClickEvent event) {
@@ -116,7 +112,9 @@ public abstract class NCItemShopMenu extends NCCustomInventory {
         return StringUtils.capitalize(name);
     }
 
-
+    protected void setItem(int index, @NotNull ItemStack isDisplay) {
+        this.items[index] = isDisplay;
+    }
 
     protected void setItem(int index, @NotNull ItemStack isDisplay, @Nullable ItemStack isGive, @NotNull MoneyType moneyType, int price) {
         int size = getSize();
@@ -128,14 +126,7 @@ public abstract class NCItemShopMenu extends NCCustomInventory {
         ItemStack itemStackDisplay = new ItemBuilder(isDisplay)
                 .addLore(
                         "§fCena:§a " + price + " " + moneyType.getMultipleName(),
-                        "§7Aktuálne máš " +
-                                moneyService
-                                        .get(
-                                                player,
-                                                moneyType) + " " +
-                                moneyType
-                                        .getMultipleName()
-                                        .toLowerCase(Locale.ROOT),
+                        "§7Aktuálne máš " + moneyService.get(player, moneyType) + " " + moneyType.getMultipleName().toLowerCase(Locale.ROOT),
                         "",
                         "§aKlikni pre zakúpenie!"
                 )
@@ -144,8 +135,7 @@ public abstract class NCItemShopMenu extends NCCustomInventory {
         if(isGive != null)
             this.itemMap.put(itemStackDisplay, new ImmutableTriple<>(isGive, moneyType, price));
 
-        this
-                .items[index] = itemStackDisplay;
+        this.items[index] = itemStackDisplay;
     }
 
     private int addItem(@NotNull ItemStack isDisplay, @Nullable ItemStack isGive, @NotNull MoneyType moneyType, int price) {

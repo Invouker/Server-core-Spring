@@ -23,13 +23,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.codehaus.plexus.util.StringUtils;
 import org.spigotmc.event.entity.EntityDismountEvent;
-import org.springframework.stereotype.Service;
 import sk.westland.core.enums.HorseArmour;
 import sk.westland.core.enums.HorseStats;
 import sk.westland.core.enums.HorseTier;
 import sk.westland.core.items.ItemBuilder;
 import sk.westland.core.items.Nbt;
-import sk.westland.core.utils.ChatInfo;
 import sk.westland.world.items.Materials;
 
 import java.util.HashMap;
@@ -61,11 +59,28 @@ public class HorseService implements Listener {
         return saddle;
     }
 
+    public ItemStack buildHorse(Colors horseColor, Style horseStyle, int jump, int speed, int health) {
+        ItemStack saddle = Materials.Items.SADDLE_ITEM.getItem().clone();
+
+        saddle = applyStats(saddle, HorseStats.COLOR, horseColor.getId());
+        saddle = applyStats(saddle, HorseStats.STYLE, horseStyle.getId());
+        saddle = applyStats(saddle, HorseStats.TYPE, HorseType.HORSE.getId());
+
+        saddle = Nbt.setNbt_Int(saddle, HorseStats.JUMP.getStatName(), 1);
+        saddle = Nbt.setNbt_Int(saddle, HorseStats.SPEED.getStatName(), 1);
+        saddle = Nbt.setNbt_Int(saddle, HorseStats.HEALTH.getStatName(), 1);
+        saddle = Nbt.setNbt_Int(saddle, HorseStats.ARMOR.getStatName(), -1);
+        saddle = Nbt.setNbt_Int(saddle, HorseStats.ARMOR_COLOR.getStatName(), -1);
+
+        saddle = applyStats(saddle, HorseStats.JUMP, jump);
+        saddle = applyStats(saddle, HorseStats.SPEED, speed);
+        return applyStats(saddle, HorseStats.HEALTH, health);
+    }
+
     public ItemStack buildHorse(HorseType horseType) {
         ItemStack saddle = Materials.Items.SADDLE_ITEM.getItem().clone();
 
         saddle = applyStats(saddle, HorseStats.TYPE, horseType.getId());
-        ChatInfo.SUCCESS.sendAll("Type: " + horseType.getId() + ", "  + horseType.getTypeName());
         saddle = Nbt.setNbt_Int(saddle, HorseStats.JUMP.getStatName(), 1);
         saddle = Nbt.setNbt_Int(saddle, HorseStats.SPEED.getStatName(), 1);
         saddle = Nbt.setNbt_Int(saddle, HorseStats.HEALTH.getStatName(), 1);
@@ -76,6 +91,7 @@ public class HorseService implements Listener {
         if(horseType == HorseType.ZOMBIE) itemName.append("Zombie horse");
         return new ItemBuilder(saddle).setName(itemName.toString()).removeLoreLine(0).setLoreLine(0, "§r").build();
     }
+
 
     public ItemStack buildHorse(int type, int jump, int speed, int health, int color, int style, int armor, int armor_color) {
         ItemStack saddle = Materials.Items.SADDLE_ITEM.getItem();

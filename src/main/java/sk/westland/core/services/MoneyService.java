@@ -5,7 +5,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.enums.MoneyType;
 import sk.westland.core.utils.ChatInfo;
@@ -87,26 +86,25 @@ public class MoneyService {
     }
 
     public boolean set(WLPlayer wlPlayer, MoneyType moneyType, double amount) {
-        if(this.canPay(wlPlayer, moneyType, amount)) {
-            switch (moneyType) {
-                case Gems: {
-                    wlPlayer.setGems(amount);
-                    return true;
-                }
-                case Shard: {
-                    wlPlayer.setShards(amount);
-                    return true;
-                }
-                case Money: {
-                    double money = vaultService.getEconomy().getBalance(getOfflinePlayer(wlPlayer));
-                    EconomyResponse economyResponse = vaultService.getEconomy().withdrawPlayer(getOfflinePlayer(wlPlayer), money);
-                    if(!economyResponse.transactionSuccess())
-                        throw new NullPointerException("Economy response, player cannot withdraw money!");
+        switch (moneyType) {
+            case Gems: {
+                wlPlayer.setGems(amount);
+                return true;
+            }
+            case Shard: {
+                wlPlayer.setShards(amount);
+                return true;
+            }
+            case Money: {
+                double money = vaultService.getEconomy().getBalance(getOfflinePlayer(wlPlayer));
+                EconomyResponse economyResponse = vaultService.getEconomy().withdrawPlayer(getOfflinePlayer(wlPlayer), money);
+                if(!economyResponse.transactionSuccess())
+                    throw new NullPointerException("Economy response, player cannot withdraw money!");
 
-                    return vaultService.getEconomy().depositPlayer(getOfflinePlayer(wlPlayer), amount).transactionSuccess();
-                }
+                return vaultService.getEconomy().depositPlayer(getOfflinePlayer(wlPlayer), amount).transactionSuccess();
             }
         }
+
         return false;
     }
 
@@ -124,10 +122,10 @@ public class MoneyService {
             }
             case Money: {
                 return vaultService.getEconomy().depositPlayer(getOfflinePlayer(wlPlayer), amount).transactionSuccess();
-
             }
+            default:
+                return false;
         }
-        return false;
     }
 
     public boolean remove(WLPlayer wlPlayer, MoneyType moneyType, double amount) {

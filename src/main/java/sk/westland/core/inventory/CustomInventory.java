@@ -26,16 +26,16 @@ import java.util.List;
 
 public abstract class CustomInventory implements InventoryHolder, Listener {
 
-    protected static final ItemStack CLOSE_INVENTORY_ITEM = new ItemBuilder(Material.BARRIER).setName("§cClose Inventory").build();
+    protected static final ItemStack CLOSE_INVENTORY_ITEM = new ItemBuilder(Material.BARRIER).setName("§cZatvoriť").build();
     protected static final ItemStack GRAY_GLASS = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName("§r ").build();
 
     protected static final ItemStack STICK_EMPTY = new ItemBuilder(Material.STICK).setModelId(10).setName("§r ").build();
     protected static final ItemStack STICK_OK = new ItemBuilder(Material.STICK).setModelId(11).setName("§r ").build();
-    protected static final ItemStack STICK_RIGHT = new ItemBuilder(Material.STICK).setModelId(16).setName("§r ").build();
-    protected static final ItemStack STICK_LEFT = new ItemBuilder(Material.STICK).setModelId(15).setName("§r ").build();
+    protected static final ItemStack STICK_CLOSE = new ItemBuilder(Material.STICK).setModelId(12).setName("§r ").build();
     protected static final ItemStack STICK_UP = new ItemBuilder(Material.STICK).setModelId(13).setName("§r ").build();
     protected static final ItemStack STICK_DOWN = new ItemBuilder(Material.STICK).setModelId(14).setName("§r ").build();
-    protected static final ItemStack STICK_CLOSE = new ItemBuilder(Material.STICK).setModelId(12).setName("§r ").build();
+    protected static final ItemStack STICK_LEFT = new ItemBuilder(Material.STICK).setModelId(15).setName("§r ").build();
+    protected static final ItemStack STICK_RIGHT = new ItemBuilder(Material.STICK).setModelId(16).setName("§r ").build();
     /**
      * Crete new empty inventory.
      */

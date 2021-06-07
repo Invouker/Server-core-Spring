@@ -8,11 +8,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.springframework.stereotype.Component;
+import sk.westland.core.App;
 import sk.westland.core.blocks.multiblock.IMBRecipe;
 import sk.westland.core.blocks.multiblock.MultiBlock;
 import sk.westland.core.blocks.multiblock.MultiBlockType;
 import sk.westland.core.items.ItemBuilder;
-import sk.westland.core.utils.Utils;
+import sk.westland.core.services.UtilsService;
 import sk.westland.world.items.Materials;
 
 import java.util.EnumSet;
@@ -38,6 +39,6 @@ public class Grinder extends MultiBlock implements Listener {
 
     @Override
     public void onMultiBlockActivation(Player player, List<Block> blocks, IMBRecipe imbRecipe, PlayerInteractEvent event) {
-        Utils.playSound(blocks.get(0).getLocation(), Sound.BLOCK_GRINDSTONE_USE);
+        App.getService(UtilsService.class).playSound(blocks.get(0).getLocation(), Sound.BLOCK_GRINDSTONE_USE);
     }
 }

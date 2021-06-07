@@ -6,7 +6,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import org.springframework.stereotype.Service;
 import sk.westland.core.event.PluginEnableEvent;
 
 public class APIServices implements Listener {
