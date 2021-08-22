@@ -1,0 +1,4 @@
+name: WorldGen
+version: ${project.version}
+main: sk.xpress.worldgen.Main
+api-version: 1.17
