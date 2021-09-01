@@ -24,7 +24,7 @@ public class MoneyReward implements IReward<MoneyReward> {
 
     @Override
     public MoneyReward reward(Player player) {
-        moneyService.set(moneyService.getPlayerService().getWLPlayer(player), moneyType, moneyValue);
+        moneyService.give(moneyService.getPlayerService().getWLPlayer(player), moneyType, moneyValue);
         return this;
     }
 

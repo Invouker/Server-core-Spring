@@ -4,7 +4,7 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
-import net.minecraft.server.v1_16_R3.MinecraftServer;
+import net.minecraft.server.MinecraftServer;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -13,8 +13,10 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitTask;
 import org.springframework.beans.factory.annotation.Autowired;
+import sk.westland.core.App;
 import sk.westland.core.WestLand;
 import sk.westland.core.database.player.UserDataRepository;
+import sk.westland.core.enums.EServerData;
 import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.event.ServerDisableEvent;
 import sk.westland.core.utils.RunnableDelay;
@@ -30,7 +32,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class DiscordService implements Listener, Runnable {
+public class DiscordService implements Listener, Runnable, BeanWire {
 
     @Autowired
     private UserDataRepository userDataRepository;
@@ -53,6 +55,7 @@ public class DiscordService implements Listener, Runnable {
 
     @EventHandler
     private void onPluginEnable(PluginEnableEvent event) {
+        if(!WestLand.isIsLocalhost())
         runnableService.runTaskLaterAsynchronously(()-> {
             jda = WestLand.getDiscordHandler().getJda();
 
@@ -195,17 +198,18 @@ public class DiscordService implements Listener, Runnable {
     private MessageEmbed generateEmbedMessage(ServerStatus serverStatus, double tps, List<String> players, List<String> admins, long uniqueConnections) {
         return new EmbedBuilder()
                 .setDescription(":signal_strength: Status: " + serverStatus.getStatus() + " | :white_check_mark: TPS: "
-                        + tps + "\n:label: IP: mc.westland.sk | play.westland.sk\n ")
+                        + tps + "\n:label: IP: mc.westland.sk | play.westland.sk | 82.208.17.61:27227\n ")
                 .setColor(new Color(serverStatus.getColor()))
                 .setTimestamp(new Date().toInstant()) // OffsetDateTime.parse("2021-03-28T17:00:32.497Z")
                 .setFooter("WestLand.sk | Posledný update", "https://westland.sk/images/wl.png")
                 .setThumbnail("https://westland.sk/images/wl.png")
                 .setAuthor("Server status", "http://westland.sk", "https://westland.sk/images/wl.png")
                 .addField("", "**Hráči online** ( " + players.size() + " )\n" +StringUtils.join(players, ", "), true)
-                .addField("", "**Členovia AT **( " + admins.size() + " )\n" +StringUtils.join(admins, ", ") + "\n", true)
+                .addField("", "**Členovia Admin Tímu **( " + admins.size() + " )\n" +StringUtils.join(admins, ", ") + "\n", true)
                .addBlankField(false)
                 .addField("Server je spustený od", dateFormat.format(startTime), true)
                 .addField("Počet unikátnych pripojení:", String.valueOf(uniqueConnections), true)
+                .addField("Najviac pripojených hráčov:", String.valueOf(App.getService(ServerDataService.class).getIntData(EServerData.PEAK_ONLINE_PLAYERS)), true)
                 //.addField("Oficiálny dátum spustenia:", "1.máj (1.5.2021)\n ", true)
                 .build();
     }

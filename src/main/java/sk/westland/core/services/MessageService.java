@@ -3,6 +3,7 @@ package sk.westland.core.services;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,14 +13,11 @@ import sk.westland.core.enums.JoinMessages;
 import sk.westland.core.enums.QuitMessages;
 import sk.westland.core.event.player.WLPlayerJoinEvent;
 import sk.westland.core.event.player.WLPlayerQuitEvent;
-import sk.westland.core.utils.ChatInfo;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-public class MessageService implements Listener{
+public class MessageService implements Listener, BeanWire {
 
     @Autowired
     private PlayerService playerService;
@@ -46,35 +44,36 @@ public class MessageService implements Listener{
 
         activeAdminChat.remove(player);
     }
+/*
+ // Player with resource pack
+                    EBadge eBadge = null;
+                    WLPlayer wlPlayer = playerService.getWLPlayer(event.getPlayer());
+                    eBadge = wlPlayer.getActiveBadge();
 
-    @EventHandler(ignoreCancelled = true)
+                    for(EEmoji eEmoji : EEmoji.values()) {
+                        String message = event.getMessage().replaceAll(eEmoji.getText(), eEmoji.getReplacement());
+                        event.setMessage(message);
+                    }
+
+                    var b =  ComponentBuilder.text(eBadge.getCharacter())
+                            .hover(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent[] {
+                                    new TextComponent("§b§l" + eBadge.getName() + "\n"),
+                                    new TextComponent("§8Informácie" + "\n"),
+                                    new TextComponent("§7Odznak ktorý dostal hráč" + "\n"),
+                                    new TextComponent("§r" + "\n"),
+                                    new TextComponent("§7" + cutLongString(eBadge.getDescription()) + "\n"),
+                                    new TextComponent("§r" + "\n"),
+                                    new TextComponent("§aKlikni pre nastavenie odznaku!"),
+                            }));
+* */
+
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
 
-        String regexPat = "\\p{IsHan}";
-        final Pattern CHINESE_REGEX = Pattern.compile(regexPat);
-        Matcher matcher = CHINESE_REGEX.matcher(event.getMessage());
-
-        if(matcher.find()) {
-            ChatInfo.WARNING.send(player, "Používanie špeciálnych znakov nie je povolené!");
-            event.setCancelled(true);
-        }
-
         for(EEmoji eEmoji : EEmoji.values()) {
             String message = event.getMessage().replaceAll(eEmoji.getText(), eEmoji.getReplacement());
-            /*
-            if(eEmoji.isAdmin() && player.hasPermission("westland.chatemoji.admin")) {
-                event.setMessage(message);
-                continue;
-            }
-
-            if(eEmoji.isPremium() && player.hasPermission("westland.chatemoji.premium")) {
-                event.setMessage(message);
-                continue;
-            }*/
-
             event.setMessage(message);
-
         }
 
         if(!player.isOp())
@@ -90,7 +89,7 @@ public class MessageService implements Listener{
             if(message.startsWith("!"))
                 adminChat = message.substring(1);
 
-            event.setCancelled(true);
+            //event.setFormat("cancel");
 
             String finalAdminChat = adminChat;
             Bukkit.getOnlinePlayers()
@@ -99,6 +98,8 @@ public class MessageService implements Listener{
                     .forEach((target) -> {
                 target.sendMessage("§c[§lADMINCHAT§c] §f" + event.getPlayer().getName() + ": §7" + finalAdminChat.replace('&', '§'));
             });
+
+            event.setCancelled(true);
         }
     }
 

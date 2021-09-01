@@ -1,14 +1,13 @@
 package sk.westland.core.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import sk.westland.core.database.data.ServerData;
 import sk.westland.core.database.data.ServerDataRepository;
 import sk.westland.core.enums.EServerData;
 
 import java.util.Optional;
 
-public class ServerDataService {
+public class ServerDataService implements BeanWire {
 
     @Autowired
     private ServerDataRepository serverDataRepository;

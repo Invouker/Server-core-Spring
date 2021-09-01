@@ -4,7 +4,7 @@ import org.bukkit.event.Listener;
 import sk.westland.core.eventmanager.EEventState;
 import sk.westland.core.eventmanager.EventManager;
 
-public class EventManagerService implements Listener {
+public class EventManagerService implements Listener, BeanWire {
 
     private EventManager eventManager;
 

@@ -3,26 +3,22 @@ package sk.westland.world.commands.discord;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.ChannelType;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageType;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.validation.Validator;
 import sk.westland.core.WestLand;
 import sk.westland.core.database.player.RankData;
 import sk.westland.core.database.player.RankDataRepository;
 import sk.westland.core.database.player.UserData;
 import sk.westland.core.database.player.UserDataRepository;
-import sk.westland.discord.DiscordHandler;
-import sk.westland.discord.ranksync.PlayerSync;
-import sk.westland.core.services.PlayerService;
 import sk.westland.core.services.VaultService;
 import sk.westland.core.utils.Utils;
+import sk.westland.discord.DiscordHandler;
 import sk.westland.discord.PermissionHandler;
+import sk.westland.discord.ranksync.PlayerSync;
 
 import java.awt.*;
 import java.util.Optional;
@@ -66,6 +62,9 @@ public class LinkCommand extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         super.onMessageReceived(event);
+
+        if(!event.isFromType(ChannelType.TEXT))
+            return;
 
         if(event.getAuthor().isBot())
             return;

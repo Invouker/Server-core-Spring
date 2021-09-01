@@ -102,6 +102,9 @@ public class PermissionHandler implements Listener, Runnable {
     @Synchronize
     public synchronized void updateRole(long playerId, String groupName) {
         Rank rank = Rank.getDiscordGroupByVault(groupName);
+        if(rank == null)
+            return;
+
         String discordGroup = rank.getDiscordGroup();
         DiscordHandler discordHandler = WestLand.getDiscordHandler();
         Optional<RankData> rankDataOptional = rankDataRepository.findByPlayerId(playerId);

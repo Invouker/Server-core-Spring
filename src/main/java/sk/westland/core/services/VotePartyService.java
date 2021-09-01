@@ -11,7 +11,7 @@ import sk.westland.core.event.player.WLVotePartyDeath;
 import sk.westland.core.utils.ChatInfo;
 import sk.westland.world.minigame.PartyGame;
 
-public class VotePartyService implements Listener {
+public class VotePartyService implements Listener, BeanWire {
 
     public final static int VOTEPARTY = 150;
     private PartyGame partyGame;

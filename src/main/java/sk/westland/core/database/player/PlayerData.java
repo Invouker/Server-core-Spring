@@ -1,9 +1,12 @@
 package sk.westland.core.database.player;
 
+import sk.westland.core.enums.EBadge;
+import sk.westland.core.utils.converter.EnumSetEBadgeConverter;
 import sk.westland.core.utils.converter.ListConverter;
 import sk.westland.core.utils.converter.StringConverter;
 
 import javax.persistence.*;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,18 +37,18 @@ public class PlayerData {
     @Convert(converter = StringConverter.class)
     private List<String> craftingRecipe;
 
+    @Enumerated(value = EnumType.STRING)
+    private EBadge activeBadge;
+
+    @Convert(converter = EnumSetEBadgeConverter.class)
+    private EnumSet<EBadge> claimedBadges = EnumSet.noneOf(EBadge.class);
+
     @Column(columnDefinition = "text")
     @Convert(converter = ListConverter.class)
     private Map<String, List<Integer>> alreadyJobRewarded;
 
     private int activeJoinMessage = 0;
     private int activeQuitMessage = 0;
-
-    //@Convert(converter = QuestProgressStorageConverter.class)
-    //private LinkedList<QuestProgressStorage> progressStorageMap;
-
-   // @Convert(converter = QuestProgressStorageConverter.class)
-    //private LinkedList<QuestProgressStorage> activeQuestProgressMap;
 
     public PlayerData() { }
 
@@ -159,5 +162,21 @@ public class PlayerData {
 
     public void setWeeklyPremiumRewardClaimed(long weeklyPremiumRewardClaimed) {
         this.weeklyPremiumRewardClaimed = weeklyPremiumRewardClaimed;
+    }
+
+    public EBadge getActiveBadge() {
+        return activeBadge;
+    }
+
+    public void setActiveBadge(EBadge activeBadge) {
+        this.activeBadge = activeBadge;
+    }
+
+    public EnumSet<EBadge> getClaimedBadges() {
+        return claimedBadges;
+    }
+
+    public void setClaimedBadges(EnumSet<EBadge> claimedBadges) {
+        this.claimedBadges = claimedBadges;
     }
 }

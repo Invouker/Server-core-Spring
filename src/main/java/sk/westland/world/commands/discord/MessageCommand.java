@@ -4,7 +4,7 @@ package sk.westland.world.commands.discord;
 public class MessageCommand {//implements ICommand {
 /*
     @Override
-    @Command(command = "msg", description = "For admins")
+    @Command(command = "msg", "" = "For admins")
     public void onCommand(User user, String command, String[] args, String arg, MessageReceivedEvent event) {
         //System.out.println("textChannel: " + event.getTextChannel() + " CMD: " + command);
         String channelName = args[0];

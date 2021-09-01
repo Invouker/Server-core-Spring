@@ -10,13 +10,14 @@ import org.bukkit.inventory.ItemStack;
 import sk.westland.core.database.player.PlayerData;
 import sk.westland.core.database.player.PlayerOptions;
 import sk.westland.core.database.player.UserData;
+import sk.westland.core.enums.EBadge;
 import sk.westland.core.enums.EPlayerTimeReward;
 import sk.westland.core.enums.JobList;
 import sk.westland.world.items.Materials;
 
 import java.util.*;
 
-public class WLPlayer  {
+public class WLPlayer {
 
     private final Player player;
     private UserData userData;
@@ -36,8 +37,12 @@ public class WLPlayer  {
 
     // METHOD OVERRIDING
 
-    public void addItemToInventory(ItemStack... itemStack) {
-        player.getInventory().addItem(itemStack);
+    public void addItemToInventory(ItemStack... itemStacks) {
+        for(ItemStack itemStack : itemStacks) {
+            if(itemStack == null)
+                continue;
+            player.getInventory().addItem(itemStack);
+        }
     }
 
     private UUID getUUID() {
@@ -58,7 +63,7 @@ public class WLPlayer  {
 
     public Location getLocation() { return player.getLocation(); }
 
-    public void teleport(Location location) { player.teleport(location); }
+    public boolean teleport(Location location) { return player.teleport(location); }
 
     public void setGameMode(GameMode gamemode) { player.setGameMode(gamemode); }
 
@@ -127,6 +132,26 @@ public class WLPlayer  {
     public void giveShards(double shards) { addShards(shards); }
 
     public void giveGems(double gems) { addGems(gems); }
+
+    public void addBadge(EBadge... eBadges) {
+        for (EBadge badge : eBadges) {
+            playerData.getClaimedBadges().add(badge);
+        }
+    }
+
+    public void removeBadge(EBadge... eBadges) {
+        for (EBadge badge : eBadges) {
+            playerData.getClaimedBadges().remove(badge);
+        }
+    }
+
+    public void setActiveBadge(EBadge eBadge) {
+        playerData.setActiveBadge(eBadge);
+    }
+
+    public EBadge getActiveBadge() {
+        return playerData.getActiveBadge();
+    }
 
     public int getActiveJoinMessage() {
         return playerData.getActiveJoinMessage();

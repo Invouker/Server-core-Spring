@@ -1,7 +1,7 @@
 package sk.westland.world.inventories.entities;
 
 import net.md_5.bungee.api.ChatColor;
-import net.minecraft.server.v1_16_R3.HorseColor;
+import net.minecraft.world.entity.animal.horse.HorseColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -60,31 +60,31 @@ public class HorseColorInventory extends NCCustomInventory {
         ItemStack saddleItem = getInventory().getItem(SADDLE_ITEM);
         switch (slot) {
             case 10: {
-                saddle = Nbt.setNbt_Int(saddleItem, HorseStats.COLOR.getStatName(), HorseColor.WHITE.a());
+                saddle = Nbt.setNbt_Int(saddleItem, HorseStats.COLOR.getStatName(), HorseColor.a.a());
                 break;
             }
             case 11: {
-                saddle = Nbt.setNbt_Int(saddleItem, HorseStats.COLOR.getStatName(), HorseColor.CREAMY.a());
+                saddle = Nbt.setNbt_Int(saddleItem, HorseStats.COLOR.getStatName(), HorseColor.b.a());
                 break;
             }
             case 12: {
-                saddle = Nbt.setNbt_Int(saddleItem, HorseStats.COLOR.getStatName(), HorseColor.CHESTNUT.a());
+                saddle = Nbt.setNbt_Int(saddleItem, HorseStats.COLOR.getStatName(), HorseColor.c.a());
                 break;
             }
             case 19: {
-                saddle = Nbt.setNbt_Int(saddleItem, HorseStats.COLOR.getStatName(), HorseColor.BROWN.a());
+                saddle = Nbt.setNbt_Int(saddleItem, HorseStats.COLOR.getStatName(), HorseColor.d.a());
                 break;
             }
             case 20: {
-                saddle = Nbt.setNbt_Int(saddleItem, HorseStats.COLOR.getStatName(), HorseColor.BLACK.a());
+                saddle = Nbt.setNbt_Int(saddleItem, HorseStats.COLOR.getStatName(), HorseColor.e.a());
                 break;
             }
             case 21: {
-                saddle = Nbt.setNbt_Int(saddleItem, HorseStats.COLOR.getStatName(), HorseColor.GRAY.a());
+                saddle = Nbt.setNbt_Int(saddleItem, HorseStats.COLOR.getStatName(), HorseColor.f.a());
                 break;
             }
             case 29: {
-                saddle = Nbt.setNbt_Int(saddleItem, HorseStats.COLOR.getStatName(), HorseColor.DARKBROWN.a());
+                saddle = Nbt.setNbt_Int(saddleItem, HorseStats.COLOR.getStatName(), HorseColor.g.a());
                 break;
             }
             default:

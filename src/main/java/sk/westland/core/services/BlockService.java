@@ -16,7 +16,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.ItemStack;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import sk.westland.core.WestLand;
 import sk.westland.core.blocks.BlockLevel;
 import sk.westland.core.blocks.BlockType;
@@ -29,7 +28,7 @@ import sk.westland.world.blocks.type.*;
 
 import java.util.*;
 
-public class BlockService implements Listener {
+public class BlockService implements Listener, BeanWire {
 
     @Autowired
     private BlockDataRepository blockDataRepository;
@@ -41,7 +40,7 @@ public class BlockService implements Listener {
 
     private int LOADED_BLOCKS = 0;
 
-    @EventHandler(priority = EventPriority.HIGH)
+    //@EventHandler(priority = EventPriority.HIGH)
     private void onPluginEnable(PluginEnableEvent event) {
         List<BlockData> blockDataList = blockDataRepository.findAll();
 

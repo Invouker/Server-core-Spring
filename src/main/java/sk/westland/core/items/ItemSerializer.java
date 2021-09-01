@@ -1,10 +1,10 @@
 package sk.westland.core.items;
 
-import net.minecraft.server.v1_16_R3.NBTCompressedStreamTools;
-import net.minecraft.server.v1_16_R3.NBTReadLimiter;
-import net.minecraft.server.v1_16_R3.NBTTagCompound;
+import net.minecraft.nbt.NBTCompressedStreamTools;
+import net.minecraft.nbt.NBTReadLimiter;
+import net.minecraft.nbt.NBTTagCompound;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +21,7 @@ import java.util.zip.GZIPOutputStream;
 public class ItemSerializer {
 
     public static void save(@NotNull ItemStack itemStack, DataOutput dataOutput) {
-        net.minecraft.server.v1_16_R3.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+        net.minecraft.world.item.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
         NBTTagCompound tag = new NBTTagCompound();
         nmsItemStack.save(tag);
 
@@ -34,7 +34,7 @@ public class ItemSerializer {
 
     @Nullable
     public static byte[] save(@NotNull ItemStack itemStack) {
-        net.minecraft.server.v1_16_R3.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+        net.minecraft.world.item.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
@@ -118,7 +118,7 @@ public class ItemSerializer {
     public static ItemStack load(DataInput dataInput) {
         try {
             NBTTagCompound readedTag = NBTCompressedStreamTools.a(dataInput, NBTReadLimiter.a);
-            net.minecraft.server.v1_16_R3.ItemStack newItemStak = net.minecraft.server.v1_16_R3.ItemStack.a(readedTag);
+            net.minecraft.world.item.ItemStack newItemStak = net.minecraft.world.item.ItemStack.a(readedTag);
             return CraftItemStack.asBukkitCopy(newItemStak);
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -131,7 +131,7 @@ public class ItemSerializer {
     {
         try(ByteArrayInputStream byteInput = new ByteArrayInputStream(data, offset, length)) {
             NBTTagCompound readedTag = NBTCompressedStreamTools.a(byteInput);
-            net.minecraft.server.v1_16_R3.ItemStack newItemStak = net.minecraft.server.v1_16_R3.ItemStack.a(readedTag);
+            net.minecraft.world.item.ItemStack newItemStak = net.minecraft.world.item.ItemStack.a(readedTag);
             return CraftItemStack.asBukkitCopy(newItemStak);
         } catch (IOException ex) {
             ex.printStackTrace();

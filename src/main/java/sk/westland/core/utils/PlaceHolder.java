@@ -1,25 +1,26 @@
 package sk.westland.core.utils;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import me.clip.placeholderapi.expansion.Relational;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import sk.westland.core.App;
+import sk.westland.core.entity.player.WLPlayer;
+import sk.westland.core.enums.EBadge;
 import sk.westland.core.enums.EPlayerOptions;
 import sk.westland.core.enums.EServerData;
-import sk.westland.core.services.PlayerService;
-import sk.westland.core.services.ScoreboardService;
-import sk.westland.core.services.ServerDataService;
-import sk.westland.core.services.VotePartyService;
+import sk.westland.core.services.*;
 
 import java.util.Arrays;
 import java.util.Optional;
 
 
-public class PlaceHolder extends PlaceholderExpansion {
+public class PlaceHolder extends PlaceholderExpansion implements Relational {
 
-    private Plugin plugin;
-    private PlayerService playerService;
-    private ScoreboardService scoreboardService;
-    private ServerDataService serverDataService;
+    private final Plugin plugin;
+    private final PlayerService playerService;
+    private final ScoreboardService scoreboardService;
+    private final ServerDataService serverDataService;
 
     public PlaceHolder(Plugin plugin, PlayerService playerService, ScoreboardService scoreboardService, ServerDataService serverDataService) {
         this.plugin = plugin;
@@ -126,6 +127,32 @@ public class PlaceHolder extends PlaceholderExpansion {
             return String.valueOf(VotePartyService.VOTEPARTY - (totalVotes % VotePartyService.VOTEPARTY));
         }
 
+        if(identifier.equalsIgnoreCase("prefix")) {
+
+            //Arrays.stream(App.getService(VaultService.class).getPerms().getGroups()).filter((group )-> !group.equalsIgnoreCase("resourcepack")).toList();
+            String group = App.getService(VaultService.class).getPerms().getPlayerGroups(player)[0];
+            if(group == null)
+                return "Group is null";
+
+            if(group.equals("resourcepack") && App.getService(VaultService.class).getPerms().getPlayerGroups(player).length > 0)
+                group = App.getService(VaultService.class).getPerms().getPlayerGroups(player)[1];
+
+            return switch(group) {
+                case "leader" ->  player.hasPermission("westland_prefix") ? "妎" : "Leader";
+                case "admin" -> player.hasPermission("westland_prefix") ? "院" : "Admin";
+                case "resourcepack" -> player.hasPermission("westland_prefix") ? "院" : "Admin";
+                case "legion" -> player.hasPermission("westland_prefix") ? "民" : "Legion";
+                default -> "default";
+            };
+
+           /*
+            if(player.hasPermission("westland_prefix")) {
+                return App.getService(VaultService.class).getPerms().getPrimaryGroup(player) + " s RP";
+            }
+            return App.getService(VaultService.class).getPerms().getPrimaryGroup(player) + " bez RP";
+           * */
+        }
+
         // %westland_rola%
         if(identifier.equalsIgnoreCase("rola")) {
             //Roľník, Farmár, Osadník, Bojovník, Kovár
@@ -156,6 +183,43 @@ public class PlaceHolder extends PlaceholderExpansion {
 
         }
 
+        return null;
+    }
+
+    @Override
+    public String onPlaceholderRequest(Player player, Player two, String identifier) {
+
+        // %rel_westland_distance%
+        if (identifier.equals("distance")) {
+            return String.valueOf(player.getLocation().distance(two.getLocation()));
+        }
+
+        // %rel_westland_prefix%
+        if (identifier.equals("prefix")) {
+            ResourcePackService resourcePackService = App.getService(ResourcePackService.class);
+            var hasResourcePack = resourcePackService.hasPlayerResourcePack(player);
+            sk.westland.core.services.ResourcePackService.Group group = resourcePackService.getGroupByPrimary(two);
+            if(hasResourcePack) {
+
+                return group.getRpPrefix();
+            } else {
+                return group.getPrefixColor() + "§l" + group.getPrefix() + "§r";
+            }
+        }
+
+        // %rel_westland_prefix%
+        if (identifier.equals("badge")) {
+            PlayerService playerService = App.getService(PlayerService.class);
+            if(playerService == null)
+                return null;
+
+            ResourcePackService resourcePackService = App.getService(ResourcePackService.class);
+            var hasResourcePack = resourcePackService.hasPlayerResourcePack(player);
+
+            WLPlayer wlPlayer = playerService.getWLPlayer(player);
+            EBadge eBadge = wlPlayer.getActiveBadge();
+
+        }
         return null;
     }
 }

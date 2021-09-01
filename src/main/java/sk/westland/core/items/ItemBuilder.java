@@ -1,6 +1,6 @@
 package sk.westland.core.items;
 
-import net.minecraft.server.v1_16_R3.Item;
+import net.minecraft.world.item.Item;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
@@ -354,7 +354,7 @@ public class ItemBuilder {
     }
 
     public static ItemStack setStackSize(ItemStack itemStack, int size) {
-        net.minecraft.server.v1_16_R3.ItemStack nmsIS = null;
+        net.minecraft.world.item.ItemStack nmsIS = null;
         try {
             itemStack.getType().getMaxStackSize();
             nmsIS = CraftItemStack.asNMSCopy(itemStack);
@@ -369,7 +369,7 @@ public class ItemBuilder {
 
 
             CraftItemStack craftstack = (CraftItemStack) items;
-            net.minecraft.server.v1_16_R3.ItemStack nmsStack = craftstack.getMaxStackSize()
+            net.minecraft.world.item.ItemStack nmsStack = craftstack.getMaxStackSize()
 
             Field maxStack = nmsStack.getItem().getClass().getDeclaredField("maxStackSize");
             maxStack.setAccessible(true);
@@ -384,7 +384,7 @@ public class ItemBuilder {
 
 
     public ItemBuilder setMaxStackSize(int amount) {
-        net.minecraft.server.v1_16_R3.ItemStack otherItem = CraftItemStack.asNMSCopy(this.is);
+        net.minecraft.world.item.ItemStack otherItem = CraftItemStack.asNMSCopy(this.is);
         otherItem.setCount(amount);
         is = CraftItemStack.asBukkitCopy(otherItem);
         return this;

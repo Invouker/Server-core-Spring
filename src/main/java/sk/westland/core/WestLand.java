@@ -4,11 +4,14 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import dev.alangomes.springspigot.SpringSpigotInitializer;
-import dev.alangomes.springspigot.event.EventService;
+import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.io.DefaultResourceLoader;
@@ -21,7 +24,6 @@ import sk.westland.core.services.*;
 import sk.westland.core.utils.PlaceHolder;
 import sk.westland.core.utils.ResFlag;
 import sk.westland.discord.DiscordHandler;
-import sk.westland.discord.PermissionHandler;
 import sk.westland.world.items.Materials;
 
 import javax.persistence.EntityManager;
@@ -31,7 +33,28 @@ import java.util.Collection;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
-public class WestLand extends JavaPlugin {
+@EnableAutoConfiguration
+public class WestLand extends JavaPlugin implements SlimefunAddon {
+
+    @Autowired
+    private PlayerService playerService;
+
+    @Autowired
+    private ScoreboardService scoreboardService;
+
+    @Autowired
+    private BlockService blockService;
+
+    @Autowired
+    private ServerDataService serverDataService;
+
+    @Autowired
+    private RankDataRepository rankDataRepository;
+
+    @Autowired
+    private UserDataRepository userDataRepository;
+
+    private static boolean isLocalhost = false;
 
     public static final String CUSTOM_BLOCK_NBT = "BLOCK_ID";
 
@@ -44,64 +67,6 @@ public class WestLand extends JavaPlugin {
     private static DiscordHandler discordHandler;
     private static ProtocolManager protocolManager;
 
-    @Autowired
-    private PlayerService playerService;
-
-    @Autowired
-    private ScoreboardService scoreboardService;
-
-    @Autowired
-    private APIServices apiServices;
-
-    @Autowired
-    private BlockService blockService;
-
-    @Autowired
-    private DiscordService discordService;
-
-    @Autowired
-    private HorseService horseService;
-
-    @Autowired
-    private InventoryService inventoryService;
-
-    @Autowired
-    private ItemInteractionService itemInteractionService;
-
-    @Autowired
-    private MessageService messageService;
-
-    @Autowired
-    private MoneyService moneyService;
-
-    @Autowired
-    private RecipeService recipeService;
-
-    @Autowired
-    private ServerDataService serverDataService;
-
-    @Autowired
-    private VaultService vaultService;
-
-    @Autowired
-    private VotePartyService votePartyService;
-
-    @Autowired
-    private UtilsService utilsService;
-
-    @Autowired
-    private RankDataRepository rankDataRepository;
-
-    @Autowired
-    private UserDataRepository userDataRepository;
-
-    @Autowired
-    private RunnableService runnableService;
-
-    @Autowired
-    private EventManagerService eventManagerService;
-
-    private EventService eventService;
 
     @PersistenceContext
     private EntityManager em;
@@ -111,6 +76,9 @@ public class WestLand extends JavaPlugin {
         super.onEnable();
 
         westLand = this;
+
+        this.saveDefaultConfig();
+        isLocalhost = this.getConfig().getBoolean("localhost", false);
 
         Bukkit.getConsoleSender().sendMessage("§a");
         Bukkit.getConsoleSender().sendMessage("§aLoading Spring framework...");
@@ -122,14 +90,14 @@ public class WestLand extends JavaPlugin {
         SpringApplication application = new SpringApplication(loader, Application.class) {
             @Override
             public void setListeners(Collection<? extends ApplicationListener<?>> listeners) {
-                super.setListeners(listeners
-                        .stream()
+               super.setListeners(listeners
+                       .stream()
                         .filter((listener) -> !(listener instanceof org.springframework.boot.context.logging.LoggingApplicationListener))
                         .collect(Collectors.toList()));
             }
         };
-        application.addInitializers(new SpringSpigotInitializer(this));
 
+        application.addInitializers(new SpringSpigotInitializer(this));
         Properties properties = new Properties();
         try {
             properties.load(getClassLoader().getResourceAsStream("application.properties"));
@@ -142,9 +110,6 @@ public class WestLand extends JavaPlugin {
         this.context = application.run();
 
         protocolManager = ProtocolLibrary.getProtocolManager();
-
-        Bukkit.getPluginManager().callEvent(new PluginEnableEvent(this));
-
         discordHandler = new DiscordHandler(rankDataRepository, userDataRepository);
 
         for (ResFlag resFlag : ResFlag.values()) {
@@ -159,10 +124,6 @@ public class WestLand extends JavaPlugin {
             ex.printStackTrace();
         }
 
-        new App(apiServices, blockService, discordService, horseService, inventoryService, itemInteractionService, messageService,
-                moneyService, playerService, recipeService, scoreboardService, serverDataService, vaultService, votePartyService,
-                utilsService, eventManagerService, PermissionHandler.getPermissionHandler());
-
         Bukkit.getConsoleSender().sendMessage("§aLoaded " + Materials.Items.values().length + " custom items!");
         Bukkit.getConsoleSender().sendMessage("§aLoaded " + Materials.Resources.values().length + " resource items!");
         Bukkit.getConsoleSender().sendMessage("§aLoaded " + blockService.getLOADED_BLOCKS() + " blocks!");
@@ -174,15 +135,12 @@ public class WestLand extends JavaPlugin {
         if(Bukkit.getOnlinePlayers().size() > 0) {
             Bukkit.getOnlinePlayers().forEach((player -> playerService.loadUser(player)));
         }
-/*
-        Filter filter = new Filter();
-        Bukkit.getLogger().setFilter(filter);
 
-        Logger coreLogger = (Logger) LogManager.getRootLogger();
-        coreLogger.addFilter(new Log4jFilter());
-*/
+        Bukkit.getPluginManager().callEvent(new PluginEnableEvent(this));
 
         Bukkit.getConsoleSender().sendMessage("§a");
+
+
     }
 
     @Override
@@ -215,15 +173,27 @@ public class WestLand extends JavaPlugin {
     }
 
     private void setupDatabase(Properties properties) {
-            String host = "casa45.fakaheda.eu";
-            int port = 3306;
-            String database = "338529_mysql_db";
-            String username = "338529_mysql_db";
-            String password = "MCWdq6jQ2D5K5Zjp";
+        boolean isLocal = this.getConfig().getBoolean("localhost", true);
 
-            properties.setProperty("spring.datasource.url", "jdbc:mysql://${MYSQL_HOST:" + host + "}:" + port + "/" + database + "?useUnicode=yes&characterEncoding=UTF-8");
-            properties.setProperty("spring.datasource.username", username);
-            properties.setProperty("spring.datasource.password", password);
+        String host = "localhost";
+        int port = 3306;
+        String database = "minecraft";
+        String username = "root";
+        String password = "root";
+
+        if(!isLocal) {
+            host = "casa45.fakaheda.eu";
+            database = "338529_mysql_db";
+            username = "338529_mysql_db";
+            password = "MCWdq6jQ2D5K5Zjp";
+            System.out.println("Setting up database to external server!");
+        }
+        else System.out.println("Setting up database to local server!");
+
+        properties.setProperty("spring.datasource.url", "jdbc:mysql://${MYSQL_HOST:" + host + "}:" + port + "/" + database + "?useUnicode=yes&characterEncoding=UTF-8");
+        properties.setProperty("spring.datasource.username", username);
+        properties.setProperty("spring.datasource.password", password);
+
     }
 
     public static WestLand getInstance() {
@@ -236,5 +206,25 @@ public class WestLand extends JavaPlugin {
 
     public static ProtocolManager getProtocolManager() {
         return protocolManager;
+    }
+
+    @NotNull
+    @Override
+    public JavaPlugin getJavaPlugin() {
+        return this;
+    }
+
+    @Nullable
+    @Override
+    public String getBugTrackerURL() {
+        return null;
+    }
+
+    public static SlimefunAddon getSlimefunAddonInstance() {
+        return westLand;
+    }
+
+    public static boolean isIsLocalhost() {
+        return isLocalhost;
     }
 }

@@ -9,7 +9,7 @@ import sk.westland.core.WestLand;
 public class ServerDisableEvent extends Event {
 
     private static final HandlerList HANDLERS_LIST = new HandlerList();
-    private WestLand westLand;
+    private final WestLand westLand;
 
     public ServerDisableEvent(WestLand westLand) {
         this.westLand = westLand;

@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,5 +57,15 @@ public class NightVisionCommand implements Runnable, Listener {
 
         player.removePotionEffect(PotionEffectType.NIGHT_VISION);
         players.remove(player);
+    }
+
+    @EventHandler
+    private void onPlayerDeath(PlayerRespawnEvent event) {
+        Player player = event.getPlayer();
+        if(!players.contains(player))
+            return;
+
+        player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION,20*9999,  3,false, false, false));
+        Utils.playSound(player, Sound.BLOCK_BEACON_ACTIVATE);
     }
 }

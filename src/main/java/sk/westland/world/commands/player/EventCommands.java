@@ -59,6 +59,10 @@ public class EventCommands {
             if(eventManager.getPlayers().contains(wlPlayer))
                 return;
 
+            if(wlPlayer == null) {
+                throw new NullPointerException("WLPlayer is null");
+            }
+
             eventManager.addPlayerToEvent(wlPlayer);
             ChatInfo.SUCCESS.send(wlPlayer, "Úspešne si sa pripojil na event!");
         }

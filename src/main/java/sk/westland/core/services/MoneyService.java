@@ -9,7 +9,7 @@ import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.enums.MoneyType;
 import sk.westland.core.utils.ChatInfo;
 
-public class MoneyService {
+public class MoneyService implements BeanWire {
 
     @Autowired
     private PlayerService playerService;

@@ -9,7 +9,7 @@ import sk.westland.core.inventory.rc.InventoryHandler;
 import java.util.HashSet;
 import java.util.Set;
 
-public class InventoryService implements Listener {
+public class InventoryService implements Listener, BeanWire {
 
     private final Set<InventoryHandler> inventoryHandlers = new HashSet<>();
 

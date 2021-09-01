@@ -4,7 +4,8 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import sk.westland.core.items.*;
+import sk.westland.core.items.CustomResourceItem;
+import sk.westland.core.items.ItemBuilder;
 
 public class EnhancedNetheriteIngot extends CustomResourceItem {
 

@@ -302,12 +302,12 @@ public class JobsInventory extends OwnerItemMenu {
     }
 
     private boolean isInJob() {
-        Job jobs = getJobFromName(job.getName());
+        Job jobs = getJobFromName(job.getOriginalName());
         return Jobs.getPlayerManager().getJobsPlayer(getPlayer()).isInJob(jobs);
     }
 
     private int getJobLevel() {
-        Job jobs = getJobFromName(job.getName());
+        Job jobs = getJobFromName(job.getOriginalName());
         JobProgression jobProgression = Jobs.getPlayerManager().getJobsPlayer(getPlayer()).getJobProgression(jobs);
         if(jobProgression == null)
             return -1;
@@ -315,17 +315,13 @@ public class JobsInventory extends OwnerItemMenu {
         return jobProgression.getLevel();
     }
 
-    private com.gamingmesh.jobs.container.Job getJobFromName(JobList job) {
-        return getJobFromName(job.getName());
+    private com.gamingmesh.jobs.container.Job getJobFromName(@NotNull JobList job) {
+        return getJobFromName(job.getOriginalName());
     }
 
     private com.gamingmesh.jobs.container.Job getJobFromName(String name) {
-
-        List<JobProgression> jobs = Jobs
-                .getPlayerManager()
-                .getJobsPlayer(
-                        getPlayer())
-                .getJobProgression();
+        List<JobProgression> jobs =
+                Jobs.getPlayerManager().getJobsPlayer(getPlayer()).getJobProgression();
 
         for(JobProgression jobProgression : jobs) {
             com.gamingmesh.jobs.container.Job job = jobProgression.getJob();
@@ -335,7 +331,7 @@ public class JobsInventory extends OwnerItemMenu {
         return null;
     }
 
-    private ItemStack getInvalidRewardItem(int level) {
+    private @NotNull ItemStack getInvalidRewardItem(int level) {
         return new ItemBuilder(Material.LIGHT_GRAY_STAINED_GLASS_PANE)
                 .setName("§b§lLevel " + level)
                 .setLore("§8UZAMKNUTÉ",

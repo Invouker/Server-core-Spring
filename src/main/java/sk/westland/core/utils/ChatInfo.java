@@ -22,9 +22,9 @@ public enum ChatInfo {
         DEBUG("§c[DEBUG] §c", ComponentBuilder.text("[DEBUG]  ").bold(true).color(ChatColor.RED).build(), ChatColor.RED),
         COMMAND_HELPER(ChatColor.of("#005ce6") +"§l~~ ", ComponentBuilder.text("§l ").bold(true).color(ChatColor.of("#FF04AA")).build(), ChatColor.of("#FF04AA"));
 
-    private String prefix;
-    private BaseComponent component;
-    private ChatColor messageColor;
+    private final String prefix;
+    private final BaseComponent component;
+    private final ChatColor messageColor;
 
     ChatInfo(String prefix, net.md_5.bungee.api.chat.BaseComponent component, net.md_5.bungee.api.ChatColor messageColor) {
         this.prefix = prefix;
@@ -84,6 +84,8 @@ public enum ChatInfo {
         player.sendMessage(prefix + message);
     }
 
+    public void sendConsole(String message) { Bukkit.getConsoleSender().sendMessage(prefix + message);}
+
     public void send(Context context, String message) {
         context.getSender().sendMessage(prefix + message);
     }
@@ -93,7 +95,14 @@ public enum ChatInfo {
     }
 
     public void sendAll(EPlayerOptions ePlayerOptions, String message) {
-        App.getService(PlayerService.class).getWlPlayerList().forEach((wlPlayer -> {
+        var playerService = App.getService(PlayerService.class);
+
+        if(playerService == null) {
+            System.out.println("Player Service is null!");
+            return;
+        }
+
+        playerService.getWlPlayerList().forEach((wlPlayer -> {
             if(ePlayerOptions.getPlayerOptions(wlPlayer))
                 wlPlayer.sendMessage(prefix + message);
         }));

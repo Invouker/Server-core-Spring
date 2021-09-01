@@ -1,15 +1,15 @@
 package sk.westland.core.services;
 
 
-import net.minecraft.server.v1_16_R3.IRecipe;
-import net.minecraft.server.v1_16_R3.MinecraftKey;
-import net.minecraft.server.v1_16_R3.Recipes;
+import net.minecraft.resources.MinecraftKey;
+import net.minecraft.world.item.crafting.IRecipe;
+import net.minecraft.world.item.crafting.Recipes;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
-import org.bukkit.craftbukkit.v1_16_R3.CraftServer;
+import org.bukkit.craftbukkit.v1_17_R1.CraftServer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -28,7 +28,7 @@ import sk.westland.world.items.Materials;
 
 import java.util.*;
 
-public class RecipeService implements Listener {
+public class RecipeService implements Listener, BeanWire {
 
     @Autowired
     private PlayerService playerService;
@@ -76,7 +76,8 @@ public class RecipeService implements Listener {
     }
 
     private void clearRecipes(Player player) {
-        for (Map.Entry<Recipes<?>, Object2ObjectLinkedOpenHashMap<MinecraftKey, IRecipe<?>>> entry : ((CraftServer) Bukkit.getServer()).getServer().getCraftingManager().recipes.entrySet()) {
+        for (Map.Entry<Recipes<?>, Object2ObjectLinkedOpenHashMap<MinecraftKey, IRecipe<?>>> entry :
+                ((CraftServer) Bukkit.getServer()).getServer().getCraftingManager().c.entrySet()) {
             for (IRecipe<?> iRecipe : entry.getValue().values()) {
                 Recipe recipe = iRecipe.toBukkitRecipe();
 
@@ -104,7 +105,8 @@ public class RecipeService implements Listener {
     }
 
     private void discoverRecipe(Player player) {
-        for (Map.Entry<Recipes<?>, Object2ObjectLinkedOpenHashMap<MinecraftKey, IRecipe<?>>> entry : ((CraftServer) Bukkit.getServer()).getServer().getCraftingManager().recipes.entrySet()) {
+        for (Map.Entry<Recipes<?>, Object2ObjectLinkedOpenHashMap<MinecraftKey, IRecipe<?>>> entry :
+                ((CraftServer) Bukkit.getServer()).getServer().getCraftingManager().c.entrySet()) {
             for (IRecipe<?> iRecipe : entry.getValue().values()) {
                 Recipe recipe = iRecipe.toBukkitRecipe();
 
@@ -126,7 +128,7 @@ public class RecipeService implements Listener {
     }
 
     @EventHandler
-    private void onPlayerRoleSelect(WLPlayerJoinEvent event) {
+    private void onWLPlayerJoin(WLPlayerJoinEvent event) {
         WLPlayer wlPlayer = event.getWlPlayer();
         clearRecipes(wlPlayer.getPlayer());
 

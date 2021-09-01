@@ -1,6 +1,5 @@
 package sk.westland.core.inventory.rc;
 
-import net.sf.saxon.om.Item;
 import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;

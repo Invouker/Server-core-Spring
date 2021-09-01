@@ -22,7 +22,7 @@ import sk.westland.core.utils.Utils;
 import java.util.Locale;
 import java.util.Random;
 
-public class UtilsService {
+public class UtilsService implements BeanWire {
 
     public void playSound(Sound sound) {
         Bukkit.getOnlinePlayers().forEach((player) -> {
@@ -50,6 +50,9 @@ public class UtilsService {
 
     public void playArmAnimation(Player player) {
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
+        if(protocolManager == null)
+            return;
+
         PacketContainer animation = protocolManager.createPacket(PacketType.Play.Server.ANIMATION, false);
 
         animation.getEntityModifier(player.getWorld()).write(0, player);

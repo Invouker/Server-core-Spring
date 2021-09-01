@@ -14,10 +14,12 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import sk.westland.core.App;
 import sk.westland.core.WestLand;
@@ -25,7 +27,11 @@ import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.enums.EEventType;
 import sk.westland.core.enums.EPlayerCauseEventLeave;
 import sk.westland.core.enums.EPlayerOptions;
+import sk.westland.core.event.eventmanager.EventChangeState;
+import sk.westland.core.event.eventmanager.EventPlayerJoin;
+import sk.westland.core.event.eventmanager.EventPlayerQuit;
 import sk.westland.core.services.EventManagerService;
+import sk.westland.core.services.PlayerService;
 import sk.westland.core.utils.ChatInfo;
 
 import java.util.*;
@@ -39,26 +45,28 @@ public abstract class EventManager implements Runnable, Listener {
     private final Location playerLocationStart;
     protected World world;
 
-    private List<ItemStack> rewardList = new ArrayList<>();
+    private List<ItemStack> rewardList;
     private Location minLocation;
     private Location maxLocation;
 
     private final Set<WLPlayer> players;
     private final Set<WLPlayer> playerRewards;
 
-    private final HashMap<Player, PlayerEventData> playerEventDataMap = new HashMap<>();
-    private final HashMap<Integer, ItemStack> playerInventory = new HashMap<>();
+    private final Map<Player, PlayerEventData> playerEventDataMap;
 
-    private int WARMUP_TIME = 20;
+    //TODO: WARMUP TIME CHANGE
+    private int WARMUP_TIME = 10;
     private boolean canStart;
     private boolean isRunning;
 
     protected final int MIN_PLAYER_TO_START = 3;
 
     protected BukkitTask task;
+    private final String eventName;
 
-    public EventManager(EEventType eEventType, Location playerLocationStart, World world, int minLocX, int minLocY, int minLocZ, int maxLocX, int maxLocY, int maxLocZ) {
+    public EventManager(EEventType eEventType, Location playerLocationStart, World world, String eventName, int minLocX, int minLocY, int minLocZ, int maxLocX, int maxLocY, int maxLocZ) {
         this.eEventType = eEventType;
+        this.eventName = eventName;
         this.playerLocationStart = playerLocationStart;
         this.minLocation = new Location(world, Math.min(minLocX, maxLocX), Math.min(minLocY, maxLocY), Math.min(minLocZ, maxLocZ));
         this.minLocation = new Location(world, Math.max(minLocX, maxLocX), Math.max(minLocY, maxLocY), Math.max(minLocZ, maxLocZ));
@@ -66,6 +74,8 @@ public abstract class EventManager implements Runnable, Listener {
 
         players = new HashSet<>();
         playerRewards = new HashSet<>();
+        playerEventDataMap = new HashMap<>();
+        rewardList = new ArrayList<>();
 
         canStart = false;
         isRunning = false;
@@ -81,8 +91,12 @@ public abstract class EventManager implements Runnable, Listener {
             region.setFlag(Flags.ALLOWED_CMDS, allowedComands);
         }
 
-        task = Bukkit.getScheduler().runTaskTimer(WestLand.getInstance(), this, 20, 20);
+        task = Bukkit.getScheduler().runTaskTimer(WestLand.getInstance(), this, 40, 20);
     }
+
+    protected abstract void changeEventState(EEventState eEventState);
+    protected abstract void onEntityDamage(EntityDamageEvent event);
+    protected abstract void onPlayerDeath(PlayerDeathEvent event);
 
     public void givePlayerRewards() {
         playerRewards.forEach(wlPlayer ->
@@ -92,16 +106,93 @@ public abstract class EventManager implements Runnable, Listener {
         playerRewards.clear();
     }
 
+    public void broadcastToEventPlayer(String message) {
+        players.forEach((player) -> player.sendMessage("§e[E] §r" + message));
+    }
+
+    public void titleForEventPlayer(String subTitle) {
+        players.forEach((player) -> player.sendTitle(ChatColor.GREEN +"Event", subTitle));
+    }
+
+    public void titleForEventPlayer(String title, String subTitle) {
+        players.forEach((player) -> player.sendTitle(ChatColor.of("#ffdd99") + title,
+                ChatColor.of("#ccff33") + subTitle));
+    }
+
+    public void addPlayerToEvent(WLPlayer wlPlayer) {
+        players.add(wlPlayer);
+        broadcastToEventPlayer("Hráč " + wlPlayer.getPlayer().getName() + " sa pripojil na event!");
+        Player player = wlPlayer.getPlayer();
+        playerEventDataMap.put(player, new PlayerEventData(player.getInventory().getContents(), player.getLocation(), player.getGameMode()));
+        wlPlayer.teleport(playerLocationStart);
+        player.setFlying(false);
+        player.setGameMode(GameMode.ADVENTURE);
+        player.getInventory().clear();
+        wlPlayer.sendTitle(ChatColor.of("#ffdd99") + "Event", ChatColor.of("#ccff33") + "Pripojil si sa na event");
+        Bukkit.getPluginManager().callEvent(new EventPlayerJoin(this, wlPlayer));
+    }
+
+    public void leavePlayerFromEvent(Player player, EPlayerCauseEventLeave ePlayerCauseEventLeave) {
+        leavePlayerFromEvent(App.getService(PlayerService.class).getWLPlayer(player), ePlayerCauseEventLeave);
+    }
+
+    public void leavePlayerFromEvent(WLPlayer wlPlayer, EPlayerCauseEventLeave quitCause) {
+        if(!players.contains(wlPlayer))
+            return;
+
+        Bukkit.getPluginManager().callEvent(new EventPlayerQuit(this, wlPlayer, EPlayerCauseEventLeave.PLAYER_DIE));
+
+        Player player = wlPlayer.getPlayer();
+        if(playerEventDataMap.containsKey(player)) {
+            PlayerEventData playerEventData = playerEventDataMap.get(player);
+            if(playerEventData == null) {
+                return;
+            }
+
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    player.setFallDistance(0f);
+                    player.teleport(playerEventData.getLastKnownLocation());
+                    player.setGameMode(playerEventData.getLastKnownGamemode());
+
+                }
+            }.runTask(WestLand.getInstance());
+
+            player.getInventory().setContents(playerEventData.getItemStacksContents());
+
+            playerEventDataMap.remove(player);
+        }
+
+        broadcastToEventPlayer("Hráč " + wlPlayer.getName() + " opustil event! ( " + quitCause.getCause() + " )");
+        players.remove(wlPlayer);
+    }
+
     public void run() {
+
+        {
+            if(this.isRunning() && eEventState == EEventState.PROGRESS && this.getPlayers().size() == 1) {
+                getPlayers().forEach(this::addToPlayerRewards);
+            }
+
+            if(this.isRunning() && eEventState == EEventState.PROGRESS && this.getPlayers().size() <= 0) {
+                ChatInfo.GENERAL_INFO.sendAll(EPlayerOptions.SHOW_EVENT_ANNOUNCE, "Event " + eEventState.name() + " práve skončil!");
+                changeState(EEventState.END);
+                return;
+            }
+        }
+
         { // WARMUP LOGIC
             if (eEventState == EEventState.WARMUP && getWarmUpTime() == 0 && isCanStart()) {
                 setCanStart(false);
                 setRunning(true);
                 setWarmUpTime(-1);
 
+                changeState(EEventState.WARMUP_PROGRESS);
+            }
 
+            if(eEventState == EEventState.WARMUP_PROGRESS) {
 
-                changeState(EEventState.PROGRESS);
             }
 
             if(eEventState == EEventState.WARMUP && isCanStart()) {
@@ -123,73 +214,27 @@ public abstract class EventManager implements Runnable, Listener {
         }
     }
 
-    public void broadcastToEventPlayer(String message) {
-        players.forEach((player) -> player.sendMessage("§e[E] §r" + message));
-    }
 
-    public void titleForEventPlayer(String subTitle) {
-        players.forEach((player) -> player.sendTitle("Event", subTitle));
-    }
-
-    public void titleForEventPlayer(String title, String subTitle) {
-        players.forEach((player) -> player.sendTitle(ChatColor.of("#ffdd99") + title, ChatColor.of("#ccff33") + subTitle));
-    }
-
-    public void addPlayerToEvent(WLPlayer wlPlayer) {
-        players.add(wlPlayer);
-        broadcastToEventPlayer("Hráč " + wlPlayer.getPlayer().getName() + " sa pripojil na event!");
-        Player player = wlPlayer.getPlayer();
-        playerEventDataMap.put(player, new PlayerEventData(player.getInventory().getContents(), player.getLocation(), player.getGameMode()));
-
-        wlPlayer.teleport(playerLocationStart);
-        player.setFlying(false);
-        player.setGameMode(GameMode.ADVENTURE);
-        player.getInventory().clear();
-        wlPlayer.sendTitle(ChatColor.of("#ffdd99") + "Event", ChatColor.of("#ccff33") + "Pripojil si sa na event");
-    }
-
-    public void leavePlayerFromEvent(WLPlayer wlPlayer, EPlayerCauseEventLeave quitCause) {
-        if(!players.contains(wlPlayer))
+    @EventHandler(ignoreCancelled = true)
+    public void onEntityDamageEvent(EntityDamageEvent event) {
+        if(event.getEntityType() != EntityType.PLAYER)
             return;
-
-        wlPlayer.setGameMode(GameMode.SURVIVAL);
-
-        Player player = wlPlayer.getPlayer();
-        if(playerEventDataMap.containsKey(player)) {
-            PlayerEventData playerEventData = playerEventDataMap.get(player);
-            player.getInventory().setContents(playerEventData.getItemStacksContents());
-            player.teleport(playerEventData.getLastKnownLocation());
-            player.setGameMode(playerEventData.getLastKnownGamemode());
-            playerEventDataMap.remove(player);
-        }
-
-        broadcastToEventPlayer("Hráč " + wlPlayer.getName() + " opustil event! (" + quitCause.getCause() + ")");
+        if(players.stream()
+                .anyMatch((wlPlayer -> wlPlayer.getPlayer().getName().equals(event.getEntity().getName()))))
+        onEntityDamage(event);
     }
 
-
-
-    public abstract void changeEventState(EEventState eEventState);
-
-    public void onEntityDamage(EntityDamageEvent event) {
-
-    }
-
-    public void onPlayerDeath(PlayerDeathEvent event) {
-        if(event.getEntity().getType() != EntityType.PLAYER)
-            return;
-
-        if(event.getEntity().getLastDamageCause() != null &&
-                event.getEntity().getLastDamageCause().getCause() != EntityDamageEvent.DamageCause.VOID)
-            return;
-
-        getPlayers().stream()
-                .filter(wlPlayer -> wlPlayer.getPlayer().getName().equals(event.getEntity().getName()))
-                .forEach((wlPlayer -> {
-                    leavePlayerFromEvent(wlPlayer, EPlayerCauseEventLeave.PLAYER_DIE);
-                }));
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerDeathEvent(PlayerDeathEvent event) {
+        System.out.println("PDE - 0");
+        if(players.stream()
+                .anyMatch((wlPlayer -> wlPlayer.getPlayer().getName().equals(event.getEntity().getName()))))
+        onPlayerDeath(event);
+        System.out.println("PDE - 1");
     }
 
     public void changeState(EEventState eEventState) {
+        Bukkit.getPluginManager().callEvent(new EventChangeState(this, eEventState));
         if(this.eEventState == eEventState)
             return;
 
@@ -217,11 +262,12 @@ public abstract class EventManager implements Runnable, Listener {
             case END_TIME: {
                 broadcastToEventPlayer("Máte 30 sekúnd na opustenie eventu, inak vás to automatický teleportuje na predchádzajúcu pozíciu!");
                 // time to quit a event
-                Bukkit.getScheduler().runTaskLater(WestLand.getInstance(), () -> {changeState(EEventState.END);}, 20*30L);
+                Bukkit.getScheduler().runTaskLater(WestLand.getInstance(), () -> changeState(EEventState.END), 20*30L);
                 break;
             }
             case END: {
-                players.forEach((player) -> {
+                players.forEach((wlPlayer) -> {
+                    Player player = wlPlayer.getPlayer();
                     if(!playerEventDataMap.containsKey(player))
                         return;
 
@@ -263,16 +309,10 @@ public abstract class EventManager implements Runnable, Listener {
     }
 
     public boolean canPlayerConnect() {
-        switch (eEventState) {
-            case PROGRESS:
-            case END:
-            case END_TIME:
-            case WARMUP:
-                return false;
-            default:
-            case LOBBY:
-                return true;
-        }
+        return switch (eEventState) {
+            case PROGRESS, END, END_TIME, WARMUP, NONE, WARMUP_PROGRESS -> false;
+            case LOBBY -> true;
+        };
     }
 
     public void addReward(ItemStack... rewards) {
@@ -287,16 +327,7 @@ public abstract class EventManager implements Runnable, Listener {
         this.rewardList = rewardList;
     }
 
-    static class PlayerEventData {
-        private final ItemStack[] itemStacksContents;
-        private final Location lastKnownLocation;
-        private final GameMode lastKnownGamemode;
-
-        public PlayerEventData(ItemStack[] itemStacksContents, Location lastKnownLocation, GameMode lastKnownGamemode) {
-            this.itemStacksContents = itemStacksContents;
-            this.lastKnownLocation = lastKnownLocation;
-            this.lastKnownGamemode = lastKnownGamemode;
-        }
+    record PlayerEventData(ItemStack[] itemStacksContents, Location lastKnownLocation, GameMode lastKnownGamemode) {
 
         public Location getLastKnownLocation() {
             return lastKnownLocation;
@@ -359,6 +390,10 @@ public abstract class EventManager implements Runnable, Listener {
         int topBlockZ = (Math.max(loc1.getBlockZ(), loc2.getBlockZ()));
         int bottomBlockZ = (Math.min(loc1.getBlockZ(), loc2.getBlockZ()));
 
+        if(world == null)
+            return null;
+
+
         for(int x = topBlockX; x >= bottomBlockX; x--) {
             for(int y = topBlockY; y >= bottomBlockY; y--) {
                 for(int z = topBlockZ; z >= bottomBlockZ; z--) {
@@ -369,5 +404,9 @@ public abstract class EventManager implements Runnable, Listener {
             }
         }
         return locations;
+    }
+
+    public String getEventName() {
+        return eventName;
     }
 }

@@ -1,6 +1,5 @@
 package sk.westland.world.minigame;
 
-import net.yatopia.api.event.PlayerAttackEntityEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -66,7 +65,8 @@ public class PartyGame implements Listener {
 
         attacked.clear();
     }
-
+//TODO: PlayerAttackEntityEvent repair
+/*
     @EventHandler
     public void onPlayerAttackEntity(PlayerAttackEntityEvent event) {
         Entity entity = event.getAttackedEntity();
@@ -80,7 +80,7 @@ public class PartyGame implements Listener {
 
             attacked.add(player);
         }
-    }
+    }*/
 
     public void payRewardByAttacked() {
         attacked.forEach((player -> {

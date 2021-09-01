@@ -33,7 +33,7 @@ import sk.westland.world.items.Materials;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HorseService implements Listener {
+public class HorseService implements Listener, BeanWire {
 
     public static final double HORSE_MAX_HEALTH = 50d;
     private final Map<Player, AbstractHorse> activateHorse = new HashMap<>();

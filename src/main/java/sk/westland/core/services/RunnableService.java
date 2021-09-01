@@ -8,7 +8,7 @@ import sk.westland.core.utils.RunnableDelay;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class RunnableService {
+public class RunnableService implements BeanWire{
 
     public void runTask(Runnable runnable) {
 

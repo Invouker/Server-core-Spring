@@ -58,9 +58,12 @@ public class ChatMinigame implements Listener, Runnable {
         if(guessWhat != null && isRunning && event.getMessage().contains(guessWhat)) {
             Player player = event.getPlayer();
 
-            AuthMeApi authMeApi = AuthMeApi.getInstance();;
-            if(!authMeApi.isAuthenticated(player))
-                return;
+            try {
+                AuthMeApi authMeApi = AuthMeApi.getInstance();
+                if (!authMeApi.isAuthenticated(player)) return;
+            }catch (Exception ex) {
+                System.out.println("Authme is not registred!");
+            }
 
             int gem = Utils.BaseMath.getRandomMinMaxInt(2, 6);
             int money = Utils.BaseMath.getRandomMinMaxInt(100, 250);
@@ -72,8 +75,8 @@ public class ChatMinigame implements Listener, Runnable {
             ChatInfo.GENERAL_INFO.sendAll("Hráč " + ChatColor.of("#f9e79f") + event.getPlayer().getName() + "§f vyhral reakciu a dostal odmenu!");
             isRunning = false;
             guessWhat = null;
-
             event.setCancelled(true);
+            //event.setFormat("cancel");
         }
     }
 

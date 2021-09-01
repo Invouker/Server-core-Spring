@@ -31,7 +31,7 @@ import sk.westland.core.items.ItemBuilder;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ItemInteractionService implements Listener {
+public class ItemInteractionService implements Listener, BeanWire {
 
     private static final NamespacedKey NBT_PER_KEY = new NamespacedKey(WestLand.getInstance(), "ITEM_ID_NAME");
 
@@ -57,7 +57,15 @@ public class ItemInteractionService implements Listener {
             return;
         }
 
+
+        if(itemInteractions.isEmpty())
+            return;
+
         String localizedName = itemStack.getItemMeta().getPersistentDataContainer().get(NBT_PER_KEY, PersistentDataType.STRING);
+
+        if(localizedName == null || localizedName.length() <= 0)
+            return;
+
 
         if(!itemInteractions.containsKey(localizedName))
             return;

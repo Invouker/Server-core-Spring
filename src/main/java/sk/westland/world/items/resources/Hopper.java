@@ -5,7 +5,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.springframework.stereotype.Component;
 import sk.westland.core.event.PluginEnableEvent;
-import sk.westland.core.items.*;
+import sk.westland.core.items.Craftable;
+import sk.westland.core.items.CraftingRecipe;
+import sk.westland.core.items.CustomResourceItem;
+import sk.westland.core.items.RecipeType;
 
 @Component
 public class Hopper extends CustomResourceItem implements Listener, Craftable {

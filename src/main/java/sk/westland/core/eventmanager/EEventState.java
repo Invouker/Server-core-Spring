@@ -5,6 +5,7 @@ public enum EEventState {
     NONE,
     LOBBY,
     WARMUP,
+    WARMUP_PROGRESS,
     PROGRESS,
     END_TIME,
     END

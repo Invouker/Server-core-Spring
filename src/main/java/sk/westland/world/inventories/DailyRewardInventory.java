@@ -145,11 +145,12 @@ public class DailyRewardInventory extends OwnerItemMenu {
         switch (ePlayerTimeReward) {
             case Daily: {
                 moneyService.give(wlPlayer, MoneyType.Gems, 4);
-                itemStackList.add(new ItemStack(Material.IRON_INGOT, 12));
-                itemStackList.add(new ItemStack(Material.PUMPKIN_PIE, 6));
+                moneyService.give(wlPlayer, MoneyType.Money, 150);
+                itemStackList.add(new ItemStack(Material.IRON_INGOT, 4));
+                itemStackList.add(new ItemStack(Material.PUMPKIN_PIE, 3));
 
                 if(Utils.BaseMath.getRandomInt(20) >= 12)
-                itemStackList.add(new ItemStack(Material.DIAMOND, 2));
+                    itemStackList.add(new ItemStack(Material.DIAMOND, 2));
 
                 break;
             }
@@ -179,14 +180,11 @@ public class DailyRewardInventory extends OwnerItemMenu {
             }
             case PremiumWeekly: {
                 moneyService.give(wlPlayer, MoneyType.Gems, 30);
-                if(Utils.BaseMath.getRandomInt(9) >= 3)
-                    itemStackList.add(new ItemBuilder(Materials.Resources.RAW_CARBON_FIBRE.getItem(),
-                            Utils.BaseMath.getRandomMinMaxInt(1, 8)).build());
 
                 itemStackList.add(new ItemStack(Material.DIAMOND, 8));
 
                 if(Utils.BaseMath.getRandomInt(20) >= 8)
-                    moneyService.give(wlPlayer, MoneyType.Shard, 2);
+                    moneyService.give(wlPlayer, MoneyType.Shard, 1);
 
                 if(Utils.BaseMath.getRandomInt(20) >= 11)
                     itemStackList.add(new ItemBuilder(Materials.Items.WORTH_WAND.getItem())
@@ -197,16 +195,8 @@ public class DailyRewardInventory extends OwnerItemMenu {
             }
             case Monthly: {
                 moneyService.give(wlPlayer, MoneyType.Money, 1500);
-                if(Utils.BaseMath.getRandomInt(3) == 1)
-                    moneyService.give(wlPlayer, MoneyType.Shard, 3);
-
                 moneyService.give(wlPlayer, MoneyType.Gems, 30);
                 itemStackList.add(new ItemStack(Material.NETHERITE_INGOT, 2));
-
-                if(Utils.BaseMath.getRandomInt(5) >= 2)
-                    itemStackList.add(new ItemBuilder(Materials.Items.WORTH_WAND.getItem())
-                        .setNbt_Int("WAND_DURABILITY", 10)
-                        .setLoreLine(6, "§7Počet použití: §f" + 10).build());
                 break;
             }
         }

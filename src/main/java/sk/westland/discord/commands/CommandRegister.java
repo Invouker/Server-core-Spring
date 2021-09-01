@@ -4,7 +4,6 @@ package sk.westland.discord.commands;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.reflections.Reflections;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
@@ -12,7 +11,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 public class CommandRegister extends ListenerAdapter {
 
@@ -23,12 +21,12 @@ public class CommandRegister extends ListenerAdapter {
             registerCommands.addAll(scanForMethods());
         }, 10L);*/
     }
-
+/*
     private List<Method> scanForMethods() {
         Reflections reflections = new Reflections("sk.westland.world.commands.discord");
         Set<Method> methods = reflections.getMethodsAnnotatedWith(Command.class);
         return new ArrayList<>(methods);
-    }
+    }*/
 
     @Override
     public void onMessageReceived(@Nonnull MessageReceivedEvent event) {

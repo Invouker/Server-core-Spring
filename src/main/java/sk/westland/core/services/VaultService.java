@@ -1,19 +1,20 @@
 package sk.westland.core.services;
 
+import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import org.springframework.stereotype.Service;
 import sk.westland.core.WestLand;
 import sk.westland.core.event.PluginEnableEvent;
 
-public class VaultService implements Listener {
+public class VaultService implements Listener, BeanWire {
 
     private Permission perms = null;
     private Economy economy = null;
+    private Chat chat = null;
 
     @EventHandler
     private void onEnable(PluginEnableEvent event) {
@@ -21,7 +22,11 @@ public class VaultService implements Listener {
         perms = rsp.getProvider();
 
         RegisteredServiceProvider<Economy> eResponse = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
-        economy = eResponse.getProvider();
+        if(eResponse != null)
+            economy = eResponse.getProvider();
+
+        RegisteredServiceProvider<Chat> chatResponse = Bukkit.getServer().getServicesManager().getRegistration(Chat.class);
+        chat = chatResponse.getProvider();
     }
 
     public Permission getPerms() {
@@ -29,6 +34,12 @@ public class VaultService implements Listener {
     }
 
     public Economy getEconomy() {
+        if(economy == null)
+            throw new NullPointerException("None of economy manager registred yet.");
         return economy;
+    }
+
+    public Chat getChat() {
+        return chat;
     }
 }

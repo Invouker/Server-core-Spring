@@ -38,7 +38,7 @@ public class Rank {
                 return rank;
         }
 
-        throw new NullPointerException("Group named " + vaultGroup + " doesnt exist.");
+        return null;
     }
 
     private String vaultGroup;

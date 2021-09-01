@@ -11,16 +11,18 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import sk.westland.core.App;
 import sk.westland.core.WestLand;
 import sk.westland.core.database.player.*;
 import sk.westland.core.entity.player.WLPlayer;
+import sk.westland.core.enums.EServerData;
 import sk.westland.core.event.ServerDisableEvent;
 import sk.westland.core.event.player.WLPlayerJoinEvent;
 import sk.westland.core.event.player.WLPlayerQuitEvent;
 
 import java.util.*;
 
-public class PlayerService implements Listener {
+public class PlayerService implements Listener, BeanWire {
 
     @Autowired
     private UserDataRepository userDataRepository;
@@ -48,15 +50,18 @@ public class PlayerService implements Listener {
     private void onPlayerConnect(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-
-
         new Thread( () -> {
             WLPlayer wlPlayer = loadUser(player);
             loadCallJoinEvent(wlPlayer);
+            System.out.println("Player " + wlPlayer.getName() + " has been loaded!");
         }, "User-Loader").start();
 
         //WLPlayer wlPlayer = loadUser(player);
-
+        ServerDataService serverDataService = App.getService(ServerDataService.class);
+        if(serverDataService.getIntData(EServerData.PEAK_ONLINE_PLAYERS) < Bukkit.getOnlinePlayers().size()) {
+            System.out.println("Nový rekord online hráčov pripojených naraz!");
+            serverDataService.setIntData(EServerData.PEAK_ONLINE_PLAYERS, Bukkit.getOnlinePlayers().size());
+        }
     }
 
     @Synchronize
@@ -144,7 +149,7 @@ public class PlayerService implements Listener {
         try { // Duplicicated UUID / NICKNAME
             userDataRepository.save(userData);
         }catch(DataIntegrityViolationException ex) {
-            Bukkit.getLogger().warning("This user already exist in database [" + player.getName() + "]");
+            Bukkit.getLogger().warning("["+userData.getId()+"] This user already exist in database [" + player.getName() + "] - ("+player.getUniqueId()+")");
             return null;
         }
         long id = userData.getId();

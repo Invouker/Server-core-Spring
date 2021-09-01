@@ -5,12 +5,10 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Dispenser;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.springframework.beans.factory.annotation.Autowired;
 import sk.westland.core.App;
 import sk.westland.core.services.BlockService;
 import sk.westland.core.services.RunnableService;
@@ -23,10 +21,10 @@ import java.util.List;
 
 public abstract class MultiBlock implements IMultiBlock {
 
-    @Autowired
+
     private BlockService blockService;
 
-    @Autowired
+
     private RunnableService runnableService;
 
     private Material[] blockMaterial;
@@ -157,7 +155,6 @@ public abstract class MultiBlock implements IMultiBlock {
 
     public abstract void onMultiBlockActivation(Player player, List<Block> blocks, IMBRecipe imbRecipe, PlayerInteractEvent event);
 
-    @EventHandler
     private void onPlayerInteract(PlayerInteractEvent event) {
 
         if(event == null)

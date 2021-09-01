@@ -12,6 +12,7 @@ public class PluginEnableEvent extends Event {
 
     public PluginEnableEvent(WestLand westLand) {
         this.westLand = westLand;
+        System.out.println("[Event] Plugin enabled!");
     }
 
     public WestLand getWestLand() {

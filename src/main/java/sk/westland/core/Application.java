@@ -1,5 +1,6 @@
 package sk.westland.core;
 
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -7,6 +8,7 @@ import sk.westland.core.services.*;
 
 @SpringBootApplication(scanBasePackages = "sk.westland")
 @EnableJpaRepositories()
+@EnableAutoConfiguration
 public class Application {
 
     @Bean
@@ -64,4 +66,10 @@ public class Application {
 
     @Bean
     public EventManagerService eventManagerService() { return new EventManagerService(); }
+
+    @Bean
+    public ResourcePackService resourcePackService() { return new ResourcePackService(); }
+
+    @Bean
+    public SlimefunService slimefunService() { return new SlimefunService(); }
 }

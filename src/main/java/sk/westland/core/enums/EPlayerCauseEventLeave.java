@@ -2,12 +2,12 @@ package sk.westland.core.enums;
 
 public enum EPlayerCauseEventLeave {
 
-    LEAVE_TROUGHT_COMMAND("pomocou príkazu"),
-    PLAYER_QUIT("opustil server"),
-    PLAYER_DIE("zomrel"),
-    PLAYER_WIN("výhry"),
-    EVENT_FORCE("vynútené opustenie"),
-    NONE("none");
+    LEAVE_TROUGHT_COMMAND("Opustil event"),
+    PLAYER_QUIT("Opustil server"),
+    PLAYER_DIE("Smrť"),
+    PLAYER_WIN("Výhra"),
+    EVENT_FORCE("Nasilu odpojený"),
+    NONE("None/Error");
 
     private String cause;
 

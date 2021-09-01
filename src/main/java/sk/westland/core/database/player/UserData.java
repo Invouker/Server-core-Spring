@@ -1,6 +1,7 @@
 package sk.westland.core.database.player;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "wl_users")
 @Entity
@@ -19,7 +20,8 @@ public class UserData {
     @Column(nullable = true)
     private String emailAddress;
 
-    private long firstConnection;
+    @Column(name = "first_connection")
+    private long firstConnection = new Date().getTime();
 
     public UserData() {
     }
@@ -68,4 +70,5 @@ public class UserData {
     public void setFirstConnection(long firstConnection) {
         this.firstConnection = firstConnection;
     }
+
 }

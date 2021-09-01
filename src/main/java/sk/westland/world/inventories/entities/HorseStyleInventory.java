@@ -1,6 +1,6 @@
 package sk.westland.world.inventories.entities;
 
-import net.minecraft.server.v1_16_R3.HorseStyle;
+import net.minecraft.world.entity.animal.horse.HorseStyle;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -63,23 +63,23 @@ public class  HorseStyleInventory extends NCCustomInventory {
         ItemStack saddleItem = getInventory().getItem(SADDLE_ITEM);
         switch (slot) {
             case 12: {
-                saddle = Nbt.setNbt_Int(saddleItem, HorseStats.STYLE.getStatName(), HorseStyle.NONE.a());
+                saddle = Nbt.setNbt_Int(saddleItem, HorseStats.STYLE.getStatName(), HorseStyle.a.a());
                 break;
             }
             case 13: {
-                saddle = Nbt.setNbt_Int(saddleItem, HorseStats.STYLE.getStatName(), HorseStyle.WHITE.a());
+                saddle = Nbt.setNbt_Int(saddleItem, HorseStats.STYLE.getStatName(), HorseStyle.b.a());
                 break;
             }
             case 14: {
-                saddle = Nbt.setNbt_Int(saddleItem, HorseStats.STYLE.getStatName(), HorseStyle.WHITE_FIELD.a());
+                saddle = Nbt.setNbt_Int(saddleItem, HorseStats.STYLE.getStatName(), HorseStyle.c.a());
                 break;
             }
             case 15: {
-                saddle = Nbt.setNbt_Int(saddleItem, HorseStats.STYLE.getStatName(), HorseStyle.WHITE_DOTS.a());
+                saddle = Nbt.setNbt_Int(saddleItem, HorseStats.STYLE.getStatName(), HorseStyle.d.a());
                 break;
             }
             case 16: {
-                saddle = Nbt.setNbt_Int(saddleItem, HorseStats.STYLE.getStatName(), HorseStyle.BLACK_DOTS.a());
+                saddle = Nbt.setNbt_Int(saddleItem, HorseStats.STYLE.getStatName(), HorseStyle.e.a());
                 break;
             }
             default:

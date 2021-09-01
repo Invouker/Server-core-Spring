@@ -4,9 +4,11 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.bukkit.event.Listener;
 import sk.westland.core.App;
+import sk.westland.core.WestLand;
 import sk.westland.core.database.player.RankDataRepository;
 import sk.westland.core.database.player.UserDataRepository;
 import sk.westland.core.services.VaultService;
@@ -33,7 +35,10 @@ public class DiscordHandler implements Runnable, Listener {
         this.userDataRepository = userDataRepository;
         this.vaultService = App.getService(VaultService.class);
 
-        new Thread(this).start();
+        var bot = new Thread(this, "DiscordBOT");
+        if(!WestLand.isIsLocalhost()) {
+            bot.start();
+        }
         //runnableService.runTaskAsynchronously(this);
     }
 
@@ -56,6 +61,8 @@ public class DiscordHandler implements Runnable, Listener {
             jda = JDABuilder.createDefault("Nzk3ODU4MjA0OTIxODg4Nzg4.X_slWw.LB4oyW65w6Dwq08pC9a-6ZyRQ1I", GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES)
                     .addEventListeners(new LinkCommand(rankDataRepository, userDataRepository, vaultService))
                     .disableCache(CacheFlag.VOICE_STATE, CacheFlag.EMOTE)
+                    .setMemberCachePolicy(MemberCachePolicy.ALL)
+
                     .build();
             jda.setAutoReconnect(true);
             for(Guild iGuild : jda.getGuilds()) {

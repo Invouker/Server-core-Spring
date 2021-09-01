@@ -27,7 +27,7 @@ public class ServerEvent implements Listener {
     public ServerEvent() {
         motd = new ArrayList<>();
 
-        motd.add(ChatColor.AQUA + "                    §lWestLand §7[1.16]\n" +
+        motd.add(ChatColor.AQUA + "                    §lWestLand §7[1.17]\n" +
                 ChatColor.GREEN + ChatColor.BOLD + "              NOVINKA: SLIMEFUN");
     }
 
@@ -38,24 +38,26 @@ public class ServerEvent implements Listener {
 
     @EventHandler
     private void onPluginEnable(PluginEnableEvent eventPlugin) {
-        ProtocolManager protocolManager = WestLand.getProtocolManager();
+       Bukkit.getScheduler().runTaskLater(WestLand.getInstance(), () -> {
+           ProtocolManager protocolManager = WestLand.getProtocolManager();
 
-        if(protocolManager == null)
-            throw new NullPointerException("ProtocolManager is not loaded or cannot be hooked into it");
+           try {
+               protocolManager.addPacketListener(
+                       new PacketAdapter(eventPlugin.getWestLand(), PacketType.Status.Server.SERVER_INFO) {
+                           @Override
+                           public void onPacketSending(PacketEvent event) {
+                               WrappedServerPing ping = event.getPacket().getServerPings().read(0);
+                               ping.setPlayersOnline(eventPlugin.getWestLand().getServer().getOnlinePlayers().size() + 1);
+                               //ping.setVersionName("I dont care what i will do");
+                               //  WrappedGameProfile wrappedGameProfile = new WrappedGameProfile(UUID.randomUUID(), "idk ty kokot");
+                               //ping.setPlayers(new ArrayList<>(Collections.singletonList(wrappedGameProfile)));
 
-        protocolManager.addPacketListener(
-                new PacketAdapter(eventPlugin.getWestLand(), PacketType.Status.Server.SERVER_INFO) {
-                    @Override
-                    public void onPacketSending(PacketEvent event) {
-                        WrappedServerPing ping = event.getPacket().getServerPings().read(0);
-                        ping.setPlayersOnline(eventPlugin.getWestLand().getServer().getOnlinePlayers().size() + 1);
-                        //ping.setVersionName("I dont care what i will do");
-                      //  WrappedGameProfile wrappedGameProfile = new WrappedGameProfile(UUID.randomUUID(), "idk ty kokot");
-                        //ping.setPlayers(new ArrayList<>(Collections.singletonList(wrappedGameProfile)));
-
-                        event.getPacket().getServerPings().write(0, ping);
-                    }
-                });
+                               event.getPacket().getServerPings().write(0, ping);
+                           }
+                       });
+               }catch (NoSuchFieldError ignored) {
+               }
+        },31L);
     }
 
     @EventHandler(ignoreCancelled = true)

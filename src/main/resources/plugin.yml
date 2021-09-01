@@ -1,10 +1,10 @@
 name: WestLand
 main: sk.westland.core.WestLand
-depend: [ProtocolLib, Jobs, Vault, AuthMe, Citizens, PlaceholderAPI, CMI, Residence, ShopGUIPlus, ForceResourcepacks, Votifier, Residence, LuckPerms, Slimefun]
+depend: [ProtocolLib, Jobs, Vault, Citizens, PlaceholderAPI, CMI, Residence, Votifier, Residence, LuckPerms, Slimefun, WorldGuard]
 
 author: XpresS
 version: 1.2
 api-version: 1.13
 
 website: WestLand.eu
-description: This plugin is developed for WestLand.eu
+about: This plugin is developed for WestLand.eu
