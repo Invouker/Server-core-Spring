@@ -4,6 +4,7 @@ sk\westland\core\services\EventManagerService.class
 sk\westland\core\services\MoneyService.class
 sk\westland\world\commands\TestCommand$Test9.class
 sk\westland\world\commands\player\PMoneyCommands.class
+sk\westland\core\enums\EBadge.class
 sk\westland\core\inventory\CustomInventory$Type$7.class
 sk\westland\world\items\tools\talismans\LootTalisman.class
 sk\westland\core\database\player\RankData.class
@@ -19,7 +20,6 @@ sk\westland\core\rewards\SoundReward.class
 sk\westland\core\database\player\PlayerData.class
 sk\westland\core\enums\EEmoji.class
 sk\westland\core\services\InventoryService.class
-sk\westland\core\utils\BookPageFactory.class
 sk\westland\core\services\PlayerService$1.class
 sk\westland\world\commands\discord\LinkCommand.class
 sk\westland\world\items\resources\CopperDust.class
@@ -31,6 +31,7 @@ sk\westland\world\minigame\PartyGame.class
 sk\westland\core\WestLand$1.class
 sk\westland\world\items\tools\SaddleItem.class
 sk\westland\discord\ranksync\DiscordRoleUpdate.class
+sk\westland\world\events\FastDiggingFly.class
 sk\westland\world\items\blocks\WorthChestItem.class
 sk\westland\core\event\player\WLPlayerMoveEvent.class
 sk\westland\core\WestLand.class
@@ -38,6 +39,8 @@ sk\westland\world\events\AutoMessageEvent.class
 sk\westland\core\utils\converter\InventoryItemConverter.class
 sk\westland\world\items\tools\talismans\ArrowTalisman.class
 sk\westland\core\rewards\PermReward.class
+sk\westland\world\slimefun\blocks\BlockBreaker$1.class
+sk\westland\world\slimefun\blocks\BlockBreaker.class
 sk\westland\world\commands\TestCommand$Test3.class
 sk\westland\world\commands\admin\WladminCommands.class
 sk\westland\core\services\ScoreboardService.class
@@ -59,6 +62,7 @@ sk\westland\core\inventory\CustomInventory$Type$2.class
 sk\westland\core\eventmanager\EventManager.class
 sk\westland\core\blocks\multiblock\MultiBlock$1.class
 sk\westland\core\utils\Utils$BaseMath.class
+sk\westland\world\slimefun\blocks\BlockBreaker$2.class
 sk\westland\world\blocks\type\MobGrinder.class
 sk\westland\world\inventories\OptionInventory.class
 sk\westland\world\items\resources\IronRod.class
@@ -66,7 +70,6 @@ sk\westland\world\commands\admin\WladminCommands$timereward.class
 sk\westland\core\items\ItemBuilder.class
 sk\westland\core\utils\converter\UUIDConverter.class
 sk\westland\core\Application.class
-sk\westland\core\utils\BookFactory.class
 sk\westland\core\items\InteractionItem.class
 sk\westland\core\services\RunnableService$4.class
 sk\westland\core\utils\converter\LocationConverter.class
@@ -80,6 +83,7 @@ sk\westland\core\items\RecipeType.class
 sk\westland\world\blocks\type\BlockPlacer.class
 sk\westland\world\commands\TestCommand$Test8.class
 sk\westland\world\items\tools\Hammer$2.class
+sk\westland\world\slimefun\HotWand.class
 sk\westland\world\items\tools\BetterPickaxe$1.class
 sk\westland\world\items\blocks\BlockChunkCollectorItem.class
 sk\westland\core\services\VotePartyService.class
@@ -100,6 +104,7 @@ sk\westland\core\enums\EEventType.class
 sk\westland\world\items\tools\talismans\EnderTalisman.class
 sk\westland\core\services\HorseService$Style.class
 sk\westland\world\items\resources\CopperIngot.class
+sk\westland\core\utils\converter\EnumSetEBadgeConverter.class
 sk\westland\core\inventory\CustomInventory$Direction.class
 sk\westland\world\items\tools\talismans\WitherSkeletonTalisman.class
 sk\westland\core\utils\ResFlag.class
@@ -118,6 +123,7 @@ sk\westland\core\services\RunnableService$6.class
 sk\westland\core\inventory\ItemMenu$1.class
 sk\westland\core\services\RunnableService.class
 sk\westland\world\commands\suggestion\PlayerOptionsSuggestion.class
+sk\westland\core\services\ResourcePackService.class
 sk\westland\core\enums\EPlayerOptions$1.class
 sk\westland\core\services\MoneyService$1.class
 sk\westland\core\enums\EServerData.class
@@ -132,8 +138,9 @@ sk\westland\core\utils\Utils.class
 sk\westland\core\inventory\CustomInventory$Type$8.class
 sk\westland\world\commands\admin\WladminCommands$voteparty.class
 sk\westland\core\enums\HorseArmour.class
-sk\westland\core\utils\BookPageHelper.class
+sk\westland\core\event\eventmanager\EventOrganizer.class
 sk\westland\world\blocks\type\WorthChest.class
+sk\westland\world\slimefun\Slimefun.class
 sk\westland\core\scoreboard\ScoreDisplay.class
 sk\westland\world\items\tools\talismans\FortuneTalisman.class
 sk\westland\world\commands\suggestion\ItemSuggestion.class
@@ -170,14 +177,17 @@ sk\westland\world\items\tools\WorthWand$1.class
 sk\westland\core\enums\QuitMessages.class
 sk\westland\world\commands\player\PMoneyCommands$GetMoney.class
 sk\westland\world\items\blocks\BlockBreakerItem.class
+sk\westland\core\eventmanager\EventManager$2.class
 sk\westland\world\commands\player\PMoneyCommands$RemoveMoney.class
 sk\westland\world\commands\suggestion\ItemResourceSuggestion.class
 sk\westland\world\commands\admin\WLRecipe$AddCommand.class
 sk\westland\world\commands\TestCommand$Test6.class
 sk\westland\core\enums\EPlayerTimeReward.class
 sk\westland\core\database\player\PlayerDataRepository.class
+sk\westland\world\inventories\SetupEventInventory$RewardEvent.class
 sk\westland\world\items\tools\talismans\HealTalisman.class
 sk\westland\world\blocks\type\WorthChest$1.class
+sk\westland\core\event\eventmanager\EventPlayerQuit.class
 sk\westland\world\items\tools\Hammer$1$1.class
 sk\westland\core\scoreboard\ScoreDisplay$Line.class
 sk\westland\core\enums\InventoryChestType.class
@@ -207,6 +217,7 @@ sk\westland\discord\commands\CommandRegister.class
 sk\westland\core\database\player\PlayerOptions.class
 sk\westland\world\items\tools\BetterShovel$1.class
 sk\westland\world\commands\player\PMoneyCommands$1.class
+sk\westland\core\services\SlimefunService.class
 sk\westland\core\services\RecipeService.class
 sk\westland\world\inventories\ChangeQuitMessageItemMenu.class
 sk\westland\world\inventories\entities\HorseUpgradeInventory.class
@@ -217,6 +228,7 @@ sk\westland\core\utils\converter\ListConverter.class
 sk\westland\world\items\Materials$Items.class
 sk\westland\core\event\player\WLPlayerQuitEvent.class
 sk\westland\core\event\PluginEnableEvent.class
+sk\westland\core\event\eventmanager\EventPlayerJoin.class
 sk\westland\world\commands\player\EventCommands$SetRewards.class
 sk\westland\world\commands\player\ShardCommands.class
 sk\westland\world\playerevent\EventFallenBlocks.class
@@ -227,6 +239,7 @@ sk\westland\world\commands\suggestion\MoneySuggestion.class
 sk\westland\core\services\ItemInteractionService.class
 sk\westland\core\event\player\WLPlayerEvent.class
 sk\westland\core\utils\Filter.class
+META-INF\org\apache\logging\log4j\core\config\plugins\Log4j2Plugins.dat
 sk\westland\core\inventory\CustomInventory$Type$3.class
 sk\westland\core\services\APIServices.class
 sk\westland\world\items\spawners\MagicSpawner.class
@@ -251,9 +264,11 @@ sk\westland\world\items\blocks\BlockUpgradeItem.class
 sk\westland\world\items\Materials.class
 sk\westland\core\blocks\CustomBlock.class
 sk\westland\world\items\resources\CoalDust.class
+sk\westland\core\event\eventmanager\EventChangeState.class
 sk\westland\core\items\Nbt.class
 sk\westland\core\services\RunnableService$3.class
 sk\westland\world\blocks\type\multiblocks\Grinder.class
+sk\westland\world\commands\admin\Who.class
 sk\westland\world\commands\OptionCommands$1.class
 sk\westland\world\commands\admin\WLRecipe.class
 sk\westland\world\commands\admin\CustomItemCommands$SellWand.class
@@ -264,7 +279,9 @@ sk\westland\core\utils\Log4jFilter.class
 sk\westland\core\blocks\BlockType.class
 sk\westland\core\items\CraftingRecipe$1.class
 sk\westland\world\items\tools\BetterPickaxe.class
+sk\westland\world\inventories\SetupEventInventory.class
 sk\westland\core\utils\RunnableDelay.class
+sk\westland\core\services\ResourcePackService$Group.class
 sk\westland\core\database\data\BlockData.class
 sk\westland\core\services\VaultService.class
 sk\westland\world\commands\TestCommand.class
@@ -298,9 +315,12 @@ sk\westland\world\commands\suggestion\JobsSuggestion.class
 sk\westland\world\events\ServerEvent.class
 sk\westland\core\utils\converter\StringConverter.class
 sk\westland\world\items\tools\BetterHoe$1.class
+sk\westland\core\services\BeanWire.class
 sk\westland\world\events\ServerEvent$1.class
 sk\westland\world\commands\admin\CustomItemCommands$Items.class
+sk\westland\world\Test.class
 sk\westland\world\commands\player\EventCommands$Start.class
+sk\westland\world\inventories\SetupEventInventory$EventData.class
 sk\westland\world\commands\admin\WladminCommands$debug.class
 sk\westland\core\enums\EPlayerCauseEventLeave.class
 sk\westland\world\inventories\TestInventory.class

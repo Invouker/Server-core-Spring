@@ -7,9 +7,11 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="WestLand" />
+        <module name="sk.xpress" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="16">
+    <bytecodeTargetLevel>
+      <module name="sk.xpress" target="10" />
       <module name="WestLand" target="16" />
     </bytecodeTargetLevel>
   </component>

@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/WestLand.iml" filepath="$PROJECT_DIR$/.idea/WestLand.iml" />
+      <module fileurl="file://$PROJECT_DIR$/WorldGen/sk.xpress.iml" filepath="$PROJECT_DIR$/WorldGen/sk.xpress.iml" />
     </modules>
   </component>
 </project>
