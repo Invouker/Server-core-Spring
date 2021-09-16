@@ -34,7 +34,7 @@ public class VotePartyService implements Listener, BeanWire {
         if(partyGame != null)
             partyGame.despawn();
 
-        partyGame = new PartyGame(new Location(Bukkit.getWorld("worldspawn"), 69.5, 58, -29.5));
+        partyGame = new PartyGame(new Location(Bukkit.getWorld("worldspawn"), 24.5, 61, -16.5));
         ChatInfo.SUCCESS.sendAll("Na spawne sa zjavil VoteParty Illusioner!");
     }
 

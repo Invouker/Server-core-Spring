@@ -3,8 +3,12 @@ package sk.westland.core.enums;
 public enum EBlockStorage {
 
     ACTIVE("Active"),
-    OWNER("Owner");
+    OWNER("Owner"),
+    DISTANCE("Distance"),
 
+    ENABLED("true"),
+    DISABLED("false")
+;
 
     private String name;
 

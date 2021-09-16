@@ -28,7 +28,7 @@ public class AutoMessageEvent implements Listener, Runnable {
             "Hlavný spôsob ako si zarobiť svoje prvé peniaze sú práce, ako bonus má každá práca zvlášť odmeny na každom leveli. Pre zamestnanie použi príkaz /prace.",
             "Zavadzia ti naša tabuľka, otravujú ťa zvuky reakcií v chate alebo chceš napríklad vypnúť prihlasovacie správy? Tieto nastavenia a oveľa viac si môžeš zmeniť vo svojom profile po napísaní príkazu /profil.",
             "Si hráč so zakúpenou originálnou verziou hry a nebaví ťa stále zadávať heslo pri prihlasovaní? Aktivuj si svoj premium účet príkazom /premium. Túto možnosť nepoužívaj pokiaľ nemáš zakúpenú hru!",
-            "Residenciu vytvoríš pomocou drevenej paličky, aktuálny limit residencie zobrazíš príkazom /res limits. Je limit nedostačujúci? Pre získanie väčšieho limitu a viac residencií si zakúp jeden z našich rankov /ranky alebo vylepšuj svoju hráčsku rolu /role.",
+            "Residenciu vytvoríš pomocou drevenej motyčky, aktuálny limit residencie zobrazíš príkazom /res limits. Je limit nedostačujúci? Pre získanie väčšieho limitu a viac residencií si zakúp jeden z našich rankov /ranky alebo vylepšuj svoju hráčsku rolu /role.",
             "Podporiť nás môžeš rôznymi spôsobmi. Jedna z nich je zakúpenie ranku /ranky. Taktiež si môžeš kúpiť rôzne kľúče, špeciálne nástroje a chestky. Toto a oveľa viac nájdeš v našom /menu. Za každú podporu vám ďakujeme!",
             "Zakúp si svoj rank a získaj výhody, ktoré ťa určite nesklamú! Svoj rank môžeš zakúpiť v /ranky. Výhody rankov sú zobrazené na našom webe: https://westland.sk/store",
             "Zapoj sa do naších turnajov a získaj skvelé odmeny, prvé 3 miesta sú vždy odmenené! Viac o turnajoch sa dozvieš po napísaní príkazu /turnaje.",

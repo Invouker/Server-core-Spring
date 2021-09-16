@@ -2,10 +2,8 @@ package sk.westland.world.events;
 
 import com.Zrips.CMI.Modules.tp.Teleportations;
 import com.Zrips.CMI.events.CMIPlayerTeleportEvent;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -19,8 +17,10 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import sk.westland.core.WestLand;
 import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.event.player.WLPlayerInteractWithNPCEvent;
 import sk.westland.core.services.DiscordService;
@@ -99,6 +99,17 @@ public class BasicEvents implements Listener {
             Utils.playSound(event.getTo(), Sound.ENTITY_ENDERMAN_TELEPORT);
             player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 35, 20, false, false, false));
             player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 30, 2, false, false, false));
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerInitialSpawn(PlayerSpawnLocationEvent event) {
+        Location playerLocation = event.getPlayer().getLocation();
+        if(playerLocation.getBlock().getType() == Material.NETHER_PORTAL) {
+            Bukkit.getScheduler().runTask(WestLand.getInstance(), () -> {
+                playerLocation.getBlock().setType(Material.AIR);
+                playerLocation.getBlock().getRelative(BlockFace.UP).setType(Material.AIR);
+            });
         }
     }
 }

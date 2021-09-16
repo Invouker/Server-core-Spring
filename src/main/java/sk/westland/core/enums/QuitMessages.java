@@ -4,9 +4,9 @@ import net.md_5.bungee.api.ChatColor;
 
 public enum QuitMessages {
 
-    BASIC("Predvolené", "Hráč %player% sa odpojil!", ChatColor.of("#269900") + "§l[!]", ChatColor.of("#53ff1a"), ChatColor.of("#33cc00")),
-    KING("Si kráľ?", "Kráľ %player% sa odpojil!", ChatColor.of("#269900") + "§l[!]", ChatColor.of("#53ff1a"), ChatColor.of("#33cc00")),
-    QUEEN("Si královna?", "Královna %player% sa odpojila!", ChatColor.of("#269900")+"§l[!]", ChatColor.of("#53ff1a"), ChatColor.of("#33cc00"));
+    BASIC("Predvolené", "Hráč %cmi_user_nickname% sa odpojil!", ChatColor.of("#269900") + "§l[!]", ChatColor.of("#53ff1a"), ChatColor.of("#33cc00")),
+    KING("Si kráľ?", "Kráľ %cmi_user_nickname% sa odpojil!", ChatColor.of("#269900") + "§l[!]", ChatColor.of("#53ff1a"), ChatColor.of("#33cc00")),
+    QUEEN("Si královna?", "Královna %cmi_user_nickname% sa odpojila!", ChatColor.of("#269900")+"§l[!]", ChatColor.of("#53ff1a"), ChatColor.of("#33cc00"));
 
 
     private final String name;

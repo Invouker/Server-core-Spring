@@ -16,6 +16,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import sk.westland.core.database.player.RankDataRepository;
 import sk.westland.core.database.player.UserDataRepository;
 import sk.westland.core.event.PluginEnableEvent;
@@ -37,6 +38,7 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 
 @EnableAutoConfiguration
+@EnableScheduling
 public class WestLand extends JavaPlugin implements SlimefunAddon {
 
     @Autowired
@@ -142,8 +144,6 @@ public class WestLand extends JavaPlugin implements SlimefunAddon {
         Bukkit.getPluginManager().callEvent(new PluginEnableEvent(this));
 
         Bukkit.getConsoleSender().sendMessage("§a");
-
-
     }
 
     @Override

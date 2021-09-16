@@ -42,6 +42,8 @@ public class JobRewards {
         addAlchemista();
         addHornik();
         addEnchanter();
+
+
     }
 
     private void addDrevorubac() {
@@ -76,8 +78,7 @@ public class JobRewards {
                                 new MoneyReward(MoneyType.Money, 350, moneyService)
                         ),
                         Arrays.asList( // level 8
-                                new PermReward("permission.dot.idk", "Pre pokrok k dalšej urovni!", PermReward.PermRenderType.HIDE),
-                                new ItemReward(Material.BAMBOO, 6)
+                               new ItemReward(Material.BAMBOO, 6)
                         ),
                         Arrays.asList( // level 9
                                 new MoneyReward(340, moneyService),
@@ -330,7 +331,7 @@ public class JobRewards {
                                 new MoneyReward(MoneyType.Money, 7430, moneyService),
                                 new ExpReward(130),
                                 new ItemReward(new ItemBuilder(Material.DIAMOND_AXE)
-                                        .addEnchant(Enchantment.DIG_SPEED, 4)
+                                        .addEnchant(Enchantment.DIG_SPEED, 7)
                                         .addEnchant(Enchantment.DURABILITY, 3))
                         ),
                         Arrays.asList( // level 73
@@ -431,7 +432,7 @@ public class JobRewards {
                                 new MoneyReward(MoneyType.Money, 24498, moneyService),
                                 new ExpReward(265),
                                 new ItemReward(new ItemBuilder(Material.NETHERITE_AXE)
-                                        .addEnchant(Enchantment.DIG_SPEED, 6)
+                                        .addEnchant(Enchantment.DIG_SPEED, 4)
                                         .setUnbreakable())
                         ),
                         Arrays.asList( // level 98
@@ -483,8 +484,7 @@ public class JobRewards {
                                 new MoneyReward(MoneyType.Money, 320, moneyService)
                         ),
                         Arrays.asList( // level 8
-                                new MoneyReward(MoneyType.Money, 335, moneyService),
-                                new PermReward("permission.dot.idk", "Pre pokrok k dalšej urovni!", PermReward.PermRenderType.HIDE)
+                                new MoneyReward(MoneyType.Money, 335, moneyService)
                         ),
                         Arrays.asList( // level 9
                                 new MoneyReward(340, moneyService),
@@ -923,7 +923,6 @@ public class JobRewards {
                                 new MoneyReward(MoneyType.Money, 350, moneyService)
                         ),
                         Arrays.asList( // level 8
-                                new PermReward("permission.dot.idk", "Pre pokrok k dalšej urovni!", PermReward.PermRenderType.HIDE),
                                 new ItemReward(Material.BAMBOO, 6)
                         ),
                         Arrays.asList( // level 9
@@ -1309,9 +1308,7 @@ public class JobRewards {
                         Arrays.asList( // level 7
                                 new MoneyReward(MoneyType.Money, 350, moneyService)
                         ),
-                        Arrays.asList( // level 8
-                                new PermReward("permission.dot.idk", "Pre pokrok k dalšej urovni!", PermReward.PermRenderType.HIDE),
-                                new ItemReward(Material.BAMBOO, 6)
+                        Arrays.asList( // level 8 new ItemReward(Material.BAMBOO, 6)
                         ),
                         Arrays.asList( // level 9
                                 new MoneyReward(340, moneyService),
@@ -1697,7 +1694,6 @@ public class JobRewards {
                                 new MoneyReward(MoneyType.Money, 350, moneyService)
                         ),
                         Arrays.asList( // level 8
-                                new PermReward("permission.dot.idk", "Pre pokrok k dalšej urovni!", PermReward.PermRenderType.HIDE),
                                 new ItemReward(Material.BAMBOO, 6)
                         ),
                         Arrays.asList( // level 9
@@ -2084,7 +2080,6 @@ public class JobRewards {
                                 new MoneyReward(MoneyType.Money, 350, moneyService)
                         ),
                         Arrays.asList( // level 8
-                                new PermReward("permission.dot.idk", "Pre pokrok k dalšej urovni!", PermReward.PermRenderType.HIDE),
                                 new ItemReward(Material.BAMBOO, 6)
                         ),
                         Arrays.asList( // level 9
@@ -2471,7 +2466,6 @@ public class JobRewards {
                                 new MoneyReward(MoneyType.Money, 350, moneyService)
                         ),
                         Arrays.asList( // level 8
-                                new PermReward("permission.dot.idk", "Pre pokrok k dalšej urovni!", PermReward.PermRenderType.HIDE),
                                 new ItemReward(Material.BAMBOO, 6)
                         ),
                         Arrays.asList( // level 9
@@ -2858,7 +2852,6 @@ public class JobRewards {
                                 new MoneyReward(MoneyType.Money, 350, moneyService)
                         ),
                         Arrays.asList( // level 8
-                                new PermReward("permission.dot.idk", "Pre pokrok k dalšej urovni!", PermReward.PermRenderType.HIDE),
                                 new ItemReward(Material.BAMBOO, 6)
                         ),
                         Arrays.asList( // level 9
@@ -3245,8 +3238,7 @@ public class JobRewards {
                                 new MoneyReward(MoneyType.Money, 350, moneyService)
                         ),
                         Arrays.asList( // level 8
-                                new PermReward("permission.dot.idk", "Pre pokrok k dalšej urovni!", PermReward.PermRenderType.HIDE),
-                                new ItemReward(Material.BAMBOO, 6)
+                               new ItemReward(Material.BAMBOO, 6)
                         ),
                         Arrays.asList( // level 9
                                 new MoneyReward(340, moneyService),
@@ -3632,7 +3624,6 @@ public class JobRewards {
                                 new MoneyReward(MoneyType.Money, 350, moneyService)
                         ),
                         Arrays.asList( // level 8
-                                new PermReward("permission.dot.idk", "Pre pokrok k dalšej urovni!", PermReward.PermRenderType.HIDE),
                                 new ItemReward(Material.BAMBOO, 6)
                         ),
                         Arrays.asList( // level 9
@@ -4019,8 +4010,7 @@ public class JobRewards {
                                 new MoneyReward(MoneyType.Money, 350, moneyService)
                         ),
                         Arrays.asList( // level 8
-                                new PermReward("permission.dot.idk", "Pre pokrok k dalšej urovni!", PermReward.PermRenderType.HIDE),
-                                new ItemReward(Material.BAMBOO, 6)
+                               new ItemReward(Material.BAMBOO, 6)
                         ),
                         Arrays.asList( // level 9
                                 new MoneyReward(340, moneyService),

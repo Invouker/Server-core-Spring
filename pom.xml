@@ -267,7 +267,7 @@
         <dependency>
             <groupId>com.github.Slimefun</groupId>
             <artifactId>Slimefun4</artifactId>
-            <version>RC-26</version>
+            <version>RC-28</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
@@ -290,6 +290,14 @@
             <version>4.17.2</version> <!-- Change the LATEST to the current version of jobs -->
             <scope>provided</scope>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.quartz-scheduler/quartz -->
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+
 
         <dependency>
             <groupId>com.zrips.CMI</groupId>
@@ -322,6 +330,12 @@
             <groupId>com.comphenix.packetwrapper</groupId>
             <artifactId>PacketWrapper</artifactId>
             <version>1.7.2-R0.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.destroystokyo.paper</groupId>
+            <artifactId>paper-api</artifactId>
+            <version>1.16.5-R0.1-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
         <!--
                 <dependency>

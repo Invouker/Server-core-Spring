@@ -27,13 +27,14 @@ public class ServerEvent implements Listener {
     public ServerEvent() {
         motd = new ArrayList<>();
 
-        motd.add(ChatColor.AQUA + "                    §lWestLand §7[1.17]\n" +
-                ChatColor.GREEN + ChatColor.BOLD + "              NOVINKA: SLIMEFUN");
+        motd.add(ChatColor.of("#e0f3ff") + "                    §lWESTLAND " + ChatColor.of("#737373") + "[1.17]\n" +
+                ChatColor.of("#30F271") +"        Bežíme vždy na najnovšej verzii!");
     }
 
     @EventHandler
     private void onServerPingEvent(ServerListPingEvent event) {
         event.setMotd(motd.get(App.getService(UtilsService.class).getRandomInt(motd.size())));
+
     }
 
     @EventHandler

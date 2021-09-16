@@ -17,7 +17,6 @@ import sk.westland.core.items.ItemBuilder;
 import sk.westland.core.services.MoneyService;
 import sk.westland.core.utils.ChatInfo;
 import sk.westland.core.utils.Utils;
-import sk.westland.world.items.Materials;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -143,61 +142,39 @@ public class DailyRewardInventory extends OwnerItemMenu {
         WLPlayer wlPlayer = getWlPlayer();
         List<ItemStack> itemStackList = new ArrayList<>();
         switch (ePlayerTimeReward) {
-            case Daily: {
+            case Daily -> {
                 moneyService.give(wlPlayer, MoneyType.Gems, 4);
-                moneyService.give(wlPlayer, MoneyType.Money, 150);
+                moneyService.give(wlPlayer, MoneyType.Money, 350);
                 itemStackList.add(new ItemStack(Material.IRON_INGOT, 4));
-                itemStackList.add(new ItemStack(Material.PUMPKIN_PIE, 3));
+                itemStackList.add(new ItemStack(Material.PUMPKIN_PIE, 2));
 
-                if(Utils.BaseMath.getRandomInt(20) >= 12)
+                if (Utils.BaseMath.getRandomInt(100) <= 10)
                     itemStackList.add(new ItemStack(Material.DIAMOND, 2));
-
-                break;
             }
-            case PremiumDaily: {
+            case PremiumDaily -> {
                 moneyService.give(wlPlayer, MoneyType.Gems, 22);
                 moneyService.give(wlPlayer, MoneyType.Money, 450);
                 itemStackList.add(new ItemStack(Material.IRON_INGOT, 25));
                 itemStackList.add(new ItemStack(Material.PUMPKIN_PIE, 12));
                 itemStackList.add(new ItemStack(Material.EMERALD, Utils.BaseMath.getRandomMinMaxInt(3, 10)));
-
-                break;
             }
-            case Weekly: {
+            case Weekly -> {
                 moneyService.give(wlPlayer, MoneyType.Gems, 20);
-
                 itemStackList.add(new ItemStack(Material.DIAMOND, 5));
 
-                if(Utils.BaseMath.getRandomInt(20) == 1)
-                    moneyService.give(wlPlayer, MoneyType.Shard, 3);
-
-                if(Utils.BaseMath.getRandomInt(20) == 1)
-                    itemStackList.add(new ItemBuilder(Materials.Items.WORTH_WAND.getItem())
-                            .setNbt_Int("WAND_DURABILITY", 5)
-                            .setLoreLine(6, "§7Počet použití: §f" + 5).build());
-
-                break;
+                if (Utils.BaseMath.getRandomInt(100) == 5)
+                    moneyService.give(wlPlayer, MoneyType.Shard, 1);
             }
-            case PremiumWeekly: {
+            case PremiumWeekly -> {
                 moneyService.give(wlPlayer, MoneyType.Gems, 30);
-
                 itemStackList.add(new ItemStack(Material.DIAMOND, 8));
 
-                if(Utils.BaseMath.getRandomInt(20) >= 8)
-                    moneyService.give(wlPlayer, MoneyType.Shard, 1);
-
-                if(Utils.BaseMath.getRandomInt(20) >= 11)
-                    itemStackList.add(new ItemBuilder(Materials.Items.WORTH_WAND.getItem())
-                            .setNbt_Int("WAND_DURABILITY", 15)
-                            .setLoreLine(6, "§7Počet použití: §f" + 15).build());
-
-                break;
+                if (Utils.BaseMath.getRandomInt(100) <= 20)
+                    moneyService.give(wlPlayer, MoneyType.Shard, 2);
             }
-            case Monthly: {
-                moneyService.give(wlPlayer, MoneyType.Money, 1500);
-                moneyService.give(wlPlayer, MoneyType.Gems, 30);
-                itemStackList.add(new ItemStack(Material.NETHERITE_INGOT, 2));
-                break;
+            case Monthly -> {
+                moneyService.give(wlPlayer, MoneyType.Money, 2500);
+                moneyService.give(wlPlayer, MoneyType.Gems, 35);
             }
         }
 

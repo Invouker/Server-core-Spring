@@ -1,5 +1,6 @@
 package sk.westland.core.services;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -124,7 +125,7 @@ public class MessageService implements Listener, BeanWire {
             activeQuitMessage = QuitMessages.values()[wlPlayer.getActiveQuitMessage()].formattedJoinMessage();
 
 
-        String quitMessage = activeQuitMessage.replace("%player%", player.getName());
+        String quitMessage = PlaceholderAPI.setPlaceholders(player, activeQuitMessage);
         System.out.println(quitMessage);
         sendMessage(getListOfActivePlayerMessage(false), quitMessage);
 
@@ -149,7 +150,8 @@ public class MessageService implements Listener, BeanWire {
         else
             activeJoinMessage = JoinMessages.values()[wlPlayer.getActiveJoinMessage()].formattedJoinMessage();
 
-        String joinMessage = activeJoinMessage.replace("%player%", player.getName());
+
+        String joinMessage = PlaceholderAPI.setPlaceholders(player, activeJoinMessage);
         System.out.println(joinMessage);
         sendMessage(getListOfActivePlayerMessage(true), joinMessage);
     }

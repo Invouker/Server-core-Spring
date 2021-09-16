@@ -1,10 +1,12 @@
 package sk.westland.world.events;
 
+import dev.alangomes.springspigot.context.Context;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import picocli.CommandLine;
 import sk.westland.core.entity.player.WLPlayer;
 import sk.westland.core.enums.EServerData;
 import sk.westland.core.event.player.WLPlayerInteractWithNPCEvent;
@@ -15,6 +17,7 @@ import sk.westland.world.inventories.entities.HorseUpgradeInventory;
 import sk.westland.world.inventories.shops.HorseBuyInventory;
 
 @Component
+@CommandLine.Command(name = "interact", hidden = true)
 public class NpcInteract implements Listener {
 
     @Autowired
@@ -39,22 +42,17 @@ public class NpcInteract implements Listener {
         if(serverDataService.getBooleanData(EServerData.DEBUG))
             ChatInfo.DEBUG.send(wlPlayer, "Interakcia s " + event.getNPC().getName() + ", " + event.getNPC().getId());
 
+
         switch (event.getNPC().getId()) {
-            case 36: {
+            case 95: {
                 HorseBuyInventory horseBuyInventory = new HorseBuyInventory(horseService, moneyService, event.getClicker());
                 horseBuyInventory.open(wlPlayer);
                 break;
             }
 
-            case 59: {
+            case 94: {
                 HorseUpgradeInventory horseUpgradeInventory = new HorseUpgradeInventory(horseService, moneyService,runnableService, event.getClicker());
                 horseUpgradeInventory.open(wlPlayer);
-                break;
-            }
-
-            case 62: {
-                DailyRewardInventory dailyRewardInventory = new DailyRewardInventory(wlPlayer, moneyService);
-                dailyRewardInventory.open(wlPlayer);
                 break;
             }
 
@@ -82,6 +80,28 @@ public class NpcInteract implements Listener {
         }
 
         if(event.getNPCName().contains("Daily reward")) {
+            DailyRewardInventory dailyRewardInventory = new DailyRewardInventory(wlPlayer, moneyService);
+            dailyRewardInventory.open(wlPlayer);
+        }
+    }
+
+    @Component
+    @CommandLine.Command(name = "dreward", hidden = true)
+    static class DailyReward implements Runnable {
+
+        @Autowired
+        private PlayerService playerService;
+
+        @Autowired
+        private Context context;
+
+        @Autowired
+        private MoneyService moneyService;
+
+        @Override
+        public void run() {
+            WLPlayer wlPlayer = playerService.getWLPlayer(context.getPlayer());
+
             DailyRewardInventory dailyRewardInventory = new DailyRewardInventory(wlPlayer, moneyService);
             dailyRewardInventory.open(wlPlayer);
         }

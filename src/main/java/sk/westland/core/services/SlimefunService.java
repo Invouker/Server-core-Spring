@@ -1,12 +1,12 @@
 package sk.westland.core.services;
 
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
-import me.mrCookieSlime.Slimefun.Objects.Category;
+import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import sk.westland.core.WestLand;
 
 public class SlimefunService implements BeanWire {
 
-    private Category category;
+    private ItemGroup itemGroup;
 
     public WestLand getInstance() {
         return WestLand.getInstance();
@@ -20,11 +20,11 @@ public class SlimefunService implements BeanWire {
 
     }
 
-    public Category getCategory() {
-        return category;
+    public ItemGroup getItemGroup() {
+        return itemGroup;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setCategory(ItemGroup itemGroup) {
+        this.itemGroup = itemGroup;
     }
 }

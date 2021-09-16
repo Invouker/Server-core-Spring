@@ -116,6 +116,7 @@ public enum ChatInfo {
 
     public void sendCommandHelperS(CommandSender commandSender, String baseCommand, String... commands) {
         commandSender.sendMessage(prefix + " Command Helper " + prefix);
+        commandSender.sendMessage("§l/" +baseCommand);
         for (String command : commands) {
             commandSender.sendMessage("§l/" +baseCommand + " " + command);
         }

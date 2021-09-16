@@ -1,22 +1,25 @@
 package sk.westland.world.slimefun;
 
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
-import me.mrCookieSlime.Slimefun.Objects.Category;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
-import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
+import io.github.thebusybiscuit.slimefun4.api.exceptions.IdConflictException;
+import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
+import io.github.thebusybiscuit.slimefun4.api.researches.Research;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import sk.westland.core.WestLand;
 import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.event.ServerDisableEvent;
+import sk.westland.core.items.ItemBuilder;
 import sk.westland.core.services.SlimefunService;
 import sk.westland.world.slimefun.blocks.BlockBreaker;
-
-import java.util.Arrays;
+import sk.westland.world.slimefun.blocks.MobGrinder;
+import sk.westland.world.slimefun.blocks.MobTeleporter;
 
 @Component
 public class Slimefun implements Listener {
@@ -31,36 +34,46 @@ public class Slimefun implements Listener {
         slimefunAddon = slimefunService.getSlimefunAddon();
 
         NamespacedKey namespacedKey = new NamespacedKey(slimefunService.getInstance(), "westland_category");
-        CustomItem customItem = new CustomItem(Material.DISPENSER, (meta) -> {
-            meta.setDisplayName("WestLand");
-            meta.setLore(Arrays.asList("", "§rWestLand category", ""));
-        });
+        ItemStack customItem = new ItemBuilder(Material.DISPENSER, "§eWestLand")
+                .setLore("",
+                        "§7Westland Category",
+                        "",
+                        "§7Developed by XpresS",
+                        "§7Bugs report to: Staff-Team",
+                        "")
+                .build();
 
-        Category category = new Category(namespacedKey, customItem);
+        ItemGroup category = new ItemGroup(namespacedKey, customItem);
         if(!category.isRegistered())
             category.register(slimefunAddon);
 
 
-        System.out.println("Category registred: " + category.getUnlocalizedName());
+        System.out.println("ItemGroup registred: " + category.getUnlocalizedName());
 
         slimefunService.setCategory(category);
+        BlockLocator blockLocator = new BlockLocator(slimefunService);
+        MobTeleporter mobTeleporter = new MobTeleporter(slimefunService);
+        MobGrinder mobGrinder = new MobGrinder(slimefunService);
+        Research research = new Research(new NamespacedKey(WestLand.getInstance(), "MOB_TELEPORTER"), 127, "Mob Teleporter", 45);
 
         BlockBreaker blockBreaker = new BlockBreaker(category);
-        blockBreaker.setHidden(false);
-        if(SlimefunItem.getByID(blockBreaker.getId()) == null)
+        blockBreaker.setHidden(true);
+
+        try {
             blockBreaker.register(slimefunAddon);
+            mobGrinder.register(slimefunAddon);
+            blockLocator.register(slimefunAddon);
+            mobTeleporter.register(slimefunAddon);
+        }catch (IdConflictException ex) {
+            System.out.println("[WestLand] Slimefun items/blocks are already registred, please restart a server!");
+            return;
+        }
+        research.addItems(blockLocator, mobTeleporter);
 
-        HotWand hotWand = new HotWand(slimefunService);
-        hotWand.setHidden(false);
-        if(SlimefunItem.getByID(hotWand.getId()) == null)
-            hotWand.register(slimefunAddon);
-
-        category.add(hotWand);
-        category.add(blockBreaker);
-        System.out.println("From category: ");
-        category.getItems().forEach((a) -> System.out.println(a.getItem().getI18NDisplayName()));
-
-
+        //category.add(blockBreaker);
+        category.add(blockLocator);
+        category.add(mobTeleporter);
+        category.add(mobGrinder);
     }
 
 

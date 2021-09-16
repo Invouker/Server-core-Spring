@@ -16,6 +16,7 @@ import sk.westland.core.event.PluginEnableEvent;
 import sk.westland.core.scoreboard.ScoreDisplay;
 import sk.westland.core.utils.RunnableDelay;
 
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 
 public class ScoreboardService implements Listener, Runnable, BeanWire {
@@ -121,14 +122,15 @@ public class ScoreboardService implements Listener, Runnable, BeanWire {
     @Override
     public void run() {
         int totalVotes = serverDataService.getIntData(EServerData.VOTES_TOTAL);
-        scoreDisplayHashMap.forEach((player, scoreDisplay) -> {
-            if(resourcePackService.hasPlayerResourcePack(player)) {
-                withResourcePack(scoreDisplay, totalVotes);
-            } else {
-                withoutResourcePack(scoreDisplay, totalVotes);
-            }
-        });
-
+        try {
+            scoreDisplayHashMap.forEach((player, scoreDisplay) -> {
+                if (resourcePackService.hasPlayerResourcePack(player)) {
+                    withResourcePack(scoreDisplay, totalVotes);
+                } else {
+                    withoutResourcePack(scoreDisplay, totalVotes);
+                }
+            });
+        }catch (ConcurrentModificationException ignored) {}
     }
 
 }

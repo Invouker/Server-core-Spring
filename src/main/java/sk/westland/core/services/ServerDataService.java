@@ -113,8 +113,10 @@ public class ServerDataService implements BeanWire {
     }
 
     public boolean getBooleanData(EServerData eServerData) {
-        if(!serverDataRepository.findByServerData(eServerData).isPresent())
+        if(!serverDataRepository.findByServerData(eServerData).isPresent()) {
+            setBooleanData(eServerData, false);
             return false;
+        }
 
         return serverDataRepository.findByServerData(eServerData).get().getBooleanData();
     }

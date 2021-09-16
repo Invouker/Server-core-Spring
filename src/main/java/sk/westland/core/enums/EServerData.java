@@ -6,7 +6,8 @@ public enum EServerData {
     AUTOMESSAGE_TIME,
     DEBUG,
     PLAYERS_WITH_RP_AFTER_RESTART,
-    PEAK_ONLINE_PLAYERS
+    PEAK_ONLINE_PLAYERS,
+    LOTTERY_RUNNING
     ;
 
     EServerData() {}

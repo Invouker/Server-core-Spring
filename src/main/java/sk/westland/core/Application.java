@@ -72,4 +72,7 @@ public class Application {
 
     @Bean
     public SlimefunService slimefunService() { return new SlimefunService(); }
+
+    @Bean
+    public LotteryService lotteryService() { return new LotteryService(); }
 }
